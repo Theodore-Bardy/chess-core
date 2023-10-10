@@ -1,6 +1,6 @@
 /**
  * @file      piece.hpp
- * @brief     main file
+ * @brief     Piece header
  * @copyright Copyright (C) Theodore Bardy. All rights reserved.
  *            Developed by Theodore Bardy.
  *            Reproduction, copy, modification in whole or part is prohibited
