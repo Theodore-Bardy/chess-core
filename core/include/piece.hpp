@@ -12,7 +12,7 @@
 
 #include <iostream>
 
-class piece
+class Piece
 {
 #define PIECE_WHITE (true)
 #define PIECE_BLACK (false)
@@ -27,7 +27,7 @@ public:
     /**
      * @brief Forbid the default constructor
      */
-    piece() = delete;
+    Piece() = delete;
 
     /**
      * @brief Construct a new piece
@@ -35,7 +35,7 @@ public:
      * @param[in] _x Default X position
      * @param[in] _y Default Y position
      */
-    piece(bool _color, int _x, int _y);
+    Piece(bool _color, int _x, int _y);
 
     /**
      * @brief Construct a new piece
@@ -44,18 +44,36 @@ public:
      * @param[in] _x Default X position
      * @param[in] _y Default Y position
      */
-    piece(bool _isAlive, bool _color, int _x, int _y);
+    Piece(bool _isAlive, bool _color, int _x, int _y);
+
+    /**
+     * @brief Copy a piece
+     * @param piece Piece to copy
+     */
+    Piece(Piece const& piece);
 
     /**
      * @brief Destroy the piece
      */
-    ~piece();
+    ~Piece();
 
     /**
      * @brief Eat a piece
      * @param[in, out] piece_to_eat Piece to eat
      */
-    void eat(piece& piece_to_eat);
+    void eat(Piece& piece_to_eat);
+
+    /**
+     * @brief Returns the current X position
+     * @return X position of the piece 
+     */
+    int getX(void);
+
+    /**
+     * @brief Returns the current Y position
+     * @return Y position of the piece 
+     */
+    int getY(void);
 
     /**
      * @brief Move a piece
@@ -72,9 +90,20 @@ public:
     virtual int getValue(void) const = 0;
 
     /**
-     * @brief Print the piece in the standard output
+     * @brief Print the piece
+     * @param[in, out] os Output stream
      */
     virtual void print(std::ostream &os) const = 0;
 };
+
+inline int Piece::getX(void)
+{
+    return x;
+}
+
+inline int Piece::getY(void)
+{
+    return y;
+}
 
 #endif /* _PIECE_HPP_ */

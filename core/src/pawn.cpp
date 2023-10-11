@@ -9,30 +9,43 @@
 
 #include "pawn.hpp"
 
-pawn::pawn(bool _color, int _x, int _y)
-    : piece(_color, _x, _y)
+Pawn::Pawn(bool _color, int _x)
+    : Piece(_color, _x, 0)
 {
     hasMoved = false;
+    if (_color)
+    {
+        y = PAWN_WHITE_DEFAULT_Y;
+    }
+    else
+    {
+        y = PAWN_BLACK_DEFAULT_Y;
+    }
 }
 
-pawn::pawn(bool _hasMoved, bool _isAlive, bool _color, int _x, int _y)
+Pawn::Pawn(bool _hasMoved, bool _isAlive, bool _color, int _x, int _y)
     : hasMoved(_hasMoved)
-    , piece(_isAlive, _color, _x, _y)
+    , Piece(_isAlive, _color, _x, _y)
 {
+    /* Ensure the pawn have not moved */
+    if ((color && (_y != PAWN_WHITE_DEFAULT_Y)) || (!color && (_y != PAWN_BLACK_DEFAULT_Y)))
+    {
+        hasMoved = true;
+    }
 }
 
-pawn::~pawn()
+Pawn::~Pawn()
 {
 }
 
 void
-pawn::promotion()
+Pawn::promotion()
 {
     // TODO
 }
 
 bool
-pawn::move(int _x, int _y)
+Pawn::move(int _x, int _y)
 {
     /* Check desired position exists */
     if ((_x < 8) || (_x > 1) || (_y < 8) || (_y > 1))
@@ -41,25 +54,44 @@ pawn::move(int _x, int _y)
     }
 
     /* Check the desired postion is reachable */
-    // TODO
+    if (color)
+    {
+        /* White pawn must increase Y at each move */
+        if ((_y > y) && ((_y == y + 1) || (!hasMoved && (_y == y + 2))))
+        {
+            x = _x;
+            y = _y;
+            return true;
+        }
+    }
+    else
+    {
+        /* Black pawn must decrease Y at each move */
+        if ((_y < y) && ((_y == y - 1) || (!hasMoved && (_y == y - 2))))
+        {
+            x = _x;
+            y = _y;
+            return true;
+        }
+    }
 
     return false;
 }
 
 int
-pawn::getValue(void) const
+Pawn::getValue(void) const
 {
     return PAWN_VALUE;
 }
 
 void
-pawn::print(std::ostream& os) const
+Pawn::print(std::ostream& os) const
 {
     os << (isAlive ? " " : "*") << "P" << (color ? "w" : "b") << "[" << x << ";" << y << "]";
 }
 
 std::ostream&
-operator<<(std::ostream& os, pawn const& pawn)
+operator<<(std::ostream& os, Pawn const& pawn)
 {
     pawn.print(os);
     return os;

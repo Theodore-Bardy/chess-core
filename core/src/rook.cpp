@@ -9,24 +9,24 @@
 
 #include "rook.hpp"
 
-rook::rook(bool _color, int _x, int _y)
-    : piece(_color, _x, _y)
+Rook::Rook(bool _color, int _x, int _y)
+    : Piece(_color, _x, _y)
 {
     hasMoved = false;
 }
 
-rook::rook(bool _hasMoved, bool _isAlive, bool _color, int _x, int _y)
+Rook::Rook(bool _hasMoved, bool _isAlive, bool _color, int _x, int _y)
     : hasMoved(_hasMoved)
-    , piece(_isAlive, _color, _x, _y)
+    , Piece(_isAlive, _color, _x, _y)
 {
 }
 
-rook::~rook()
+Rook::~Rook()
 {
 }
 
 bool
-rook::castling(bool side)
+Rook::castling(bool side)
 {
     if (!hasMoved)
     {
@@ -46,7 +46,7 @@ rook::castling(bool side)
 }
 
 bool
-rook::move(int _x, int _y)
+Rook::move(int _x, int _y)
 {
     /* Check desired position exists */
     if ((_x < 8) || (_x > 1) || (_y < 8) || (_y > 1))
@@ -66,19 +66,19 @@ rook::move(int _x, int _y)
 }
 
 int
-rook::getValue(void) const
+Rook::getValue(void) const
 {
     return ROOK_VALUE;
 }
 
 void
-rook::print(std::ostream& os) const
+Rook::print(std::ostream& os) const
 {
     os << (isAlive ? " " : "*") << "R" << (color ? "w" : "b") << "[" << x << ";" << y << "]";
 }
 
 std::ostream&
-operator<<(std::ostream& os, rook const& rook)
+operator<<(std::ostream& os, Rook const& rook)
 {
     rook.print(os);
     return os;

@@ -25,7 +25,7 @@
 #define ROOK_2_WHITE_DEFAULT_X (8)
 #define ROOK_2_WHITE_DEFAULT_Y (1)
 
-class rook : public piece
+class Rook : public Piece
 {
 private:
     bool hasMoved; /**< Indicate if the rook has moved */
@@ -34,22 +34,22 @@ public:
     /**
      * @brief Forbid the default constructor
      */
-    rook() = delete;
+    Rook() = delete;
 
     /**
      * @brief Construct a default rook
      */
-    rook(bool _color, int _x, int _y);
+    Rook(bool _color, int _x, int _y);
 
     /**
      * @brief Construct a custom rook
      */
-    rook(bool _hasMoved, bool _isAlive, bool _color, int _x, int _y);
+    Rook(bool _hasMoved, bool _isAlive, bool _color, int _x, int _y);
 
     /**
      * @brief Destroy the rook
      */
-    ~rook();
+    ~Rook();
 
     /**
      * @brief Castle the rook
@@ -73,7 +73,8 @@ public:
     virtual int getValue(void) const;
 
     /**
-     * @brief Print rook in the standard output
+     * @brief Print rook
+     * @param[in, out] os Output stream
      */
     virtual void print(std::ostream &os) const;
 
@@ -83,7 +84,7 @@ public:
      * @param[in] rook Rook object
      * @return ostream& Output stream
      */
-    friend std::ostream& operator<<(std::ostream& os, rook const& rook);
+    friend std::ostream& operator<<(std::ostream& os, Rook const& rook);
 };
 
 #endif /* _ROOK_HPP_ */

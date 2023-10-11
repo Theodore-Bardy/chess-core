@@ -19,7 +19,7 @@
 #define PAWN_BLACK_DEFAULT_Y (7)
 #define PAWN_WHITE_DEFAULT_Y (2)
 
-class pawn : public piece
+class Pawn : public Piece
 {
 private:
     bool hasMoved; /**< Indicate if the pawn has moved */
@@ -28,22 +28,22 @@ public:
     /**
      * @brief Forbid the default constructor
      */
-    pawn() = delete;
+    Pawn() = delete;
 
     /**
      * @brief Construct a default pawn
      */
-    pawn(bool _color, int _x);
+    Pawn(bool _color, int _x);
 
     /**
      * @brief Construct a custom pawn
      */
-    pawn(bool _hasMoved, bool _isAlive, bool _color, int _x, int _y);
+    Pawn(bool _hasMoved, bool _isAlive, bool _color, int _x, int _y);
 
     /**
      * @brief Destroy the pawn
      */
-    ~pawn();
+    ~Pawn();
 
     /**
      * @brief Promote the pawn
@@ -65,7 +65,8 @@ public:
     virtual int getValue(void) const;
 
     /**
-     * @brief Print pawn in the standard output
+     * @brief Print pawn
+     * @param[in, out] os Output stream
      */
     virtual void print(std::ostream &os) const;
 
@@ -75,7 +76,7 @@ public:
      * @param[in] pawn Pawn object
      * @return ostream& Output stream
      */
-    friend std::ostream& operator<<(std::ostream& os, pawn const& pawn);
+    friend std::ostream& operator<<(std::ostream& os, Pawn const& pawn);
 };
 
 #endif /* _PAWN_HPP_ */

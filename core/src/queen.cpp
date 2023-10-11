@@ -10,8 +10,8 @@
 #include "queen.hpp"
 #include "math.h"
 
-queen::queen(bool _color)
-    : piece(_color, 0, 0)
+Queen::Queen(bool _color)
+    : Piece(_color, 0, 0)
 {
     isAlive = true;
 
@@ -29,17 +29,17 @@ queen::queen(bool _color)
     }
 }
 
-queen::queen(bool _isAlive, bool _color, int _x, int _y)
-    : piece(_isAlive, _color, _x, _y)
+Queen::Queen(bool _isAlive, bool _color, int _x, int _y)
+    : Piece(_isAlive, _color, _x, _y)
 {
 }
 
-queen::~queen()
+Queen::~Queen()
 {
 }
 
 bool
-queen::move(int _x, int _y)
+Queen::move(int _x, int _y)
 {
     /* Check desired position exists */
     if ((_x < 8) || (_x > 1) || (_y < 8) || (_y > 1))
@@ -60,19 +60,19 @@ queen::move(int _x, int _y)
 }
 
 int
-queen::getValue(void) const
+Queen::getValue(void) const
 {
     return QUEEN_VALUE;
 }
 
 void
-queen::print(std::ostream& os) const
+Queen::print(std::ostream& os) const
 {
     os << (isAlive ? " " : "*") << "Q" << (color ? "w" : "b") << "[" << x << ";" << y << "]";
 }
 
 std::ostream&
-operator<<(std::ostream& os, queen const& queen)
+operator<<(std::ostream& os, Queen const& queen)
 {
     queen.print(os);
     return os;

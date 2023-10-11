@@ -9,22 +9,22 @@
 
 #include "knight.hpp"
 
-knight::knight(bool _color, int _x, int _y)
-    : piece(_color, _x, _y)
+Knight::Knight(bool _color, int _x, int _y)
+    : Piece(_color, _x, _y)
 {
 }
 
-knight::knight(bool _isAlive, bool _color, int _x, int _y)
-    : piece(_isAlive, _color, _x, _y)
+Knight::Knight(bool _isAlive, bool _color, int _x, int _y)
+    : Piece(_isAlive, _color, _x, _y)
 {
 }
 
-knight::~knight()
+Knight::~Knight()
 {
 }
 
 bool
-knight::move(int _x, int _y)
+Knight::move(int _x, int _y)
 {
     /* Check desired position exists */
     if ((_x < 8) || (_x > 1) || (_y < 8) || (_y > 1))
@@ -45,19 +45,19 @@ knight::move(int _x, int _y)
 }
 
 int
-knight::getValue(void) const
+Knight::getValue(void) const
 {
     return KNIGHT_VALUE;
 }
 
 void
-knight::print(std::ostream& os) const
+Knight::print(std::ostream& os) const
 {
     os << (isAlive ? " " : "*") << "N" << (color ? "w" : "b") << "[" << x << ";" << y << "]";
 }
 
 std::ostream&
-operator<<(std::ostream& os, knight const& knight)
+operator<<(std::ostream& os, Knight const& knight)
 {
     knight.print(os);
     return os;
