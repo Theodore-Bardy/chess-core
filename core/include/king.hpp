@@ -21,7 +21,7 @@
 #define KING_WHITE_DEFAULT_X (5)
 #define KING_WHITE_DEFAULT_Y (1)
 
-class king : public piece
+class King : public Piece
 {
 private:
     bool isCheck;  /**< King check status */
@@ -31,22 +31,22 @@ public:
     /**
      * @brief Forbid the default constructor
      */
-    king() = delete;
+    King() = delete;
 
     /**
      * @brief Construct a default king
      */
-    king(bool _color);
+    King(bool _color);
 
     /**
      * @brief Construct a custom king
      */
-    king(bool _isCheck, bool _hasMoved, bool _isAlive, bool _color, int _x, int _y);
+    King(bool _isCheck, bool _hasMoved, bool _isAlive, bool _color, int _x, int _y);
 
     /**
      * @brief Destroy the king
      */
-    ~king();
+    ~King();
 
     /**
      * @brief Castle the king
@@ -70,7 +70,8 @@ public:
     virtual int getValue(void) const;
 
     /**
-     * @brief Print king in the standard output
+     * @brief Print king
+     * @param[in, out] os Output stream
      */
     virtual void print(std::ostream &os) const;
 
@@ -80,7 +81,7 @@ public:
      * @param[in] king King object
      * @return ostream& Output stream
      */
-    friend std::ostream& operator<<(std::ostream& os, king const& king);
+    friend std::ostream& operator<<(std::ostream& os, King const& king);
 };
 
 #endif /* _KING_HPP_ */

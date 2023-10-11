@@ -25,28 +25,28 @@
 #define BISHOP_2_WHITE_DEFAULT_X (6)
 #define BISHOP_2_WHITE_DEFAULT_Y (1)
 
-class bishop : public piece
+class Bishop : public Piece
 {
 public:
     /**
      * @brief Forbid the default constructor
      */
-    bishop() = delete;
+    Bishop() = delete;
 
     /**
      * @brief Construct a default bishop
      */
-    bishop(bool _color, int _x, int _y);
+    Bishop(bool _color, int _x, int _y);
 
     /**
      * @brief Construct a custom bishop
      */
-    bishop(bool _isAlive, bool _color, int _x, int _y);
+    Bishop(bool _isAlive, bool _color, int _x, int _y);
 
     /**
      * @brief Destroy the bishop
      */
-    ~bishop();
+    ~Bishop();
 
     /**
      * @brief Move the bishop
@@ -63,7 +63,8 @@ public:
     virtual int getValue(void) const;
 
     /**
-     * @brief Print bishop in the standard output
+     * @brief Print bishop
+     * @param[in, out] os Output stream
      */
     virtual void print(std::ostream &os) const;
 
@@ -73,7 +74,7 @@ public:
      * @param[in] bishop Bishop object
      * @return ostream& Output stream
      */
-    friend std::ostream& operator<<(std::ostream& os, bishop const& bishop);
+    friend std::ostream& operator<<(std::ostream& os, Bishop const& bishop);
 };
 
 #endif /* _BISHOP_HPP_ */

@@ -10,22 +10,22 @@
 #include "math.h"
 #include "bishop.hpp"
 
-bishop::bishop(bool _color, int _x, int _y)
-    : piece(_color, _x, _y)
+Bishop::Bishop(bool _color, int _x, int _y)
+    : Piece(_color, _x, _y)
 {
 }
 
-bishop::bishop(bool _isAlive, bool _color, int _x, int _y)
-    : piece(_isAlive, _color, _x, _y)
+Bishop::Bishop(bool _isAlive, bool _color, int _x, int _y)
+    : Piece(_isAlive, _color, _x, _y)
 {
 }
 
-bishop::~bishop()
+Bishop::~Bishop()
 {
 }
 
 bool
-bishop::move(int _x, int _y)
+Bishop::move(int _x, int _y)
 {
     /* Check desired position exists */
     if ((_x < 8) || (_x > 1) || (_y < 8) || (_y > 1))
@@ -45,19 +45,19 @@ bishop::move(int _x, int _y)
 }
 
 int
-bishop::getValue(void) const
+Bishop::getValue(void) const
 {
     return BISHOP_VALUE;
 }
 
 void
-bishop::print(std::ostream& os) const
+Bishop::print(std::ostream& os) const
 {
     os << (isAlive ? " " : "*") << "B" << (color ? "w" : "b") << "[" << x << ";" << y << "]";
 }
 
 std::ostream&
-operator<<(std::ostream& os, bishop const& bishop)
+operator<<(std::ostream& os, Bishop const& bishop)
 {
     bishop.print(os);
     return os;

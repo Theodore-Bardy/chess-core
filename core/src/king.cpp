@@ -9,8 +9,8 @@
 
 #include "king.hpp"
 
-king::king(bool _color)
-    : piece(_color, 0, 0)
+King::King(bool _color)
+    : Piece(_color, 0, 0)
 {
     isCheck  = false;
     hasMoved = false;
@@ -29,19 +29,24 @@ king::king(bool _color)
     }
 }
 
-king::king(bool _isCheck, bool _hasMoved, bool _isAlive, bool _color, int _x, int _y)
+King::King(bool _isCheck, bool _hasMoved, bool _isAlive, bool _color, int _x, int _y)
     : isCheck(_isCheck)
     , hasMoved(_hasMoved)
-    , piece(_isAlive, _color, _x, _y)
+    , Piece(_isAlive, _color, _x, _y)
 {
+    /* Ensure king have not moved */
+    if ((color && ((_x != KING_WHITE_DEFAULT_X) || (_y != KING_WHITE_DEFAULT_Y))) || (!color && ((_x != KING_BLACK_DEFAULT_X) || (_y != KING_BLACK_DEFAULT_Y))))
+    {
+        hasMoved = true;
+    }
 }
 
-king::~king()
+King::~King()
 {
 }
 
 bool
-king::castling(bool side)
+King::castling(bool side)
 {
     if (!hasMoved)
     {
@@ -62,7 +67,7 @@ king::castling(bool side)
 }
 
 bool
-king::move(int _x, int _y)
+King::move(int _x, int _y)
 {
     /* Check desired position exists */
     if ((_x < 8) || (_x > 1) || (_y < 8) || (_y > 1))
@@ -84,19 +89,19 @@ king::move(int _x, int _y)
 }
 
 int
-king::getValue(void) const
+King::getValue(void) const
 {
     return KING_VALUE;
 }
 
 void
-king::print(std::ostream& os) const
+King::print(std::ostream& os) const
 {
     os << (isAlive ? " " : "*") << "K" << (color ? "w" : "b") << "[" << x << ";" << y << "]";
 }
 
 std::ostream&
-operator<<(std::ostream& os, king const& king)
+operator<<(std::ostream& os, King const& king)
 {
     king.print(os);
     return os;

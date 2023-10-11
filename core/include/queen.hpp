@@ -21,28 +21,28 @@
 #define QUEEN_WHITE_DEFAULT_X (4)
 #define QUEEN_WHITE_DEFAULT_Y (1)
 
-class queen : public piece
+class Queen : public Piece
 {
 public:
     /**
      * @brief Forbid the default constructor
      */
-    queen() = delete;
+    Queen() = delete;
 
     /**
      * @brief Construct a default queen
      */
-    queen(bool _color);
+    Queen(bool _color);
 
     /**
      * @brief Construct a custom queen
      */
-    queen(bool _isAlive, bool _color, int _x, int _y);
+    Queen(bool _isAlive, bool _color, int _x, int _y);
 
     /**
      * @brief Destroy the queen
      */
-    ~queen();
+    ~Queen();
 
     /**
      * @brief Move the queen
@@ -59,7 +59,8 @@ public:
     virtual int getValue(void) const;
 
     /**
-     * @brief Print queen in the standard output
+     * @brief Print queen
+     * @param[in, out] os Output stream
      */
     virtual void print(std::ostream &os) const;
 
@@ -69,7 +70,7 @@ public:
      * @param[in] queen Queen object
      * @return ostream& Output stream
      */
-    friend std::ostream& operator<<(std::ostream& os, queen const& queen);
+    friend std::ostream& operator<<(std::ostream& os, Queen const& queen);
 };
 
 #endif /* _QUEEN_HPP_ */

@@ -25,28 +25,28 @@
 #define KNIGHT_2_WHITE_DEFAULT_X (7)
 #define KNIGHT_2_WHITE_DEFAULT_Y (1)
 
-class knight : public piece
+class Knight : public Piece
 {
 public:
     /**
      * @brief Forbid the default constructor
      */
-    knight() = delete;
+    Knight() = delete;
 
     /**
      * @brief Construct a default knight
      */
-    knight(bool _color, int _x, int _y);
+    Knight(bool _color, int _x, int _y);
 
     /**
      * @brief Construct a custom knight
      */
-    knight(bool _isAlive, bool _color, int _x, int _y);
+    Knight(bool _isAlive, bool _color, int _x, int _y);
 
     /**
      * @brief Destroy the knight
      */
-    ~knight();
+    ~Knight();
 
     /**
      * @brief Move the knight
@@ -63,7 +63,8 @@ public:
     virtual int getValue(void) const;
 
     /**
-     * @brief Print knight in the standard output
+     * @brief Print knight
+     * @param[in, out] os Output stream
      */
     virtual void print(std::ostream &os) const;
 
@@ -73,7 +74,7 @@ public:
      * @param[in] knight Knight object
      * @return ostream& Output stream
      */
-    friend std::ostream& operator<<(std::ostream& os, knight const& knight);
+    friend std::ostream& operator<<(std::ostream& os, Knight const& knight);
 };
 
 #endif /* _KNIGHT_HPP_ */

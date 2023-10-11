@@ -9,7 +9,7 @@
 
 #include "piece.hpp"
 
-piece::piece(bool _color, int _x, int _y)
+Piece::Piece(bool _color, int _x, int _y)
     : isAlive(true)
     , color(_color)
     , y(_y)
@@ -17,7 +17,7 @@ piece::piece(bool _color, int _x, int _y)
 {
 }
 
-piece::piece(bool _isAlive, bool _color, int _x, int _y)
+Piece::Piece(bool _isAlive, bool _color, int _x, int _y)
     : isAlive(_isAlive)
     , color(_color)
     , y(_y)
@@ -25,12 +25,20 @@ piece::piece(bool _isAlive, bool _color, int _x, int _y)
 {
 }
 
-piece::~piece()
+Piece::Piece(Piece const& piece)
+    : isAlive(piece.isAlive)
+    , color(piece.color)
+    , y(piece.y)
+    , x(piece.x)
+{
+}
+
+Piece::~Piece()
 {
 }
 
 void
-piece::eat(piece& piece_to_eat)
+Piece::eat(Piece& piece_to_eat)
 {
     piece_to_eat.isAlive = false;
 }
