@@ -148,9 +148,9 @@ Board::print(std::ostream& os) const
     for (int Y = 1; Y <= BOARD_SIZE_MAX; Y++)
     {
         os << (BOARD_SIZE_MAX - Y) << "| ";
-        for (int X = 1; X <= BOARD_SIZE_MAX; X++)
+        for (int X = 0; X < BOARD_SIZE_MAX; X++)
         {
-            os << *board[BOARD_SIZE_MAX - X][BOARD_SIZE_MAX - Y];
+            os << *board[X][BOARD_SIZE_MAX - Y];
         }
         os << "\n";
     }
