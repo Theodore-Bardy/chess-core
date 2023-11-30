@@ -3,3 +3,4 @@
 
 # Include sub-directories
 include(${CMAKE_CURRENT_LIST_DIR}/game/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/parser/CMakeLists.txt)
