@@ -43,8 +43,8 @@ Pawn::promotion()
 bool
 Pawn::move(int _x, int _y)
 {
-    /* Check desired position exists */
-    if ((_x < 8) || (_x > 1) || (_y < 8) || (_y > 1))
+    /* Check desired position exists and it is not the current position */
+    if ((_x > 8) || (_x < 1) || (_y > 8) || (_y < 1) || ((_x == x) && (_y == y)))
     {
         return false;
     }
