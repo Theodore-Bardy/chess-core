@@ -1,0 +1,25 @@
+name: Chess-core CI
+on:
+  push:
+    branches:
+      - '**'
+jobs:
+  build:
+    runs-on: 'ubuntu-latest'
+    container: theodorebardy/chess-core-build-env:latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: BARR-C Analysis
+      run: |
+        ./.github/ci_entrypoint.sh || exit 1
+        ! git grep $'\\r' ':!*.png' || exit 1
+        ./.github/check_headers.sh || exit 1
+        ./.github/check_code_format.sh || exit 1
+        ./.github/check_include_guards.sh || exit 1
+
+    - name: Build application
+      run: ./.github/build.sh || exit 1
