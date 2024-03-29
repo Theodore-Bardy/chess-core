@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
-# @file      build.sh
-# @brief     Build the application
-# @copyright Copyright (C) Theodore Bardy. All rights reserved.
-#            Developed by Theodore Bardy.
-#            Reproduction, copy, modification in whole or part is prohibited
-#            without the written permission of the copyright owner.
+# @file  build.sh
+# @brief Build the application
 
 # Exit if a command returns a non-zero status
 set -e

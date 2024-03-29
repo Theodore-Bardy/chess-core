@@ -1,10 +1,6 @@
 /**
- * @file      king.hpp
- * @brief     King header
- * @copyright Copyright (C) Theodore Bardy. All rights reserved.
- *            Developed by Theodore Bardy.
- *            Reproduction, copy, modification in whole or part is prohibited
- *            without the written permission of the copyright owner.
+ * @file  king.hpp
+ * @brief King header
  */
 
 #ifndef _KING_HPP_
@@ -73,7 +69,7 @@ public:
      * @brief Print king
      * @param[in, out] os Output stream
      */
-    virtual void print(std::ostream &os) const;
+    virtual void print(std::ostream& os) const;
 
     /**
      * @brief Overloading the `<<` operator for king class

@@ -1,16 +1,12 @@
-#!/bin/bash
-# @file      check_code_format.sh
-# @brief     Check code format
-# @copyright Copyright (C) Theodore Bardy. All rights reserved.
-#            Developed by Theodore Bardy.
-#            Reproduction, copy, modification in whole or part is prohibited
-#            without the written permission of the copyright owner.
+#!/usr/bin/env bash
+# @file  check_code_format.sh
+# @brief Check code format
 
 # Initialize list of files that are not properly formatted
 result=""
 
 # Check source and header files
-for source_file in `git ls-tree -r HEAD --name-only | grep -E '(.*\.c$|.*\.cpp$|.*\.h$)'`
+for source_file in `git ls-tree -r HEAD --name-only | grep -E '(.*\.c$|.*\.cpp$|.*\.h$|.*\.hpp$)'`
 do
     lines=$(clang-format --dry-run ${source_file} 2>&1 | wc -l)
     if [[ ! $lines -eq 0 ]]; then

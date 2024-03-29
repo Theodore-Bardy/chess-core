@@ -1,10 +1,6 @@
 /**
- * @file      board.cpp
- * @brief     Board sources
- * @copyright Copyright (C) Theodore Bardy. All rights reserved.
- *            Developed by Theodore Bardy.
- *            Reproduction, copy, modification in whole or part is prohibited
- *            without the written permission of the copyright owner.
+ * @file  board.cpp
+ * @brief Board sources
  */
 
 #include "board.hpp"

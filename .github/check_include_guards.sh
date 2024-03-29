@@ -1,16 +1,12 @@
-#!/bin/bash
-# @file      check_include_guards.sh
-# @brief     Check include guards
-# @copyright Copyright (C) Theodore Bardy. All rights reserved.
-#            Developed by Theodore Bardy.
-#            Reproduction, copy, modification in whole or part is prohibited
-#            without the written permission of the copyright owner.
+#!/usr/bin/env bash
+# @file  check_include_guards.sh
+# @brief Check include guards
 
 # Initialize list of files that are not properly formatted
 result=""
 
 # Check header files
-for source_file in `git ls-tree -r HEAD --name-only | grep -E '(.*\.h$)'`
+for source_file in `git ls-tree -r HEAD --name-only | grep -E '(.*\.hpp$)'`
 do
     uppercase=$(echo $(basename ${source_file^^}) | tr '.' '_')
     grep -Pze "#ifndef _${uppercase}_\n#define _${uppercase}_" ${source_file} > /dev/null 2>&1

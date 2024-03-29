@@ -1,10 +1,6 @@
 /**
- * @file      queen.hpp
- * @brief     Queen header
- * @copyright Copyright (C) Theodore Bardy. All rights reserved.
- *            Developed by Theodore Bardy.
- *            Reproduction, copy, modification in whole or part is prohibited
- *            without the written permission of the copyright owner.
+ * @file  queen.hpp
+ * @brief Queen header
  */
 
 #ifndef _QUEEN_HPP_
@@ -62,7 +58,7 @@ public:
      * @brief Print queen
      * @param[in, out] os Output stream
      */
-    virtual void print(std::ostream &os) const;
+    virtual void print(std::ostream& os) const;
 
     /**
      * @brief Overloading the `<<` operator for queen class

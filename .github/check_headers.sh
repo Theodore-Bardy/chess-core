@@ -1,10 +1,6 @@
-#!/bin/bash
-# @file      check_headers.sh
-# @brief     Check headers
-# @copyright Copyright (C) Theodore Bardy. All rights reserved.
-#            Developed by Theodore Bardy.
-#            Reproduction, copy, modification in whole or part is prohibited
-#            without the written permission of the copyright owner.
+#!/usr/bin/env bash
+# @file  check_headers.sh
+# @brief Check headers
 
 # Function used to check headers
 # Arg1: Source file path
@@ -17,7 +13,7 @@ check_header() {
     new_line=$3
     last_line=$4
     filename=$(echo $(basename ${source_file}) | sed -r 's/\+/\\+/g')
-    grep -Pze "${first_line}${first_line:+\n}${new_line} @file      ${filename}\n${new_line} @brief     .+\n${new_line} @copyright Copyright \(C\) Theodore Bardy. All rights reserved.\n${new_line}            Developed by Theodore Bardy.\n${new_line}            Reproduction, copy, modification in whole or part is prohibited\n${new_line}            without the written permission of the copyright owner.${last_line:+\n}${last_line}\n\n" ${source_file} > /dev/null 2>&1
+    grep -Pze "${first_line}${first_line:+\n}${new_line} @file  ${filename}\n${new_line} @brief .+\n${last_line}\n" ${source_file} > /dev/null 2>&1
     return $?
 }
 
@@ -25,7 +21,7 @@ check_header() {
 result=""
 
 # Check source, header, ASM and linker files
-for source_file in `git ls-tree -r HEAD --name-only | grep -E '(.*\.c$|.*\.cpp$|.*\.h$|.*\.s$|.*\.ld$)'`
+for source_file in `git ls-tree -r HEAD --name-only | grep -E '(.*\.c$|.*\.cpp$|.*\.h$|.*\.hpp$|.*\.s$|.*\.ld$)'`
 do
     check_header ${source_file} "/\*\*" " \*" " \*/"
     if [ "$?" != "0" ]; then
@@ -45,7 +41,7 @@ done
 # Check bash files
 for source_file in `git ls-tree -r HEAD --name-only | grep -E '(.*\.sh$)'`
 do
-    check_header ${source_file} "#!/bin/bash" "#" ""
+    check_header ${source_file} "#!/usr/bin/env bash" "#" ""
     if [ "$?" != "0" ]; then
       result="${result}\n${source_file}"
     fi

@@ -1,9 +1,5 @@
-# @file      CMakeLists.txt
-# @brief     CMakeLists file of the repository
-# @copyright Copyright (C) Theodore Bardy. All rights reserved.
-#            Developed by Theodore Bardy.
-#            Reproduction, copy, modification in whole or part is prohibited
-#            without the written permission of the copyright owner.
+# @file  CMakeLists.txt
+# @brief CMakeLists file of the repository
 
 cmake_minimum_required(VERSION 3.19)
 

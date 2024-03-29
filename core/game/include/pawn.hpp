@@ -1,10 +1,6 @@
 /**
- * @file      pawn.hpp
- * @brief     Pawn header
- * @copyright Copyright (C) Theodore Bardy. All rights reserved.
- *            Developed by Theodore Bardy.
- *            Reproduction, copy, modification in whole or part is prohibited
- *            without the written permission of the copyright owner.
+ * @file  pawn.hpp
+ * @brief Pawn header
  */
 
 #ifndef _PAWN_HPP_
@@ -68,7 +64,7 @@ public:
      * @brief Print pawn
      * @param[in, out] os Output stream
      */
-    virtual void print(std::ostream &os) const;
+    virtual void print(std::ostream& os) const;
 
     /**
      * @brief Overloading the `<<` operator for pawn class

@@ -1,10 +1,6 @@
 /**
- * @file      board.hpp
- * @brief     board header
- * @copyright Copyright (C) Theodore Bardy. All rights reserved.
- *            Developed by Theodore Bardy.
- *            Reproduction, copy, modification in whole or part is prohibited
- *            without the written permission of the copyright owner.
+ * @file  board.hpp
+ * @brief board header
  */
 
 #ifndef _BOARD_HPP_
@@ -23,7 +19,7 @@ class Board
 {
 protected:
     bool                isInitialize;
-    Square              *board[BOARD_SIZE_MAX][BOARD_SIZE_MAX];
+    Square*             board[BOARD_SIZE_MAX][BOARD_SIZE_MAX];
     std::vector<Piece*> white_pieces;
     std::vector<Piece*> balck_pieces;
 
@@ -55,7 +51,7 @@ public:
      * @brief Print board
      * @param[in, out] os Output stream
      */
-    void print(std::ostream &os) const;
+    void print(std::ostream& os) const;
 
     /**
      * @brief Overloading the `<<` operator for board class

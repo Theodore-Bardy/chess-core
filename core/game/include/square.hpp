@@ -1,10 +1,6 @@
 /**
- * @file      square.hpp
- * @brief     Square header
- * @copyright Copyright (C) Theodore Bardy. All rights reserved.
- *            Developed by Theodore Bardy.
- *            Reproduction, copy, modification in whole or part is prohibited
- *            without the written permission of the copyright owner.
+ * @file  square.hpp
+ * @brief Square header
  */
 
 #ifndef _SQUARE_HPP_
@@ -19,8 +15,8 @@ class Piece;
 class Square
 {
 private:
-    Board *board; /**< Pointer on the parent board */
-    Piece *piece; /**< Pointer on the piece */
+    Board* board; /**< Pointer on the parent board */
+    Piece* piece; /**< Pointer on the piece */
     bool   color; /**< Color true = withe, false = black */
     int    x;     /**< X position */
     int    y;     /**< Y position */
@@ -31,7 +27,7 @@ public:
      * @param[in] _x X square position
      * @param[in] _y Y square position
      */
-    Square(Board *_board, int _x, int _y);
+    Square(Board* _board, int _x, int _y);
 
     /**
      * @brief Destroy the square
@@ -42,7 +38,7 @@ public:
      * @brief Place piece in the square
      * @param[in] _piece Piece to place in the square
      */
-    void setPiece(Piece *_piece);
+    void setPiece(Piece* _piece);
 
     /**
      * @brief Indicate if a piece is in the square
@@ -86,7 +82,7 @@ public:
      * @brief Print square
      * @param[in, out] os Output stream
      */
-    void print(std::ostream &os) const;
+    void print(std::ostream& os) const;
 
     /**
      * @brief Overloading the `<<` operator for square class
@@ -97,12 +93,14 @@ public:
     friend std::ostream& operator<<(std::ostream& os, Square const& square);
 };
 
-inline int Square::getX(void)
+inline int
+Square::getX(void)
 {
     return x;
 }
 
-inline int Square::getY(void)
+inline int
+Square::getY(void)
 {
     return y;
 }

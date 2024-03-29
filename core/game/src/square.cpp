@@ -1,10 +1,6 @@
 /**
- * @file      square.cpp
- * @brief     Square sources
- * @copyright Copyright (C) Theodore Bardy. All rights reserved.
- *            Developed by Theodore Bardy.
- *            Reproduction, copy, modification in whole or part is prohibited
- *            without the written permission of the copyright owner.
+ * @file  square.cpp
+ * @brief Square sources
  */
 
 #include "square.hpp"

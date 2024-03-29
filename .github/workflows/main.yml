@@ -1,3 +1,6 @@
+# @file  main.yml
+# @brief Github pipelines
+
 name: Chess-core CI
 on:
   push:

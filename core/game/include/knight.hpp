@@ -1,10 +1,6 @@
 /**
- * @file      knight.hpp
- * @brief     knight header
- * @copyright Copyright (C) Theodore Bardy. All rights reserved.
- *            Developed by Theodore Bardy.
- *            Reproduction, copy, modification in whole or part is prohibited
- *            without the written permission of the copyright owner.
+ * @file  knight.hpp
+ * @brief Knight header
  */
 
 #ifndef _KNIGHT_HPP_
@@ -66,7 +62,7 @@ public:
      * @brief Print knight
      * @param[in, out] os Output stream
      */
-    virtual void print(std::ostream &os) const;
+    virtual void print(std::ostream& os) const;
 
     /**
      * @brief Overloading the `<<` operator for knight class

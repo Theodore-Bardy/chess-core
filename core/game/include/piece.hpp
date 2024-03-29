@@ -1,10 +1,6 @@
 /**
- * @file      piece.hpp
- * @brief     Piece header
- * @copyright Copyright (C) Theodore Bardy. All rights reserved.
- *            Developed by Theodore Bardy.
- *            Reproduction, copy, modification in whole or part is prohibited
- *            without the written permission of the copyright owner.
+ * @file  piece.hpp
+ * @brief Piece header
  */
 
 #ifndef _PIECE_HPP_
@@ -93,15 +89,17 @@ public:
      * @brief Print the piece
      * @param[in, out] os Output stream
      */
-    virtual void print(std::ostream &os) const = 0;
+    virtual void print(std::ostream& os) const = 0;
 };
 
-inline int Piece::getX(void)
+inline int
+Piece::getX(void)
 {
     return x;
 }
 
-inline int Piece::getY(void)
+inline int
+Piece::getY(void)
 {
     return y;
 }
