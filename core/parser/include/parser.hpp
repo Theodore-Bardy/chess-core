@@ -6,17 +6,16 @@
 #ifndef _PARSER_HPP_
 #define _PARSER_HPP_
 
-#include "piece.hpp"
+#include <optional>
 #include <string>
-#include <tuple>
-#include <vector>
+
+#include "game.hpp"
 
 using namespace std;
 
 class Parser
 {
 private:
-    vector<string> gameDescription;
 
 public:
     /**
@@ -31,11 +30,12 @@ public:
 
     /**
      * @brief Read a Chess game from a PGN files format
+     * @param[in] game Game object where the PGN file will be loaded
      * @param[in] filePath Path to the file
      * @param[in] fileName Name of the file
      * @return true if file is found, false otherwise
      */
-    bool loadGame(string filePath, string fileName);
+    bool loadGame(Game& game, string filePath, string fileName);
 
     /**
      * @brief Save a Chess game from to a PGN files format
@@ -44,15 +44,6 @@ public:
      * @return true if file is created, false otherwise
      */
     bool saveGame(string filePath, string fileName);
-
-    /**
-     * @brief Returns the gameDescription attribute
-     * @return gameDescription attribute
-     */
-    vector<string> getGameDescription(void)
-    {
-        return gameDescription;
-    }
 };
 
 #endif /* _PARSER_HPP_ */

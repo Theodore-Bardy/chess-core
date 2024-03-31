@@ -5,16 +5,14 @@
 
 #include "parser.hpp"
 #include <iostream>
-#include <optional>
 #include <fstream>
-#include <string>
 
 using namespace std;
 
 static optional<string> getMoveIntoLine(string const& line, int moveNumber, bool color);
 
 bool
-Parser::loadGame(string filePath, string fileName)
+Parser::loadGame(Game& game, string filePath, string fileName)
 {
     ifstream fileToRead;
     string   gameAsStr;
@@ -66,7 +64,7 @@ Parser::loadGame(string filePath, string fileName)
             if (tempStr.has_value())
             {
                 whiteFound = true;
-                gameDescription.push_back(tempStr.value());
+                game.addMove(*(new Move(tempStr.value())));
             }
 
             /* Get black move if white move have been found */
@@ -75,7 +73,7 @@ Parser::loadGame(string filePath, string fileName)
                 tempStr = getMoveIntoLine(gameAsStr, move++, false);
                 if (tempStr.has_value())
                 {
-                    gameDescription.push_back(tempStr.value());
+                    game.addMove(*(new Move(tempStr.value())));
                 }
             }
         } while (tempStr.has_value());
