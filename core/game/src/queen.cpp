@@ -64,7 +64,7 @@ Queen::getValue(void) const
 void
 Queen::print(std::ostream& os) const
 {
-    os << (isAlive ? " " : "*") << "Q" << (color ? "w" : "b") << "[" << x << ";" << y << "]";
+    os << (isAlive ? (color ? " ♕ " : " ♛ ") : "   ");
 }
 
 std::ostream&

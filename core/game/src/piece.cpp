@@ -38,3 +38,10 @@ Piece::eat(Piece& piece_to_eat)
 {
     piece_to_eat.isAlive = false;
 }
+
+std::ostream&
+operator<<(std::ostream& os, Piece const& piece)
+{
+    piece.print(os);
+    return os;
+}

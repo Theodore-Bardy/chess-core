@@ -49,7 +49,7 @@ Bishop::getValue(void) const
 void
 Bishop::print(std::ostream& os) const
 {
-    os << (isAlive ? " " : "*") << "B" << (color ? "w" : "b") << "[" << x << ";" << y << "]";
+    os << (isAlive ? (color ? " ♗ " : " ♝ ") : "   ");
 }
 
 std::ostream&

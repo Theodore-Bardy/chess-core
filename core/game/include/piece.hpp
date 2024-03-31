@@ -90,6 +90,14 @@ public:
      * @param[in, out] os Output stream
      */
     virtual void print(std::ostream& os) const = 0;
+
+    /**
+     * @brief Overloading the `<<` operator for piece class
+     * @param[in, out] os Output stream
+     * @param[in] piece Piece object
+     * @return ostream& Output stream
+     */
+    friend std::ostream& operator<<(std::ostream& os, Piece const& piece);
 };
 
 inline int

@@ -83,7 +83,7 @@ Pawn::getValue(void) const
 void
 Pawn::print(std::ostream& os) const
 {
-    os << (isAlive ? " " : "*") << "P" << (color ? "w" : "b") << "[" << x << ";" << y << "]";
+    os << (isAlive ? (color ? " ♙ " : " ♟ ") : "   ");
 }
 
 std::ostream&

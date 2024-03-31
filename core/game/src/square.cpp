@@ -80,7 +80,7 @@ Square::print(std::ostream& os) const
     }
     else
     {
-        os << " x ";
+        os << *piece;
     }
 }
 
