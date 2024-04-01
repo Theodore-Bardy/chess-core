@@ -6,20 +6,39 @@
 #ifndef _SQUARE_HPP_
 #define _SQUARE_HPP_
 
-class Board;
-#include "board.hpp"
-class Piece;
-#include "piece.hpp"
 #include <iostream>
+
+/**
+ * @brief Square piece color values list
+ */
+enum SquarePieceColor
+{
+    NoPiece,
+    White,
+    Black
+};
+
+/**
+ * @brief Square values list
+ */
+enum SquareValue
+{
+    Empty,
+    KingValue,
+    QueenValue,
+    BishopValue,
+    KnightValue,
+    RookValue,
+    PawnValue
+};
 
 class Square
 {
 private:
-    Board* board; /**< Pointer on the parent board */
-    Piece* piece; /**< Pointer on the piece */
-    bool   color; /**< Color true = white, false = black */
-    int    x;     /**< X position */
-    int    y;     /**< Y position */
+    SquarePieceColor color; /**< Color of the piece in the square (0 = no piece, 1 = white, 2 = black) */
+    SquareValue      value; /**< Value of the piece in the square (cf. SquareValue) */
+    int              x;     /**< X position */
+    int              y;     /**< Y position */
 
 public:
     /**
@@ -27,56 +46,66 @@ public:
      * @param[in] _x X square position
      * @param[in] _y Y square position
      */
-    Square(Board* _board, int _x, int _y);
+    Square(int _x, int _y);
 
     /**
      * @brief Destroy the square
      */
-    ~Square();
+    ~Square() = default;
 
     /**
-     * @brief Place piece in the square
-     * @param[in] _piece Piece to place in the square
+     * @brief Get the Value object
+     * @return Value of the square (cf. SquareValue)
      */
-    void setPiece(Piece* _piece);
+    SquarePieceColor getColor(void) const
+    {
+        return color;
+    }
 
     /**
-     * @brief Indicate if a piece is in the square
-     * @return true if a piece is in the square, false otherwise
+     * @brief Set the color of the piece in the square
+     * @param[in] _color Color of the piece in the square
      */
-    bool hasPiece();
+    void setColor(SquarePieceColor _color)
+    {
+        color = _color;
+    }
 
     /**
-     * @brief Removed the piece is the square
-     * @note This function is safe to be call on an empty square
-     * @return true if the piece have been removed, false otherwise
+     * @brief Get the value of the square
+     * @return Value of the square (cf. SquareValue)
      */
-    bool removePiece();
+    SquareValue getValue(void) const
+    {
+        return value;
+    }
 
     /**
-     * @brief Get the piece in the square
-     * @return The piece in the square
+     * @brief Set the value of the square
+     * @param[in] _value Value of the square
      */
-    Piece* getPiece();
-
-    /**
-     * @brief Check if the square is attacked by a piece of a given color
-     * @param _color Color to check for attack
-     * @return true is the square is attacked, false otherwise
-     */
-    bool isAttacked(bool _color);
+    void setValue(SquareValue _value)
+    {
+        value = _value;
+    }
 
     /**
      * @brief Returns the current X position
      * @return X position of the square
      */
-    int getX(void) const;
+    int getX(void) const
+    {
+        return x;
+    }
 
     /**
      * @brief Returns the current Y position
      * @return Y position of the square
      */
-    int getY(void) const;
+    int getY(void) const
+    {
+        return y;
+    }
 
     /**
      * @brief Print square
@@ -92,17 +121,5 @@ public:
      */
     friend std::ostream& operator<<(std::ostream& os, Square const& square);
 };
-
-inline int
-Square::getX(void) const
-{
-    return x;
-}
-
-inline int
-Square::getY(void) const
-{
-    return y;
-}
 
 #endif /* _SQUARE_HPP_ */
