@@ -41,6 +41,14 @@ public:
     ~Queen();
 
     /**
+     * @brief Clone a queen
+     */
+    Queen* clone(void) const
+    {
+        return new Queen(*this);
+    }
+
+    /**
      * @brief Move the queen
      * @param[in] x Desired X position
      * @param[in] y Desired Y position

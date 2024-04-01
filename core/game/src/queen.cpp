@@ -9,7 +9,7 @@
 Queen::Queen(bool _color)
     : Piece(_color, 0, 0)
 {
-    isAlive = true;
+    alive = true;
 
     if (_color)
     {
@@ -64,7 +64,7 @@ Queen::getValue(void) const
 void
 Queen::print(std::ostream& os) const
 {
-    os << (isAlive ? (color ? " ♕ " : " ♛ ") : "   ");
+    os << (alive ? (color ? " ♕ " : " ♛ ") : "   ");
 }
 
 std::ostream&

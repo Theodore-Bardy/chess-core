@@ -48,6 +48,14 @@ public:
     ~Rook();
 
     /**
+     * @brief Clone a rook
+     */
+    Rook* clone(void) const
+    {
+        return new Rook(*this);
+    }
+
+    /**
      * @brief Castle the rook
      * @param[in] side true means little castle, flase great castle
      * @return true if the rook has castle, false otherwise

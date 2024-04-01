@@ -30,6 +30,11 @@ public:
     Board();
 
     /**
+     * @brief Copy a new board
+     */
+    Board(Board const& boardToCopy);
+
+    /**
      * @brief Destroy the board
      */
     ~Board();

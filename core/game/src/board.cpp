@@ -25,6 +25,40 @@ Board::Board()
     }
 }
 
+Board::Board(Board const& boardToCopy)
+    : isInitialize(boardToCopy.isInitialize)
+{
+
+    /* Copy squares */
+    /* Initialize empty board */
+    for (int Y = 0; Y < BOARD_SIZE_MAX; Y++)
+    {
+        for (int X = 0; X < BOARD_SIZE_MAX; X++)
+        {
+            if (boardToCopy.board[X][Y] != nullptr)
+            {
+                board[X][Y] = new Square(*boardToCopy.board[X][Y]);
+            }
+            else
+            {
+                board[X][Y] = nullptr;
+            }
+        }
+    }
+
+    /* White pieces */
+    for (auto const& it : boardToCopy.white_pieces)
+    {
+        white_pieces.push_back(it->clone());
+    }
+
+    /* Black pieces */
+    for (auto const& it : boardToCopy.balck_pieces)
+    {
+        balck_pieces.push_back(it->clone());
+    }
+}
+
 Board::~Board()
 {
     /* Release board */
@@ -33,22 +67,19 @@ Board::~Board()
         for (int X = 0; X < BOARD_SIZE_MAX; X++)
         {
             delete board[X][Y];
-            board[X][Y] = NULL;
         }
     }
 
     /* Release piece vectors */
-    for (int index = 0; index < white_pieces.size(); index++)
+    for (Piece* p : white_pieces)
     {
-        delete white_pieces[index];
+        delete p;
     }
-    white_pieces.clear();
 
-    for (int index = 0; index < balck_pieces.size(); index++)
+    for (Piece* p : balck_pieces)
     {
-        delete balck_pieces[index];
+        delete p;
     }
-    balck_pieces.clear();
 }
 
 void

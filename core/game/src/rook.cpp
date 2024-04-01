@@ -70,7 +70,7 @@ Rook::getValue(void) const
 void
 Rook::print(std::ostream& os) const
 {
-    os << (isAlive ? (color ? " ♖ " : " ♜ ") : "   ");
+    os << (alive ? (color ? " ♖ " : " ♜ ") : "   ");
 }
 
 std::ostream&

@@ -42,6 +42,14 @@ public:
     ~Pawn();
 
     /**
+     * @brief Clone a pawn
+     */
+    Pawn* clone(void) const
+    {
+        return new Pawn(*this);
+    }
+
+    /**
      * @brief Promote the pawn
      */
     void promotion();

@@ -14,10 +14,10 @@ class Piece
 #define PIECE_BLACK (false)
 
 protected:
-    bool isAlive; /**< Alive state */
-    bool color;   /**< Color true = withe, false = black */
-    int  x;       /**< X position */
-    int  y;       /**< Y position */
+    bool alive; /**< Alive state */
+    bool color; /**< Color true = white, false = black */
+    int  x;     /**< X position */
+    int  y;     /**< Y position */
 
 public:
     /**
@@ -35,23 +35,22 @@ public:
 
     /**
      * @brief Construct a new piece
-     * @param[in] _isAlive Alive state
+     * @param[in] _alive Alive state
      * @param[in] _color Color of the piece
      * @param[in] _x Default X position
      * @param[in] _y Default Y position
      */
-    Piece(bool _isAlive, bool _color, int _x, int _y);
-
-    /**
-     * @brief Copy a piece
-     * @param piece Piece to copy
-     */
-    Piece(Piece const& piece);
+    Piece(bool _alive, bool _color, int _x, int _y);
 
     /**
      * @brief Destroy the piece
      */
     ~Piece();
+
+    /**
+     * @brief Clone a piece
+     */
+    virtual Piece* clone(void) const = 0;
 
     /**
      * @brief Eat a piece
@@ -60,16 +59,28 @@ public:
     void eat(Piece& piece_to_eat);
 
     /**
+     * @brief Returns the color of the piece
+     * @return Color of the piece
+     */
+    bool getColor(void) const;
+
+    /**
+     * @brief Returns the life status
+     * @return Life status the piece
+     */
+    bool isAlive(void) const;
+
+    /**
      * @brief Returns the current X position
      * @return X position of the piece 
      */
-    int getX(void);
+    int getX(void) const;
 
     /**
      * @brief Returns the current Y position
      * @return Y position of the piece 
      */
-    int getY(void);
+    int getY(void) const;
 
     /**
      * @brief Move a piece
@@ -100,14 +111,26 @@ public:
     friend std::ostream& operator<<(std::ostream& os, Piece const& piece);
 };
 
+inline bool
+Piece::getColor(void) const
+{
+    return color;
+}
+
+inline bool
+Piece::isAlive(void) const
+{
+    return alive;
+}
+
 inline int
-Piece::getX(void)
+Piece::getX(void) const
 {
     return x;
 }
 
 inline int
-Piece::getY(void)
+Piece::getY(void) const
 {
     return y;
 }

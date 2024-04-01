@@ -6,26 +6,18 @@
 #include "piece.hpp"
 
 Piece::Piece(bool _color, int _x, int _y)
-    : isAlive(true)
+    : alive(true)
     , color(_color)
     , y(_y)
     , x(_x)
 {
 }
 
-Piece::Piece(bool _isAlive, bool _color, int _x, int _y)
-    : isAlive(_isAlive)
+Piece::Piece(bool _alive, bool _color, int _x, int _y)
+    : alive(_alive)
     , color(_color)
     , y(_y)
     , x(_x)
-{
-}
-
-Piece::Piece(Piece const& piece)
-    : isAlive(piece.isAlive)
-    , color(piece.color)
-    , y(piece.y)
-    , x(piece.x)
 {
 }
 
@@ -36,7 +28,7 @@ Piece::~Piece()
 void
 Piece::eat(Piece& piece_to_eat)
 {
-    piece_to_eat.isAlive = false;
+    piece_to_eat.alive = false;
 }
 
 std::ostream&

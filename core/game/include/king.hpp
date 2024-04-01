@@ -45,6 +45,14 @@ public:
     ~King();
 
     /**
+     * @brief Clone a king
+     */
+    King* clone(void) const
+    {
+        return new King(*this);
+    }
+
+    /**
      * @brief Castle the king
      * @param[in] side true means little castle, flase great castle
      * @return true if the king has castle, false otherwise

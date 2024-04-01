@@ -45,6 +45,14 @@ public:
     ~Bishop();
 
     /**
+     * @brief Clone a bishop
+     */
+    Bishop* clone(void) const
+    {
+        return new Bishop(*this);
+    }
+
+    /**
      * @brief Move the bishop
      * @param[in] x Desired X position
      * @param[in] y Desired Y position

@@ -45,6 +45,14 @@ public:
     ~Knight();
 
     /**
+     * @brief Clone a knight
+     */
+    Knight* clone(void) const
+    {
+        return new Knight(*this);
+    }
+
+    /**
      * @brief Move the knight
      * @param[in] x Desired X position
      * @param[in] y Desired Y position

@@ -17,7 +17,7 @@ class Square
 private:
     Board* board; /**< Pointer on the parent board */
     Piece* piece; /**< Pointer on the piece */
-    bool   color; /**< Color true = withe, false = black */
+    bool   color; /**< Color true = white, false = black */
     int    x;     /**< X position */
     int    y;     /**< Y position */
 
@@ -70,13 +70,13 @@ public:
      * @brief Returns the current X position
      * @return X position of the square
      */
-    int getX(void);
+    int getX(void) const;
 
     /**
      * @brief Returns the current Y position
      * @return Y position of the square
      */
-    int getY(void);
+    int getY(void) const;
 
     /**
      * @brief Print square
@@ -94,13 +94,13 @@ public:
 };
 
 inline int
-Square::getX(void)
+Square::getX(void) const
 {
     return x;
 }
 
 inline int
-Square::getY(void)
+Square::getY(void) const
 {
     return y;
 }

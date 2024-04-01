@@ -21,7 +21,7 @@ Square::Square(Board* _board, int _x, int _y)
     }
 
     /* No piece in the square by default */
-    piece = NULL;
+    piece = nullptr;
 }
 
 Square::~Square()
