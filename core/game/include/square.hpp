@@ -9,6 +9,30 @@
 #include <iostream>
 
 /**
+ * @brief X coordinates
+ */
+#define SQUARE_X_A (0)
+#define SQUARE_X_B (1)
+#define SQUARE_X_C (2)
+#define SQUARE_X_D (3)
+#define SQUARE_X_E (4)
+#define SQUARE_X_F (5)
+#define SQUARE_X_G (6)
+#define SQUARE_X_H (7)
+
+/**
+ * @brief Y coordinates
+ */
+#define SQUARE_Y_1 (0)
+#define SQUARE_Y_2 (1)
+#define SQUARE_Y_3 (2)
+#define SQUARE_Y_4 (3)
+#define SQUARE_Y_5 (4)
+#define SQUARE_Y_6 (5)
+#define SQUARE_Y_7 (6)
+#define SQUARE_Y_8 (7)
+
+/**
  * @brief Square piece color values list
  */
 enum SquarePieceColor

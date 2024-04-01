@@ -7,15 +7,16 @@
 #define _KING_HPP_
 
 #include "piece.hpp"
+#include "square.hpp"
 
 /**
  * @brief King default value
  */
 #define KING_VALUE           (0)
-#define KING_BLACK_DEFAULT_X (5)
-#define KING_BLACK_DEFAULT_Y (8)
-#define KING_WHITE_DEFAULT_X (5)
-#define KING_WHITE_DEFAULT_Y (1)
+#define KING_BLACK_DEFAULT_X (SQUARE_X_E)
+#define KING_BLACK_DEFAULT_Y (SQUARE_Y_8)
+#define KING_WHITE_DEFAULT_X (SQUARE_X_E)
+#define KING_WHITE_DEFAULT_Y (SQUARE_Y_1)
 
 class King : public Piece
 {
@@ -71,7 +72,7 @@ public:
      * @brief Get the value of the king
      * @return The value of the king
      */
-    virtual int getValue(void) const;
+    virtual SquareValue getValue(void) const;
 
     /**
      * @brief Print king

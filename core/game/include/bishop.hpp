@@ -7,19 +7,20 @@
 #define _BISHOP_HPP_
 
 #include "piece.hpp"
+#include "square.hpp"
 
 /**
  * @brief Bishop default value
  */
 #define BISHOP_VALUE             (3)
-#define BISHOP_1_BLACK_DEFAULT_X (3)
-#define BISHOP_1_BLACK_DEFAULT_Y (8)
-#define BISHOP_2_BLACK_DEFAULT_X (6)
-#define BISHOP_2_BLACK_DEFAULT_Y (8)
-#define BISHOP_1_WHITE_DEFAULT_X (3)
-#define BISHOP_1_WHITE_DEFAULT_Y (1)
-#define BISHOP_2_WHITE_DEFAULT_X (6)
-#define BISHOP_2_WHITE_DEFAULT_Y (1)
+#define BISHOP_1_BLACK_DEFAULT_X (SQUARE_X_C)
+#define BISHOP_1_BLACK_DEFAULT_Y (SQUARE_Y_8)
+#define BISHOP_2_BLACK_DEFAULT_X (SQUARE_X_F)
+#define BISHOP_2_BLACK_DEFAULT_Y (SQUARE_Y_8)
+#define BISHOP_1_WHITE_DEFAULT_X (SQUARE_X_C)
+#define BISHOP_1_WHITE_DEFAULT_Y (SQUARE_Y_1)
+#define BISHOP_2_WHITE_DEFAULT_X (SQUARE_X_F)
+#define BISHOP_2_WHITE_DEFAULT_Y (SQUARE_Y_1)
 
 class Bishop : public Piece
 {
@@ -64,7 +65,7 @@ public:
      * @brief Get the value of the bishop
      * @return The value of the bishop
      */
-    virtual int getValue(void) const;
+    virtual SquareValue getValue(void) const;
 
     /**
      * @brief Print bishop

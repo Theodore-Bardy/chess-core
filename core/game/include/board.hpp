@@ -6,12 +6,17 @@
 #ifndef _BOARD_HPP_
 #define _BOARD_HPP_
 
-class Piece;
-#include "piece.hpp"
-class Square;
-#include "square.hpp"
 #include <iostream>
 #include <vector>
+
+#include "piece.hpp"
+#include "king.hpp"
+#include "queen.hpp"
+#include "bishop.hpp"
+#include "knight.hpp"
+#include "rook.hpp"
+#include "pawn.hpp"
+#include "square.hpp"
 
 #define BOARD_SIZE_MAX (8)
 
@@ -20,8 +25,24 @@ class Board
 protected:
     bool                isInitialize;
     Square*             board[BOARD_SIZE_MAX][BOARD_SIZE_MAX];
-    std::vector<Piece*> white_pieces;
-    std::vector<Piece*> balck_pieces;
+    std::vector<Piece*> whitePieces;
+    std::vector<Piece*> balckPieces;
+
+    /* White pieces */
+    King*   whiteKing;
+    Queen*  whiteQueen;
+    Bishop* whiteBishops[2];
+    Knight* whiteKnights[2];
+    Rook*   whiteRooks[2];
+    Pawn*   whitePawns[8];
+
+    /* Black pieces */
+    King*   blackKing;
+    Queen*  blackQueen;
+    Bishop* blackBishops[2];
+    Knight* blackKnights[2];
+    Rook*   blackRooks[2];
+    Pawn*   blackPawns[8];
 
 public:
     /**
@@ -45,12 +66,22 @@ public:
     void startUp();
 
     /**
-     * @brief Get the square at the given position on the board
-     * @param[in] _x X square position
-     * @param[in] _y Y square position
-     * @return The square
+     * @brief Move a piece to the desired position
+     * @param[in] piece Piece to move
+     * @param[in] x X position to move
+     * @param[in] y Y position to move
+     * @return true if the piece has moved, false otherwise
      */
-    Square* getSquare(int _x, int _y);
+    bool movePiece(Piece* piece, int x, int y);
+
+    /**
+     * @brief Select a piece on the board
+     * @param[out] piece Piece selected
+     * @param[in] x X position where to select the piece
+     * @param[in] y Y position where to select the piece
+     * @return true if the piece is selected, false otherwise
+     */
+    bool selectPiece(Piece** piece, int x, int y);
 
     /**
      * @brief Print board

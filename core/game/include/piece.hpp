@@ -8,6 +8,8 @@
 
 #include <iostream>
 
+#include "square.hpp"
+
 class Piece
 {
 #define PIECE_WHITE (true)
@@ -94,7 +96,7 @@ public:
      * @brief Get the value of the piece
      * @return The value of the piece
      */
-    virtual int getValue(void) const = 0;
+    virtual SquareValue getValue(void) const = 0;
 
     /**
      * @brief Print the piece

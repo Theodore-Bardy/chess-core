@@ -7,13 +7,14 @@
 #define _PAWN_HPP_
 
 #include "piece.hpp"
+#include "square.hpp"
 
 /**
  * @brief Pawn default value
  */
 #define PAWN_VALUE           (1)
-#define PAWN_BLACK_DEFAULT_Y (7)
-#define PAWN_WHITE_DEFAULT_Y (2)
+#define PAWN_BLACK_DEFAULT_Y (SQUARE_Y_7)
+#define PAWN_WHITE_DEFAULT_Y (SQUARE_Y_2)
 
 class Pawn : public Piece
 {
@@ -66,7 +67,7 @@ public:
      * @brief Get the value of the pawn
      * @return The value of the pawn
      */
-    virtual int getValue(void) const;
+    virtual SquareValue getValue(void) const;
 
     /**
      * @brief Print pawn

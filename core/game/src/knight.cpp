@@ -23,7 +23,7 @@ bool
 Knight::move(int _x, int _y)
 {
     /* Check desired position exists and it is not the current position */
-    if ((_x > 8) || (_x < 1) || (_y > 8) || (_y < 1) || ((_x == x) && (_y == y)))
+    if ((_x > 7) || (_x < 0) || (_y > 7) || (_y < 0) || ((_x == x) && (_y == y)))
     {
         return false;
     }
@@ -40,10 +40,10 @@ Knight::move(int _x, int _y)
     return false;
 }
 
-int
+SquareValue
 Knight::getValue(void) const
 {
-    return KNIGHT_VALUE;
+    return KnightValue;
 }
 
 void

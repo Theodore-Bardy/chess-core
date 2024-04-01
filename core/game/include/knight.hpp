@@ -7,19 +7,20 @@
 #define _KNIGHT_HPP_
 
 #include "piece.hpp"
+#include "square.hpp"
 
 /**
  * @brief Knight default value
  */
 #define KNIGHT_VALUE             (3)
-#define KNIGHT_1_BLACK_DEFAULT_X (2)
-#define KNIGHT_1_BLACK_DEFAULT_Y (8)
-#define KNIGHT_2_BLACK_DEFAULT_X (7)
-#define KNIGHT_2_BLACK_DEFAULT_Y (8)
-#define KNIGHT_1_WHITE_DEFAULT_X (2)
-#define KNIGHT_1_WHITE_DEFAULT_Y (1)
-#define KNIGHT_2_WHITE_DEFAULT_X (7)
-#define KNIGHT_2_WHITE_DEFAULT_Y (1)
+#define KNIGHT_1_BLACK_DEFAULT_X (SQUARE_X_B)
+#define KNIGHT_1_BLACK_DEFAULT_Y (SQUARE_Y_8)
+#define KNIGHT_2_BLACK_DEFAULT_X (SQUARE_X_G)
+#define KNIGHT_2_BLACK_DEFAULT_Y (SQUARE_Y_8)
+#define KNIGHT_1_WHITE_DEFAULT_X (SQUARE_X_B)
+#define KNIGHT_1_WHITE_DEFAULT_Y (SQUARE_Y_1)
+#define KNIGHT_2_WHITE_DEFAULT_X (SQUARE_X_G)
+#define KNIGHT_2_WHITE_DEFAULT_Y (SQUARE_Y_1)
 
 class Knight : public Piece
 {
@@ -64,7 +65,7 @@ public:
      * @brief Get the value of the knight
      * @return The value of the knight
      */
-    virtual int getValue(void) const;
+    virtual SquareValue getValue(void) const;
 
     /**
      * @brief Print knight

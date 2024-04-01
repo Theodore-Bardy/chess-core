@@ -7,19 +7,20 @@
 #define _ROOK_HPP_
 
 #include "piece.hpp"
+#include "square.hpp"
 
 /**
  * @brief Rook default value
  */
 #define ROOK_VALUE             (5)
-#define ROOK_1_BLACK_DEFAULT_X (1)
-#define ROOK_1_BLACK_DEFAULT_Y (8)
-#define ROOK_2_BLACK_DEFAULT_X (8)
-#define ROOK_2_BLACK_DEFAULT_Y (8)
-#define ROOK_1_WHITE_DEFAULT_X (1)
-#define ROOK_1_WHITE_DEFAULT_Y (1)
-#define ROOK_2_WHITE_DEFAULT_X (8)
-#define ROOK_2_WHITE_DEFAULT_Y (1)
+#define ROOK_1_BLACK_DEFAULT_X (SQUARE_X_A)
+#define ROOK_1_BLACK_DEFAULT_Y (SQUARE_Y_8)
+#define ROOK_2_BLACK_DEFAULT_X (SQUARE_X_H)
+#define ROOK_2_BLACK_DEFAULT_Y (SQUARE_Y_8)
+#define ROOK_1_WHITE_DEFAULT_X (SQUARE_X_A)
+#define ROOK_1_WHITE_DEFAULT_Y (SQUARE_Y_1)
+#define ROOK_2_WHITE_DEFAULT_X (SQUARE_X_H)
+#define ROOK_2_WHITE_DEFAULT_Y (SQUARE_Y_1)
 
 class Rook : public Piece
 {
@@ -74,7 +75,7 @@ public:
      * @brief Get the value of the rook
      * @return The value of the rook
      */
-    virtual int getValue(void) const;
+    virtual SquareValue getValue(void) const;
 
     /**
      * @brief Print rook

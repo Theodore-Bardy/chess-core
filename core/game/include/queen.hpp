@@ -7,15 +7,16 @@
 #define _QUEEN_HPP_
 
 #include "piece.hpp"
+#include "square.hpp"
 
 /**
  * @brief Queen default value
  */
 #define QUEEN_VALUE           (9)
-#define QUEEN_BLACK_DEFAULT_X (4)
-#define QUEEN_BLACK_DEFAULT_Y (8)
-#define QUEEN_WHITE_DEFAULT_X (4)
-#define QUEEN_WHITE_DEFAULT_Y (1)
+#define QUEEN_BLACK_DEFAULT_X (SQUARE_X_D)
+#define QUEEN_BLACK_DEFAULT_Y (SQUARE_Y_8)
+#define QUEEN_WHITE_DEFAULT_X (SQUARE_X_D)
+#define QUEEN_WHITE_DEFAULT_Y (SQUARE_Y_1)
 
 class Queen : public Piece
 {
@@ -60,7 +61,7 @@ public:
      * @brief Get the value of the queen
      * @return The value of the queen
      */
-    virtual int getValue(void) const;
+    virtual SquareValue getValue(void) const;
 
     /**
      * @brief Print queen
