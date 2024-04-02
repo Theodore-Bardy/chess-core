@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 
+#include "board.hpp"
 #include "move.hpp"
 
 using namespace std;
@@ -16,8 +17,9 @@ using namespace std;
 class Game
 {
 private:
-    vector<Move> gameDescription;
-    int          index;
+    Board              gameBoard;
+    std::vector<Move*> moves;
+    int                moveIndex;
 
 public:
     /**
@@ -28,45 +30,25 @@ public:
     /**
      * @brief Default destructor
      */
-    ~Game() = default;
+    ~Game();
 
     /**
-     * @brief Add a move into the gameDescription
-     * @param[in] new_move New move to add
+     * @brief Add a move into the moves vector
+     * @param[in] xStart X position where select the piece
+     * @param[in] yStart Y position where select the piece
+     * @param[in] xEnd X position where move the piece
+     * @param[in] yEnd Y position where move the piece
+     * @return true if the move is possible, false otherwise
      */
-    void addMove(Move const& new_move);
+    bool addMove(int xStart, int yStart, int xEnd, int yEnd);
 
     /**
-     * @brief Returns the first move of the game
-     * @return First move of the game
+     * @brief Returns the move index
+     * @return The move index attribute
      */
-    Move& firstMove(void);
-
-    /**
-     * @brief Returns the previous move depending on the index
-     * @return Previous move
-     */
-    Move& previousMove(void);
-
-    /**
-     * @brief Returns the next move depending on the index
-     * @return Next move
-     */
-    Move& nextMove(void);
-
-    /**
-     * @brief Returns the last move of the game
-     * @return Last move of the game
-     */
-    Move& lastMove(void);
-
-    /**
-     * @brief Returns the index attribute
-     * @return index attribute
-     */
-    int getIndex(void)
+    int getMoveIndex(void) const
     {
-        return index;
+        return moveIndex;
     }
 
     /**

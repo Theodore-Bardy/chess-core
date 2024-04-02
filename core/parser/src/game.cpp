@@ -9,43 +9,42 @@
 using namespace std;
 
 Game::Game()
-    : index(0)
+    : moveIndex(0)
 {
+    gameBoard.startUp();
 }
 
-void
-Game::addMove(Move const& new_move)
+Game::~Game()
 {
-    gameDescription.push_back(new_move);
+    /* Release moves vector */
+    for (Move* m : moves)
+    {
+        delete m;
+    }
 }
 
-Move&
-Game::firstMove(void)
+bool
+Game::addMove(int xStart, int yStart, int xEnd, int yEnd)
 {
-    index = 0;
-    return gameDescription.at(index);
-}
+    Piece* p = nullptr;
 
-Move&
-Game::previousMove(void)
-{
-    /* Decrement index except if it already the first move */
-    index -= (index == 0) ? 0 : 1;
-    return gameDescription.at(index);
-}
+    /* Select piece */
+    if (!gameBoard.selectPiece(&p, xStart, yStart))
+    {
+        return false;
+    }
 
-Move&
-Game::nextMove(void)
-{
-    index += (index == gameDescription.size() - 1U) ? 0 : 1;;
-    return gameDescription.at(index);
-}
+    /* Move piece */
+    if (!gameBoard.movePiece(p, xEnd, yEnd))
+    {
+        return false;
+    }
 
-Move&
-Game::lastMove(void)
-{
-    index = gameDescription.size() - 1U;
-    return gameDescription.at(index);
+    /* Add move into moves vector */
+    moves.push_back(new Move(p, xStart, yStart, xEnd, yEnd));
+    moveIndex++;
+
+    return true;
 }
 
 void
@@ -54,20 +53,22 @@ Game::print(std::ostream& os) const
     int whiteMove = 1;
     int blackMove = 1;
 
-    os << "[" << index << "]";
-    for (auto it : gameDescription)
+    os << "[" << moveIndex << "]";
+    for (auto m : moves)
     {
         if (whiteMove == blackMove)
         {
-            os << " " << whiteMove << ". " << it;
+            os << " " << whiteMove << ". " << *m;
             whiteMove++;
         }
         else
         {
-            os << " " << blackMove << ".. " << it;
+            os << " " << *m;
             blackMove++;
         }
     }
+
+    os << "\n\n" << gameBoard;
 }
 
 std::ostream&
