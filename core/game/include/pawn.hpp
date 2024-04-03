@@ -59,17 +59,19 @@ public:
      * @brief Check if the piece is able to move a the desired position
      * @param[in] _x Desired X position
      * @param[in] _y Desired Y position
+     * @param[in] flags Move flags
      * @return true if the piece is able to move, otherwise false
      */
-    virtual bool isAbleToMove(int _x, int _y) const;
+    virtual bool isAbleToMove(int _x, int _y, int flags) const;
 
     /**
      * @brief Move the pawn
      * @param[in] x Desired X position
      * @param[in] y Desired Y position
+     * @param[in] flags Move flags
      * @return true if the pawn has moved to the desired destination, false otherwise
      */
-    virtual bool move(int _x, int _y);
+    virtual bool move(int _x, int _y, int flags);
 
     /**
      * @brief Get the value of the pawn

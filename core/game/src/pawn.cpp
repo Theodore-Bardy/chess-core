@@ -4,6 +4,7 @@
  */
 
 #include "pawn.hpp"
+#include "move.hpp"
 
 Pawn::Pawn(bool _color, int _x)
     : Piece(_color, _x, 0)
@@ -41,7 +42,7 @@ Pawn::promotion()
 }
 
 bool
-Pawn::isAbleToMove(int _x, int _y) const
+Pawn::isAbleToMove(int _x, int _y, int flags) const
 {
     /* Check desired position exists and it is not the current position */
     if ((_x > 7) || (_x < 0) || (_y > 7) || (_y < 0) || ((_x == x) && (_y == y)))
@@ -49,21 +50,25 @@ Pawn::isAbleToMove(int _x, int _y) const
         return false;
     }
 
-    /* Check the desired postion is reachable */
-    if (color)
+    /* If the pawn is eating it must move 1 square right or left, otherwise remain on the same column */
+    if (((MOVE_FLAG_EAT == (flags & MOVE_FLAG_EAT)) && ((_x == x + 1) || (_x == x - 1))) || ((0 == (flags & MOVE_FLAG_EAT)) && (_x == x)))
     {
-        /* White pawn must increase Y at each move */
-        if ((_y > y) && ((_y == y + 1) || (!hasMoved && (_y == y + 2))))
+        /* Check the desired postion is reachable */
+        if (color)
         {
-            return true;
+            /* White pawn must increase Y at each move */
+            if ((_y > y) && ((_y == y + 1) || (!hasMoved && (_y == y + 2))))
+            {
+                return true;
+            }
         }
-    }
-    else
-    {
-        /* Black pawn must decrease Y at each move */
-        if ((_y < y) && ((_y == y - 1) || (!hasMoved && (_y == y - 2))))
+        else
         {
-            return true;
+            /* Black pawn must decrease Y at each move */
+            if ((_y < y) && ((_y == y - 1) || (!hasMoved && (_y == y - 2))))
+            {
+                return true;
+            }
         }
     }
 
@@ -71,10 +76,10 @@ Pawn::isAbleToMove(int _x, int _y) const
 }
 
 bool
-Pawn::move(int _x, int _y)
+Pawn::move(int _x, int _y, int flags)
 {
     /* Check the king is able to move to the desired position */
-    if (this->isAbleToMove(_x, _y))
+    if (this->isAbleToMove(_x, _y, flags))
     {
         x = _x;
         y = _y;

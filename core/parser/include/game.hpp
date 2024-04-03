@@ -38,9 +38,21 @@ public:
      * @param[in] yStart Y position where select the piece
      * @param[in] xEnd X position where move the piece
      * @param[in] yEnd Y position where move the piece
+     * @param[in] flags Flags of the movement
      * @return true if the move is possible, false otherwise
      */
-    bool addMove(int xStart, int yStart, int xEnd, int yEnd);
+    bool addMove(int xStart, int yStart, int xEnd, int yEnd, int flags);
+
+    /**
+     * @brief Add a move into the moves vector from a piece description
+     * @param[in] pieceType Piece type to move
+     * @param[in] pieceColor Piece color to move
+     * @param[in] xEnd X position where move the piece
+     * @param[in] yEnd Y position where move the piece
+     * @param[in] flags Flags of the movement
+     * @return true if the move is possible, false otherwise
+     */
+    bool addMoveFromPieceDesc(SquareValue pieceType, SquarePieceColor pieceColor, int xEnd, int yEnd, int flags);
 
     /**
      * @brief Returns the move index

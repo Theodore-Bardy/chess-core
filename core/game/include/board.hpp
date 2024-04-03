@@ -70,9 +70,10 @@ public:
      * @param[in] piece Piece to move
      * @param[in] x X position to move
      * @param[in] y Y position to move
+     * @param[in] flags Flags of the movement
      * @return true if the piece has moved, false otherwise
      */
-    bool movePiece(Piece* piece, int x, int y);
+    bool movePiece(Piece* piece, int x, int y, int flags);
 
     /**
      * @brief Select a piece on the board
@@ -82,6 +83,18 @@ public:
      * @return true if the piece is selected, false otherwise
      */
     bool selectPiece(Piece** piece, int x, int y);
+
+    /**
+     * @brief Search all pieces able to move a the given position with the given description
+     * @param[out] pieces Pieces found
+     * @param[in] pieceType Type of pieces to look for
+     * @param[in] pieceColor Color of pieces to look for
+     * @param[in] x X position where to select the piece
+     * @param[in] y Y position where
+     * @param[in] flags Move flags
+     * @return true if pieces are found, false otherwise
+     */
+    bool lookForPiecesAbleToMoveAt(std::vector<Piece*>& pieces, SquareValue pieceType, SquarePieceColor pieceColor, int x, int y, int flags);
 
     /**
      * @brief Print board

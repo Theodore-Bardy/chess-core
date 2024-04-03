@@ -201,12 +201,12 @@ Board::startUp()
 }
 
 bool
-Board::movePiece(Piece* piece, int x, int y)
+Board::movePiece(Piece* piece, int x, int y, int flags)
 {
     int oldX = piece->getX();
     int oldY = piece->getY();
 
-    if (piece->move(x, y))
+    if (piece->move(x, y, flags))
     {
         /* Reset old square */
         board[oldX][oldY]->setValue(SquareValue::Empty);
@@ -407,6 +407,39 @@ Board::selectPiece(Piece** piece, int x, int y)
     }
 
     return false;
+}
+
+bool
+Board::lookForPiecesAbleToMoveAt(std::vector<Piece*>& pieces, SquareValue pieceType, SquarePieceColor pieceColor, int x, int y, int flags)
+{
+    bool pieceFound = false;
+
+    /* White */
+    if (pieceColor == White)
+    {
+        for (auto p : whitePieces)
+        {
+            if ((p->getValue() == pieceType) && p->isAlive() && p->isAbleToMove(x, y, flags))
+            {
+                pieces.push_back(p);
+                pieceFound = true;
+            }
+        }
+    }
+    /* Black */
+    else
+    {
+        for (auto p : balckPieces)
+        {
+            if ((p->getValue() == pieceType) && p->isAlive() && p->isAbleToMove(x, y, flags))
+            {
+                pieces.push_back(p);
+                pieceFound = true;
+            }
+        }
+    }
+
+    return pieceFound;
 }
 
 void
