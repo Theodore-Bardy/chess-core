@@ -42,7 +42,7 @@ Rook::castling(bool side)
 }
 
 bool
-Rook::move(int _x, int _y)
+Rook::isAbleToMove(int _x, int _y) const
 {
     /* Check desired position exists and it is not the current position */
     if ((_x > 7) || (_x < 0) || (_y > 7) || (_y < 0) || ((_x == x) && (_y == y)))
@@ -52,6 +52,17 @@ Rook::move(int _x, int _y)
 
     /* The rook moves along a rank, check the desired postion is reachable */
     if ((_x == x) || (_y == y))
+    {
+        return true;
+    }
+    return false;
+}
+
+bool
+Rook::move(int _x, int _y)
+{
+    /* Check the king is able to move to the desired position */
+    if (this->isAbleToMove(_x, _y))
     {
         x = _x;
         y = _y;

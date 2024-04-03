@@ -35,7 +35,7 @@ Queen::~Queen()
 }
 
 bool
-Queen::move(int _x, int _y)
+Queen::isAbleToMove(int _x, int _y) const
 {
     /* Check desired position exists and it is not the current position */
     if ((_x > 7) || (_x < 0) || (_y > 7) || (_y < 0) || ((_x == x) && (_y == y)))
@@ -46,6 +46,18 @@ Queen::move(int _x, int _y)
     /* The queen moves in any direction at any distance, check the desired postion
    * is reachable */
     if ((_x == x) || (_y == y) || (sqrt(pow(x - _x, 2)) == sqrt(pow(y - _y, 2))))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool
+Queen::move(int _x, int _y)
+{
+    /* Check the king is able to move to the desired position */
+    if (this->isAbleToMove(_x, _y))
     {
         x = _x;
         y = _y;

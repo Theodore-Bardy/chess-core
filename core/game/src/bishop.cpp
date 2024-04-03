@@ -21,7 +21,7 @@ Bishop::~Bishop()
 }
 
 bool
-Bishop::move(int _x, int _y)
+Bishop::isAbleToMove(int _x, int _y) const
 {
     /* Check desired position exists and it is not the current position */
     if ((_x > 7) || (_x < 0) || (_y > 7) || (_y < 0) || ((_x == x) && (_y == y)))
@@ -31,6 +31,18 @@ Bishop::move(int _x, int _y)
 
     /* The bishop moves along a diagonal, check the desired postion is reachable */
     if (sqrt(pow(x - _x, 2)) == sqrt(pow(y - _y, 2)))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool
+Bishop::move(int _x, int _y)
+{
+    /* Check the king is able to move to the desired position */
+    if (this->isAbleToMove(_x, _y))
     {
         x = _x;
         y = _y;

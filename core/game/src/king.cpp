@@ -63,7 +63,7 @@ King::castling(bool side)
 }
 
 bool
-King::move(int _x, int _y)
+King::isAbleToMove(int _x, int _y) const
 {
     /* Check desired position exists and it is not the current position */
     if ((_x > 7) || (_x < 0) || (_y > 7) || (_y < 0) || ((_x == x) && (_y == y)))
@@ -76,6 +76,18 @@ King::move(int _x, int _y)
     if ((_x <= (x + 1)) && (_x >= (x - 1)) && (_y <= (y + 1)) && (_y >= (y - 1)))
     {
         // TODO check is the king is check on the new square
+        return true;
+    }
+
+    return false;
+}
+
+bool
+King::move(int _x, int _y)
+{
+    /* Check the king is able to move to the desired position */
+    if (this->isAbleToMove(_x, _y))
+    {
         x = _x;
         y = _y;
         return true;

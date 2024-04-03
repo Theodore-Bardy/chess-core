@@ -41,7 +41,7 @@ Pawn::promotion()
 }
 
 bool
-Pawn::move(int _x, int _y)
+Pawn::isAbleToMove(int _x, int _y) const
 {
     /* Check desired position exists and it is not the current position */
     if ((_x > 7) || (_x < 0) || (_y > 7) || (_y < 0) || ((_x == x) && (_y == y)))
@@ -55,8 +55,6 @@ Pawn::move(int _x, int _y)
         /* White pawn must increase Y at each move */
         if ((_y > y) && ((_y == y + 1) || (!hasMoved && (_y == y + 2))))
         {
-            x = _x;
-            y = _y;
             return true;
         }
     }
@@ -65,10 +63,22 @@ Pawn::move(int _x, int _y)
         /* Black pawn must decrease Y at each move */
         if ((_y < y) && ((_y == y - 1) || (!hasMoved && (_y == y - 2))))
         {
-            x = _x;
-            y = _y;
             return true;
         }
+    }
+
+    return false;
+}
+
+bool
+Pawn::move(int _x, int _y)
+{
+    /* Check the king is able to move to the desired position */
+    if (this->isAbleToMove(_x, _y))
+    {
+        x = _x;
+        y = _y;
+        return true;
     }
 
     return false;

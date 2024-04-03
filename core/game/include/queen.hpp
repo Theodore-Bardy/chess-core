@@ -50,6 +50,14 @@ public:
     }
 
     /**
+     * @brief Check if the piece is able to move a the desired position
+     * @param[in] _x Desired X position
+     * @param[in] _y Desired Y position
+     * @return true if the piece is able to move, otherwise false
+     */
+    virtual bool isAbleToMove(int _x, int _y) const;
+
+    /**
      * @brief Move the queen
      * @param[in] x Desired X position
      * @param[in] y Desired Y position
