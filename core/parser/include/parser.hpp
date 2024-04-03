@@ -16,7 +16,6 @@ using namespace std;
 class Parser
 {
 private:
-
 public:
     /**
      * @brief Default constructor
