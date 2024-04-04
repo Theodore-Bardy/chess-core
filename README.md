@@ -3,8 +3,25 @@
 ![workflow](https://github.com/Theodore-Bardy/chess-core/actions/workflows/main.yml/badge.svg) 
 ![version](https://img.shields.io/badge/version-0.0.1-blue)
 
-Chess game Core tool development in C++. The goal of this tool is to be able to save chess games to studies them.
+The [chess-core](https://github.com/Theodore-Bardy/chess-core) project is a tool which allows to review, work and study your chess games for free, developed in C++.
 
 This project implement:
- - The chess game pieces behavior and logic.
- - A PGN parser able to read chess games.
+ - A full chess game, with the normal behavior and logic.
+ - A parser able to read and save chess games at the PGN format.
+
+## Development tools
+
+ - CMake (>= 3.19)
+    - `sudo apt install cmake`
+ - make
+    - `sudo apt install make`
+ - gcc/g++ toolchain
+    - `sudo apt install build-essential`
+
+## TODO
+
+- [ ] Add doxygen documentation
+- [ ] Finish PGN parser
+- [ ] Implement a TUI (Terminal User Interface)
+    - [C++ FTXUI](https://github.com/ArthurSonzogni/FTXUI)
+    - [Rust tui](https://docs.rs/tui/latest/tui/)
