@@ -50,8 +50,29 @@ Pawn::isAbleToMove(int _x, int _y, int flags) const
         return false;
     }
 
-    /* If the pawn is eating it must move 1 square right or left, otherwise remain on the same column */
-    if (((MOVE_FLAG_EAT == (flags & MOVE_FLAG_EAT)) && ((_x == x + 1) || (_x == x - 1))) || ((0 == (flags & MOVE_FLAG_EAT)) && (_x == x)))
+    /* If the pawn is eating it must move 1 square right or left */
+    if ((MOVE_FLAG_EAT == (flags & MOVE_FLAG_EAT)) && ((_x == x + 1) || (_x == x - 1)))
+    {
+        /* Check the desired postion is reachable */
+        if (color)
+        {
+            /* White pawn must increase Y by one square */
+            if (_y == y + 1)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            /* Black pawn must decrease Y by one square */
+            if (_y == y - 1)
+            {
+                return true;
+            }
+        }
+    }
+    /* If the pawn isn't eating it must stay on his column */
+    else if ((0 == (flags & MOVE_FLAG_EAT)) && (_x == x))
     {
         /* Check the desired postion is reachable */
         if (color)

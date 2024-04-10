@@ -10,6 +10,7 @@
 #include "knight.hpp"
 #include "rook.hpp"
 #include "pawn.hpp"
+#include "move.hpp"
 
 Board::Board()
     : isInitialize(false)
@@ -205,6 +206,20 @@ Board::movePiece(Piece* piece, int x, int y, int flags)
 {
     int oldX = piece->getX();
     int oldY = piece->getY();
+
+    /* Compute flags - take */
+    if ((MOVE_FLAG_EAT == (flags & MOVE_FLAG_EAT)))
+    {
+        Piece* p = nullptr;
+        if (this->selectPiece(&p, x, y))
+        {
+            piece->eat(*p); // TODO - eat is not to best method
+
+            /* Reset square */
+            board[x][y]->setValue(SquareValue::Empty);
+            board[x][y]->setColor(SquarePieceColor::NoPiece);
+        }
+    }
 
     if (piece->move(x, y, flags))
     {
