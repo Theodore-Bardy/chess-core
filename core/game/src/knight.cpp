@@ -61,7 +61,7 @@ Knight::getValue(void) const
 void
 Knight::print(std::ostream& os) const
 {
-    os << (alive ? (color ? " ♘ " : " ♞ ") : "   ");
+    os << (color ? " ♘ " : " ♞ ");
 }
 
 std::ostream&

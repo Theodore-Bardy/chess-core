@@ -105,7 +105,7 @@ King::getValue(void) const
 void
 King::print(std::ostream& os) const
 {
-    os << (alive ? (color ? " ♔ " : " ♚ ") : "   ");
+    os << (color ? " ♔ " : " ♚ ");
 }
 
 std::ostream&
