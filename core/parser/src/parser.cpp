@@ -189,7 +189,96 @@ getMoveDescriptionFromString(string const& move, SquareValue& pieceType, int& xE
     }
 
     /* Other piece moves */
-    // TODO
+    else
+    {
+        switch (move.at(0))
+        {
+            /* King */
+            case 'K':
+                if (move.at(1) == 'x')
+                {
+                    flags |= MOVE_FLAG_EAT;
+                    xEnd = getXfromChar(move.at(2));
+                    yEnd = getYfromChar(move.at(3));
+                }
+                else
+                {
+                    xEnd = getXfromChar(move.at(1));
+                    yEnd = getYfromChar(move.at(2));
+                }
+                pieceType = KingValue;
+                break;
+
+            /* Queen */
+            case 'Q':
+                if (move.at(1) == 'x')
+                {
+                    flags |= MOVE_FLAG_EAT;
+                    xEnd = getXfromChar(move.at(2));
+                    yEnd = getYfromChar(move.at(3));
+                }
+                else
+                {
+                    xEnd = getXfromChar(move.at(1));
+                    yEnd = getYfromChar(move.at(2));
+                }
+                pieceType = QueenValue;
+                break;
+
+            /* Bishop */
+            case 'B':
+                if (move.at(1) == 'x')
+                {
+                    flags |= MOVE_FLAG_EAT;
+                    xEnd = getXfromChar(move.at(2));
+                    yEnd = getYfromChar(move.at(3));
+                }
+                else
+                {
+                    xEnd = getXfromChar(move.at(1));
+                    yEnd = getYfromChar(move.at(2));
+                }
+                pieceType = BishopValue;
+                break;
+
+            /* Knight */
+            case 'N':
+                if (move.at(1) == 'x')
+                {
+                    flags |= MOVE_FLAG_EAT;
+                    xEnd = getXfromChar(move.at(2));
+                    yEnd = getYfromChar(move.at(3));
+                }
+                else
+                {
+                    xEnd = getXfromChar(move.at(1));
+                    yEnd = getYfromChar(move.at(2));
+                }
+                pieceType = KnightValue;
+                break;
+
+            /* Rook */
+            case 'R':
+                if (move.at(1) == 'x')
+                {
+                    flags |= MOVE_FLAG_EAT;
+                    xEnd = getXfromChar(move.at(2));
+                    yEnd = getYfromChar(move.at(3));
+                }
+                else
+                {
+                    xEnd = getXfromChar(move.at(1));
+                    yEnd = getYfromChar(move.at(2));
+                }
+                pieceType = RookValue;
+                break;
+
+            default:
+                /* Should not be here */
+                assert(false);
+                break;
+        }
+    }
 
     return true;
 }
