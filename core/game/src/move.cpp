@@ -8,12 +8,13 @@
 
 using namespace std;
 
-Move::Move(Piece* _piece, int _xStart, int _yStart, int _xEnd, int _yEnd)
+Move::Move(Piece* _piece, int _xStart, int _yStart, int _xEnd, int _yEnd, int _flags)
     : piece(_piece)
     , xStart(_xStart)
     , yStart(_yStart)
     , xEnd(_xEnd)
     , yEnd(_yEnd)
+    , flags(_flags)
 {
 }
 
@@ -22,6 +23,13 @@ Move::print(std::ostream& os) const
 {
     os << *piece;
 
+    /* Take flag */
+    if (MOVE_FLAG_EAT == (flags & MOVE_FLAG_EAT))
+    {
+        os << "x";
+    }
+
+    /* Colomn */
     switch (xEnd)
     {
         case SQUARE_X_A:
@@ -53,6 +61,7 @@ Move::print(std::ostream& os) const
             break;
     }
 
+    /* Row */
     switch (yEnd)
     {
         case SQUARE_Y_1:

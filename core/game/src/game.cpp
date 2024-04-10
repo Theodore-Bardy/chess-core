@@ -41,7 +41,7 @@ Game::addMove(int xStart, int yStart, int xEnd, int yEnd, int flags)
     }
 
     /* Add move into moves vector */
-    moves.push_back(new Move(p, xStart, yStart, xEnd, yEnd));
+    moves.push_back(new Move(p, xStart, yStart, xEnd, yEnd, flags));
     moveIndex++;
 
     return true;

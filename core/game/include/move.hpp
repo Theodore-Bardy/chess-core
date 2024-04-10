@@ -27,12 +27,13 @@ private:
     int    yStart; /**< Y position before move */
     int    xEnd;   /**< X position after move */
     int    yEnd;   /**< Y position after move */
+    int    flags;  /**< Move flags */
 
 public:
     /**
      * @brief Construct a default rook
      */
-    Move(Piece* _piece, int _xStart, int _yStart, int _xEnd, int _yEnd);
+    Move(Piece* _piece, int _xStart, int _yStart, int _xEnd, int _yEnd, int _flags);
 
     /**
      * @brief Returns the moving piece
@@ -77,6 +78,15 @@ public:
     int getYEnd(void) const
     {
         return yEnd;
+    }
+
+    /**
+     * @brief Returns the move flags
+     * @return Move flags
+     */
+    int getFlags(void) const
+    {
+        return flags;
     }
 
     /**
