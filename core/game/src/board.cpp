@@ -460,6 +460,16 @@ Board::lookForPiecesAbleToMoveAt(std::vector<Piece*>& pieces, SquareValue pieceT
 void
 Board::print(std::ostream& os) const
 {
+    /* Print dead white pieces */
+    for (auto p : whitePieces)
+    {
+        if (!p->isAlive())
+        {
+            os << *p;
+        }
+    }
+    os << "\n";
+
     for (int Y = 1; Y <= BOARD_SIZE_MAX; Y++)
     {
         os << (BOARD_SIZE_MAX - Y + 1) << "| ";
@@ -472,6 +482,16 @@ Board::print(std::ostream& os) const
 
     os << "___________________________\n";
     os << "  | a  b  c  d  e  f  g  h \n";
+
+    /* Print dead black pieces */
+    for (auto p : blackPieces)
+    {
+        if (!p->isAlive())
+        {
+            os << *p;
+        }
+    }
+    os << "\n";
 }
 
 std::ostream&
