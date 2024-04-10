@@ -6,7 +6,8 @@
 #include "main.hpp"
 #include <iostream>
 
-#include "board.hpp"
+#include "game.hpp"
+#include "parser.hpp"
 
 using namespace std;
 
@@ -18,46 +19,40 @@ static bool computeMove(string const& move, int& x, int& y);
 int
 main(int argc, char const* argv[])
 {
-    Board gameBoard;
-    gameBoard.startUp();
+    Game gameBoard;
 
     cout << "   Chess core demo:" << endl;
     cout << gameBoard << endl;
 
     Piece* p = nullptr;
     string move;
-    int    x;
-    int    y;
+    int    xStart;
+    int    yStart;
+    int    xEnd;
+    int    yEnd;
 
     while (true)
     {
         cout << "Please select a piece: ";
         cin >> move;
-        if (computeMove(move, x, y))
+        if (computeMove(move, xStart, yStart))
         {
-            if (gameBoard.selectPiece(&p, x, y))
+            cout << "Please select a square to move the piece: ";
+            cin >> move;
+            if (computeMove(move, xEnd, yEnd))
             {
-                cout << "Please select a square to move the " << *p << ": ";
-                cin >> move;
-                if (computeMove(move, x, y))
+                if (gameBoard.addMove(xStart, yStart, xEnd, yEnd, 0))
                 {
-                    if (gameBoard.movePiece(p, x, y))
-                    {
-                        cout << gameBoard << endl;
-                    }
-                    else
-                    {
-                        cout << "[Error] Unable to move the piece" << endl;
-                    }
+                    cout << gameBoard << endl;
                 }
                 else
                 {
-                    cout << "[Error] Wrong input" << endl;
+                    cout << "[Error] Unable to move the piece" << endl;
                 }
             }
             else
             {
-                cout << "[Error] Unable to select the piece" << endl;
+                cout << "[Error] Wrong input" << endl;
             }
         }
         else
