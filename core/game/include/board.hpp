@@ -26,7 +26,7 @@ protected:
     bool                isInitialize;
     Square*             board[BOARD_SIZE_MAX][BOARD_SIZE_MAX];
     std::vector<Piece*> whitePieces;
-    std::vector<Piece*> balckPieces;
+    std::vector<Piece*> blackPieces;
 
     /* White pieces */
     King*   whiteKing;

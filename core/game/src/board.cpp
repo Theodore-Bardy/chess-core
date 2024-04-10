@@ -45,9 +45,9 @@ Board::Board(Board const& boardToCopy)
     }
 
     /* Black pieces */
-    for (auto const& it : boardToCopy.balckPieces)
+    for (auto const& it : boardToCopy.blackPieces)
     {
-        balckPieces.push_back(it->clone());
+        blackPieces.push_back(it->clone());
     }
 }
 
@@ -68,7 +68,7 @@ Board::~Board()
         delete p;
     }
 
-    for (Piece* p : balckPieces)
+    for (Piece* p : blackPieces)
     {
         delete p;
     }
@@ -135,49 +135,49 @@ Board::startUp()
         King* black_king = new King(PIECE_BLACK);
         board[KING_BLACK_DEFAULT_X][KING_BLACK_DEFAULT_Y]->setValue(SquareValue::KingValue);
         board[KING_BLACK_DEFAULT_X][KING_BLACK_DEFAULT_Y]->setColor(SquarePieceColor::Black);
-        balckPieces.push_back(black_king);
+        blackPieces.push_back(black_king);
         blackKing = black_king;
 
         Queen* black_queen = new Queen(PIECE_BLACK);
         board[QUEEN_BLACK_DEFAULT_X][QUEEN_BLACK_DEFAULT_Y]->setValue(SquareValue::QueenValue);
         board[QUEEN_BLACK_DEFAULT_X][QUEEN_BLACK_DEFAULT_Y]->setColor(SquarePieceColor::Black);
-        balckPieces.push_back(black_queen);
+        blackPieces.push_back(black_queen);
         blackQueen = black_queen;
 
         Bishop* black_bishop = new Bishop(PIECE_BLACK, BISHOP_1_BLACK_DEFAULT_X, BISHOP_1_BLACK_DEFAULT_Y);
         board[BISHOP_1_BLACK_DEFAULT_X][BISHOP_1_BLACK_DEFAULT_Y]->setValue(SquareValue::BishopValue);
         board[BISHOP_1_BLACK_DEFAULT_X][BISHOP_1_BLACK_DEFAULT_Y]->setColor(SquarePieceColor::Black);
-        balckPieces.push_back(black_bishop);
+        blackPieces.push_back(black_bishop);
         blackBishops[0] = black_bishop;
 
         black_bishop = new Bishop(PIECE_BLACK, BISHOP_2_BLACK_DEFAULT_X, BISHOP_2_BLACK_DEFAULT_Y);
         board[BISHOP_2_BLACK_DEFAULT_X][BISHOP_2_BLACK_DEFAULT_Y]->setValue(SquareValue::BishopValue);
         board[BISHOP_2_BLACK_DEFAULT_X][BISHOP_2_BLACK_DEFAULT_Y]->setColor(SquarePieceColor::Black);
-        balckPieces.push_back(black_bishop);
+        blackPieces.push_back(black_bishop);
         blackBishops[1] = black_bishop;
 
         Knight* black_knight = new Knight(PIECE_BLACK, KNIGHT_1_BLACK_DEFAULT_X, KNIGHT_1_BLACK_DEFAULT_Y);
         board[KNIGHT_1_BLACK_DEFAULT_X][KNIGHT_1_BLACK_DEFAULT_Y]->setValue(SquareValue::KnightValue);
         board[KNIGHT_1_BLACK_DEFAULT_X][KNIGHT_1_BLACK_DEFAULT_Y]->setColor(SquarePieceColor::Black);
-        balckPieces.push_back(black_knight);
+        blackPieces.push_back(black_knight);
         blackKnights[0] = black_knight;
 
         black_knight = new Knight(PIECE_BLACK, KNIGHT_2_BLACK_DEFAULT_X, KNIGHT_2_BLACK_DEFAULT_Y);
         board[KNIGHT_2_BLACK_DEFAULT_X][KNIGHT_2_BLACK_DEFAULT_Y]->setValue(SquareValue::KnightValue);
         board[KNIGHT_2_BLACK_DEFAULT_X][KNIGHT_2_BLACK_DEFAULT_Y]->setColor(SquarePieceColor::Black);
-        balckPieces.push_back(black_knight);
+        blackPieces.push_back(black_knight);
         blackKnights[1] = black_knight;
 
         Rook* black_rook = new Rook(PIECE_BLACK, ROOK_1_BLACK_DEFAULT_X, ROOK_1_BLACK_DEFAULT_Y);
         board[ROOK_1_BLACK_DEFAULT_X][ROOK_1_BLACK_DEFAULT_Y]->setValue(SquareValue::RookValue);
         board[ROOK_1_BLACK_DEFAULT_X][ROOK_1_BLACK_DEFAULT_Y]->setColor(SquarePieceColor::Black);
-        balckPieces.push_back(black_rook);
+        blackPieces.push_back(black_rook);
         blackRooks[0] = black_rook;
 
         black_rook = new Rook(PIECE_BLACK, ROOK_2_BLACK_DEFAULT_X, ROOK_2_BLACK_DEFAULT_Y);
         board[ROOK_2_BLACK_DEFAULT_X][ROOK_2_BLACK_DEFAULT_Y]->setValue(SquareValue::RookValue);
         board[ROOK_2_BLACK_DEFAULT_X][ROOK_2_BLACK_DEFAULT_Y]->setColor(SquarePieceColor::Black);
-        balckPieces.push_back(black_rook);
+        blackPieces.push_back(black_rook);
         blackRooks[1] = black_rook;
 
         /* Pawns */
@@ -194,7 +194,7 @@ Board::startUp()
             Pawn* black_pawn = new Pawn(PIECE_BLACK, index);
             board[index][PAWN_BLACK_DEFAULT_Y]->setValue(SquareValue::PawnValue);
             board[index][PAWN_BLACK_DEFAULT_Y]->setColor(SquarePieceColor::Black);
-            balckPieces.push_back(black_pawn);
+            blackPieces.push_back(black_pawn);
             blackPawns[index] = black_pawn;
         }
     }
@@ -429,7 +429,7 @@ Board::lookForPiecesAbleToMoveAt(std::vector<Piece*>& pieces, SquareValue pieceT
     /* Black */
     else
     {
-        for (auto p : balckPieces)
+        for (auto p : blackPieces)
         {
             if ((p->getValue() == pieceType) && p->isAlive() && p->isAbleToMove(x, y, flags))
             {
