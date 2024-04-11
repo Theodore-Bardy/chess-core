@@ -24,7 +24,7 @@ Move::print(std::ostream& os) const
     os << *piece;
 
     /* Take flag */
-    if (MOVE_FLAG_EAT == (flags & MOVE_FLAG_EAT))
+    if (MOVE_FLAG_TAKE == (flags & MOVE_FLAG_TAKE))
     {
         os << "x";
     }

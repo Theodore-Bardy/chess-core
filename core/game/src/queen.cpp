@@ -35,8 +35,10 @@ Queen::~Queen()
 }
 
 bool
-Queen::isAbleToMove(int _x, int _y, int flags) const
+Queen::isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U]) const
 {
+    bool xReturn = false;
+
     /* Check desired position exists and it is not the current position */
     if ((_x > 7) || (_x < 0) || (_y > 7) || (_y < 0) || ((_x == x) && (_y == y)))
     {
@@ -47,10 +49,20 @@ Queen::isAbleToMove(int _x, int _y, int flags) const
    * is reachable */
     if ((_x == x) || (_y == y) || (sqrt(pow(x - _x, 2)) == sqrt(pow(y - _y, 2))))
     {
-        return true;
+        xReturn = true;
     }
 
-    return false;
+    /* Check if there is piece between current and desired position */
+    if (xReturn && (board != nullptr))
+    {
+        xReturn = this->checkWayOnMove(_x, _y, board);
+        if (xReturn)
+        {
+            xReturn = this->checkFinalOnMove(_x, _y, board);
+        }
+    }
+
+    return xReturn;
 }
 
 bool

@@ -20,8 +20,10 @@ Knight::~Knight()
 }
 
 bool
-Knight::isAbleToMove(int _x, int _y, int flags) const
+Knight::isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U]) const
 {
+    bool xReturn = false;
+
     /* Check desired position exists and it is not the current position */
     if ((_x > 7) || (_x < 0) || (_y > 7) || (_y < 0) || ((_x == x) && (_y == y)))
     {
@@ -32,10 +34,16 @@ Knight::isAbleToMove(int _x, int _y, int flags) const
     if (((_x == x + 2) && (_y == y + 1)) || ((_x == x + 2) && (_y == y - 1)) || ((_x == x - 2) && (_y == y + 1)) || ((_x == x - 2) && (_y == y - 1))
         || ((_x == x + 1) && (_y == y + 2)) || ((_x == x + 1) && (_y == y - 2)) || ((_x == x - 1) && (_y == y + 2)) || ((_x == x - 1) && (_y == y - 2)))
     {
-        return true;
+        xReturn = true;
     }
 
-    return false;
+    /* Check desired position isn't a piece of the same color */
+    if (xReturn && (board != nullptr))
+    {
+        xReturn = this->checkFinalOnMove(_x, _y, board);
+    }
+
+    return xReturn;
 }
 
 bool

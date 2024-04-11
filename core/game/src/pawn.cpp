@@ -42,8 +42,10 @@ Pawn::promotion()
 }
 
 bool
-Pawn::isAbleToMove(int _x, int _y, int flags) const
+Pawn::isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U]) const
 {
+    bool xReturn = false;
+
     /* Check desired position exists and it is not the current position */
     if ((_x > 7) || (_x < 0) || (_y > 7) || (_y < 0) || ((_x == x) && (_y == y)))
     {
@@ -51,7 +53,7 @@ Pawn::isAbleToMove(int _x, int _y, int flags) const
     }
 
     /* If the pawn is eating it must move 1 square right or left */
-    if ((MOVE_FLAG_EAT == (flags & MOVE_FLAG_EAT)) && ((_x == x + 1) || (_x == x - 1)))
+    if ((MOVE_FLAG_TAKE == (flags & MOVE_FLAG_TAKE)) && ((_x == x + 1) || (_x == x - 1)))
     {
         /* Check the desired postion is reachable */
         if (color)
@@ -59,7 +61,7 @@ Pawn::isAbleToMove(int _x, int _y, int flags) const
             /* White pawn must increase Y by one square */
             if (_y == y + 1)
             {
-                return true;
+                xReturn = true;
             }
         }
         else
@@ -67,12 +69,12 @@ Pawn::isAbleToMove(int _x, int _y, int flags) const
             /* Black pawn must decrease Y by one square */
             if (_y == y - 1)
             {
-                return true;
+                xReturn = true;
             }
         }
     }
     /* If the pawn isn't eating it must stay on his column */
-    else if ((0 == (flags & MOVE_FLAG_EAT)) && (_x == x))
+    else if ((0 == (flags & MOVE_FLAG_TAKE)) && (_x == x))
     {
         /* Check the desired postion is reachable */
         if (color)
@@ -80,7 +82,7 @@ Pawn::isAbleToMove(int _x, int _y, int flags) const
             /* White pawn must increase Y at each move */
             if ((_y > y) && ((_y == y + 1) || (!hasMoved && (_y == y + 2))))
             {
-                return true;
+                xReturn = true;
             }
         }
         else
@@ -88,12 +90,22 @@ Pawn::isAbleToMove(int _x, int _y, int flags) const
             /* Black pawn must decrease Y at each move */
             if ((_y < y) && ((_y == y - 1) || (!hasMoved && (_y == y - 2))))
             {
-                return true;
+                xReturn = true;
             }
         }
     }
 
-    return false;
+    /* Check if there is piece between current and desired position */
+    if (xReturn && (board != nullptr))
+    {
+        xReturn = this->checkWayOnMove(_x, _y, board);
+        if (xReturn)
+        {
+            xReturn = this->checkFinalOnMove(_x, _y, board);
+        }
+    }
+
+    return xReturn;
 }
 
 bool

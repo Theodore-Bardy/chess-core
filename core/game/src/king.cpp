@@ -4,6 +4,7 @@
  */
 
 #include "king.hpp"
+#include "move.hpp"
 
 King::King(bool _color)
     : Piece(_color, 0, 0)
@@ -44,7 +45,7 @@ King::~King()
 bool
 King::castling(bool side)
 {
-    if (!hasMoved)
+    if (!hasMoved && !isCheck)
     {
         // TODO check is the king is check on the way
         if (side)
@@ -56,6 +57,7 @@ King::castling(bool side)
             x -= 2;
         }
 
+        hasMoved = true;
         return true;
     }
 
@@ -63,23 +65,39 @@ King::castling(bool side)
 }
 
 bool
-King::isAbleToMove(int _x, int _y, int flags) const
+King::isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U]) const
 {
+    bool xReturn = false;
+
     /* Check desired position exists and it is not the current position */
     if ((_x > 7) || (_x < 0) || (_y > 7) || (_y < 0) || ((_x == x) && (_y == y)))
     {
         return false;
     }
 
-    /* The king moves one square in any direction, check the desired postion is
-   * reachable */
-    if ((_x <= (x + 1)) && (_x >= (x - 1)) && (_y <= (y + 1)) && (_y >= (y - 1)))
+    /* The king can castle if it hasn't move and isn't in check state */
+    if (((MOVE_FLAG_KING_CASTLE == (flags & MOVE_FLAG_KING_CASTLE)) || (MOVE_FLAG_QUEEN_CASTLE == (flags & MOVE_FLAG_QUEEN_CASTLE))) && (_y == y))
     {
-        // TODO check is the king is check on the new square
-        return true;
+        xReturn = (!hasMoved && !isCheck);
     }
 
-    return false;
+    /* The king moves one square in any direction, check the desired postion is reachable */
+    else if ((_x <= (x + 1)) && (_x >= (x - 1)) && (_y <= (y + 1)) && (_y >= (y - 1)))
+    {
+        xReturn = true;
+    }
+
+    /* Check if there is piece between current and desired position */
+    if (xReturn && (board != nullptr))
+    {
+        xReturn = this->checkWayOnMove(_x, _y, board);
+        if (xReturn)
+        {
+            xReturn = this->checkFinalOnMove(_x, _y, board);
+        }
+    }
+
+    return xReturn;
 }
 
 bool
@@ -88,8 +106,9 @@ King::move(int _x, int _y, int flags)
     /* Check the king is able to move to the desired position */
     if (this->isAbleToMove(_x, _y, flags))
     {
-        x = _x;
-        y = _y;
+        x        = _x;
+        y        = _y;
+        hasMoved = true;
         return true;
     }
 

@@ -21,6 +21,24 @@ protected:
     int  x;     /**< X position */
     int  y;     /**< Y position */
 
+    /**
+     * @brief Check the way between current and desired position excluded is empty
+     * @param[in] _x Desired X position
+     * @param[in] _y Desired Y position
+     * @param[in] board Context board
+     * @return true if the way is empty, otherwise false
+     */
+    bool checkWayOnMove(int _x, int _y, Square* board[8U][8U]) const;
+
+    /**
+     * @brief Check desired position isn't a piece of the same color
+     * @param[in] _x Desired X position
+     * @param[in] _y Desired Y position
+     * @param[in] board Context board
+     * @return true if there is no piece with the same color at the desired position, otherwise false
+     */
+    bool checkFinalOnMove(int _x, int _y, Square* board[8U][8U]) const;
+
 public:
     /**
      * @brief Forbid the default constructor
@@ -89,9 +107,10 @@ public:
      * @param[in] _x Desired X position
      * @param[in] _y Desired Y position
      * @param[in] flags Move flags
+     * @param[in] board Give more context to check the move (optional)
      * @return true if the piece is able to move, otherwise false
      */
-    virtual bool isAbleToMove(int _x, int _y, int flags) const = 0;
+    virtual bool isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U] = nullptr) const = 0;
 
     /**
      * @brief Move a piece

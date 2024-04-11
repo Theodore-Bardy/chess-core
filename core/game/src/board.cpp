@@ -208,7 +208,7 @@ Board::movePiece(Piece* piece, int x, int y, int flags)
     int oldY = piece->getY();
 
     /* Compute flags - take */
-    if ((MOVE_FLAG_EAT == (flags & MOVE_FLAG_EAT)))
+    if ((MOVE_FLAG_TAKE == (flags & MOVE_FLAG_TAKE)))
     {
         Piece* p = nullptr;
         if (this->selectPiece(&p, x, y))

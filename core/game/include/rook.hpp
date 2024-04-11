@@ -25,7 +25,8 @@
 class Rook : public Piece
 {
 private:
-    bool hasMoved; /**< Indicate if the rook has moved */
+    bool hasMoved;   /**< Indicate if the rook has moved */
+    bool isKingSide; /**< Indicate if the rook is the king side one */
 
 public:
     /**
@@ -70,7 +71,7 @@ public:
      * @param[in] flags Move flags
      * @return true if the piece is able to move, otherwise false
      */
-    virtual bool isAbleToMove(int _x, int _y, int flags) const;
+    virtual bool isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U] = nullptr) const;
 
     /**
      * @brief Move the rook
@@ -80,6 +81,15 @@ public:
      * @return true if the rook has moved to the desired destination, false otherwise
      */
     virtual bool move(int _x, int _y, int flags);
+
+    /**
+     * @brief Indicate if the rook is the king side one
+     * @return true if the rook is the king side one, false otherwise
+     */
+    bool isKingSideRook(void) const
+    {
+        return isKingSide;
+    }
 
     /**
      * @brief Get the value of the rook

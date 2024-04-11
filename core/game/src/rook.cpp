@@ -4,15 +4,27 @@
  */
 
 #include "rook.hpp"
+#include "move.hpp"
 
 Rook::Rook(bool _color, int _x, int _y)
     : Piece(_color, _x, _y)
 {
     hasMoved = false;
+
+    /* If rook is create in h1 or h8 it's a king side rook */
+    if (((ROOK_2_WHITE_DEFAULT_X == _x) && (ROOK_2_WHITE_DEFAULT_Y)) || ((ROOK_2_BLACK_DEFAULT_X == _x) && (ROOK_2_BLACK_DEFAULT_Y)))
+    {
+        isKingSide = true;
+    }
+    else
+    {
+        isKingSide = false;
+    }
 }
 
 Rook::Rook(bool _hasMoved, bool _isAlive, bool _color, int _x, int _y)
     : hasMoved(_hasMoved)
+    , isKingSide(false)
     , Piece(_isAlive, _color, _x, _y)
 {
 }
@@ -35,6 +47,7 @@ Rook::castling(bool side)
             x += 3;
         }
 
+        hasMoved = true;
         return true;
     }
 
@@ -42,20 +55,43 @@ Rook::castling(bool side)
 }
 
 bool
-Rook::isAbleToMove(int _x, int _y, int flags) const
+Rook::isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U]) const
 {
+    bool xReturn = false;
+
     /* Check desired position exists and it is not the current position */
     if ((_x > 7) || (_x < 0) || (_y > 7) || (_y < 0) || ((_x == x) && (_y == y)))
     {
         return false;
     }
 
-    /* The rook moves along a rank, check the desired postion is reachable */
-    if ((_x == x) || (_y == y))
+    /* The rook can castle if it hasn't move */
+    if (MOVE_FLAG_KING_CASTLE == (flags & MOVE_FLAG_KING_CASTLE))
     {
-        return true;
+        xReturn = (!hasMoved && isKingSide);
     }
-    return false;
+    else if (MOVE_FLAG_QUEEN_CASTLE == (flags & MOVE_FLAG_QUEEN_CASTLE))
+    {
+        xReturn = (!hasMoved && !isKingSide);
+    }
+
+    /* The rook moves along a rank, check the desired postion is reachable */
+    else if ((_x == x) || (_y == y))
+    {
+        xReturn = true;
+    }
+
+    /* Check if there is piece between current and desired position */
+    if (xReturn && (board != nullptr))
+    {
+        xReturn = this->checkWayOnMove(_x, _y, board);
+        if (xReturn)
+        {
+            xReturn = this->checkFinalOnMove(_x, _y, board);
+        }
+    }
+
+    return xReturn;
 }
 
 bool
@@ -64,8 +100,9 @@ Rook::move(int _x, int _y, int flags)
     /* Check the king is able to move to the desired position */
     if (this->isAbleToMove(_x, _y, flags))
     {
-        x = _x;
-        y = _y;
+        x        = _x;
+        y        = _y;
+        hasMoved = true;
         return true;
     }
 

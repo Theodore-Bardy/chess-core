@@ -13,7 +13,7 @@ using namespace std;
 /**
  * @brief Optional flash on a move
  */
-#define MOVE_FLAG_EAT          (0x01) /**< (0b0000_0001) */
+#define MOVE_FLAG_TAKE         (0x01) /**< (0b0000_0001) */
 #define MOVE_FLAG_KING_CASTLE  (0x02) /**< (0b0000_0010) */
 #define MOVE_FLAG_QUEEN_CASTLE (0x04) /**< (0b0000_0100) */
 #define MOVE_FLAG_CHECK        (0x08) /**< (0b0000_1000) */
