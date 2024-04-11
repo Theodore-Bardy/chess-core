@@ -85,16 +85,26 @@ public:
     bool selectPiece(Piece** piece, int x, int y);
 
     /**
-     * @brief Search all pieces able to move a the given position with the given description
-     * @param[out] pieces Pieces found
+     * @brief Check if a piece is able to reach the desired position with the given description
+     * @param[out] piece Piece found (must be nullptr)
      * @param[in] pieceType Type of pieces to look for
      * @param[in] pieceColor Color of pieces to look for
-     * @param[in] x X position where to select the piece
-     * @param[in] y Y position where
+     * @param[in] x X position to reach
+     * @param[in] y Y position to reach
      * @param[in] flags Move flags
-     * @return true if pieces are found, false otherwise
+     * @param[in] extraFlag Extra flag for ambigous moves
+     * @return true if a piece is found, false otherwise
      */
-    bool lookForPiecesAbleToMoveAt(std::vector<Piece*>& pieces, SquareValue pieceType, SquarePieceColor pieceColor, int x, int y, int flags);
+    bool checkMove(Piece** piece, SquareValue pieceType, SquarePieceColor pieceColor, int x, int y, int flags = 0, char extraFlag = ' ');
+
+    /**
+     * @brief Check if the square x, y is attacked a piece of the given color
+     * @param[in] pieceColor Color of attacking pieces
+     * @param[in] x X square position
+     * @param[in] y Y square position
+     * @return true if the square is attacked, false otherwise
+     */
+    bool isSquareAttacked(SquarePieceColor pieceColor, int x, int y);
 
     /**
      * @brief Print board

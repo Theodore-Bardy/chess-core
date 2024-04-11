@@ -22,18 +22,19 @@ using namespace std;
 class Move
 {
 private:
-    Piece* piece;  /**< The moving piece */
-    int    xStart; /**< X position before move */
-    int    yStart; /**< Y position before move */
-    int    xEnd;   /**< X position after move */
-    int    yEnd;   /**< Y position after move */
-    int    flags;  /**< Move flags */
+    Piece* piece;     /**< The moving piece */
+    int    xStart;    /**< X position before move */
+    int    yStart;    /**< Y position before move */
+    int    xEnd;      /**< X position after move */
+    int    yEnd;      /**< Y position after move */
+    int    flags;     /**< Move flags */
+    char   extraFlag; /**< Extra flag used on pawn takes and ambigous moves */
 
 public:
     /**
      * @brief Construct a default rook
      */
-    Move(Piece* _piece, int _xStart, int _yStart, int _xEnd, int _yEnd, int _flags);
+    Move(Piece* _piece, int _xStart, int _yStart, int _xEnd, int _yEnd, int _flags = 0, char _extraFlag = ' ');
 
     /**
      * @brief Returns the moving piece

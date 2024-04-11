@@ -39,9 +39,10 @@ public:
      * @param[in] xEnd X position where move the piece
      * @param[in] yEnd Y position where move the piece
      * @param[in] flags Flags of the movement
+     * @param[in] extraFlag Extra flag for ambigous moves
      * @return true if the move is possible, false otherwise
      */
-    bool addMove(int xStart, int yStart, int xEnd, int yEnd, int flags);
+    bool addMove(int xStart, int yStart, int xEnd, int yEnd, int flags = 0, char extraFlag = ' ');
 
     /**
      * @brief Add a move into the moves vector from a piece description
@@ -50,9 +51,10 @@ public:
      * @param[in] xEnd X position where move the piece
      * @param[in] yEnd Y position where move the piece
      * @param[in] flags Flags of the movement
+     * @param[in] extraFlag Extra flag for ambigous moves
      * @return true if the move is possible, false otherwise
      */
-    bool addMoveFromPieceDesc(SquareValue pieceType, SquarePieceColor pieceColor, int xEnd, int yEnd, int flags);
+    bool checkMove(SquareValue pieceType, SquarePieceColor pieceColor, int xEnd, int yEnd, int flags = 0, char extraFlag = ' ');
 
     /**
      * @brief Returns the move index

@@ -24,7 +24,7 @@ Game::~Game()
 }
 
 bool
-Game::addMove(int xStart, int yStart, int xEnd, int yEnd, int flags)
+Game::addMove(int xStart, int yStart, int xEnd, int yEnd, int flags, char extraFlag)
 {
     Piece* p = nullptr;
 
@@ -41,25 +41,22 @@ Game::addMove(int xStart, int yStart, int xEnd, int yEnd, int flags)
     }
 
     /* Add move into moves vector */
-    moves.push_back(new Move(p, xStart, yStart, xEnd, yEnd, flags));
+    moves.push_back(new Move(p, xStart, yStart, xEnd, yEnd, flags, extraFlag));
     moveIndex++;
 
     return true;
 }
 
 bool
-Game::addMoveFromPieceDesc(SquareValue pieceType, SquarePieceColor pieceColor, int xEnd, int yEnd, int flags)
+Game::checkMove(SquareValue pieceType, SquarePieceColor pieceColor, int xEnd, int yEnd, int flags, char extraFlag)
 {
-    vector<Piece*> pieces;
+    Piece* p = nullptr;
 
     /* Select piece */
-    if (gameBoard.lookForPiecesAbleToMoveAt(pieces, pieceType, pieceColor, xEnd, yEnd, flags))
+    if (gameBoard.checkMove(&p, pieceType, pieceColor, xEnd, yEnd, flags, extraFlag))
     {
         /* Add move into moves vector */
-        for (auto p : pieces)
-        {
-            return this->addMove(p->getX(), p->getY(), xEnd, yEnd, flags);
-        }
+        return this->addMove(p->getX(), p->getY(), xEnd, yEnd, flags, extraFlag);
     }
 
     return false;

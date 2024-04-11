@@ -3,6 +3,7 @@
  * @brief Board sources
  */
 
+#include <assert.h>
 #include "board.hpp"
 #include "king.hpp"
 #include "queen.hpp"
@@ -425,36 +426,103 @@ Board::selectPiece(Piece** piece, int x, int y)
 }
 
 bool
-Board::lookForPiecesAbleToMoveAt(std::vector<Piece*>& pieces, SquareValue pieceType, SquarePieceColor pieceColor, int x, int y, int flags)
+Board::checkMove(Piece** piece, SquareValue pieceType, SquarePieceColor pieceColor, int x, int y, int flags, char extraFlag)
 {
-    bool pieceFound = false;
+    /* Check parameter */
+    assert(nullptr == *piece);
 
-    /* White */
-    if (pieceColor == White)
+    int xExtraFlag = -1;
+    int yExtraFlag = -1;
+
+    /* Check for extra flag */
+    switch (extraFlag)
     {
-        for (auto p : whitePieces)
+        case 'a':
+            xExtraFlag = 0;
+            break;
+        case 'b':
+            xExtraFlag = 1;
+            break;
+        case 'c':
+            xExtraFlag = 2;
+            break;
+        case 'd':
+            xExtraFlag = 3;
+            break;
+        case 'e':
+            xExtraFlag = 4;
+            break;
+        case 'f':
+            xExtraFlag = 5;
+            break;
+        case 'g':
+            xExtraFlag = 6;
+            break;
+        case 'h':
+            xExtraFlag = 7;
+            break;
+        case '1':
+            yExtraFlag = 0;
+            break;
+        case '2':
+            yExtraFlag = 1;
+            break;
+        case '3':
+            yExtraFlag = 2;
+            break;
+        case '4':
+            yExtraFlag = 3;
+            break;
+        case '5':
+            yExtraFlag = 4;
+            break;
+        case '6':
+            yExtraFlag = 5;
+            break;
+        case '7':
+            yExtraFlag = 6;
+            break;
+        case '8':
+            yExtraFlag = 7;
+            break;
+        default:
+            /* Nothing to do */
+            break;
+    }
+
+    /* Lambda declaration - search a particular piece */
+    auto searchPiece = [&piece, &pieceType, &x, &y, &flags, &xExtraFlag, &yExtraFlag](vector<Piece*> const& pieces) {
+        for (auto p : pieces)
         {
-            if ((p->getValue() == pieceType) && p->isAlive() && p->isAbleToMove(x, y, flags))
+            if ((p->getValue() == pieceType) && p->isAlive() && p->isAbleToMove(x, y, flags) && ((xExtraFlag == -1) || (p->getX() == xExtraFlag))
+                && ((yExtraFlag == -1) || (p->getY() == yExtraFlag)))
             {
-                pieces.push_back(p);
-                pieceFound = true;
+                /* Only one piece should fit to the description */
+                assert(nullptr == *piece);
+                *piece = p;
             }
         }
-    }
-    /* Black */
-    else
-    {
-        for (auto p : blackPieces)
+        return (*piece != nullptr);
+    };
+
+    return searchPiece((pieceColor == White) ? whitePieces : blackPieces);
+}
+
+bool
+Board::isSquareAttacked(SquarePieceColor pieceColor, int x, int y)
+{
+    auto isAttacked = [&x, &y](vector<Piece*> const& pieces, Square* board[BOARD_SIZE_MAX][BOARD_SIZE_MAX]) {
+        for (auto p : pieces)
         {
-            if ((p->getValue() == pieceType) && p->isAlive() && p->isAbleToMove(x, y, flags))
+            if (p->isAlive() && p->isAbleToMove(x, y, 0, board))
             {
-                pieces.push_back(p);
-                pieceFound = true;
+                return true;
             }
         }
-    }
+        return false;
+    };
 
-    return pieceFound;
+    return isAttacked(((pieceColor == White) ? whitePieces : blackPieces), board);
 }
 
 void

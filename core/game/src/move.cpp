@@ -8,13 +8,14 @@
 
 using namespace std;
 
-Move::Move(Piece* _piece, int _xStart, int _yStart, int _xEnd, int _yEnd, int _flags)
+Move::Move(Piece* _piece, int _xStart, int _yStart, int _xEnd, int _yEnd, int _flags, char _extraFlag)
     : piece(_piece)
     , xStart(_xStart)
     , yStart(_yStart)
     , xEnd(_xEnd)
     , yEnd(_yEnd)
     , flags(_flags)
+    , extraFlag(_extraFlag)
 {
 }
 
