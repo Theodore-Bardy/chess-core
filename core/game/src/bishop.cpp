@@ -64,7 +64,7 @@ Bishop::move(int _x, int _y, int flags)
     return false;
 }
 
-SquareValue
+SquarePieceValue
 Bishop::getValue(void) const
 {
     return BishopValue;

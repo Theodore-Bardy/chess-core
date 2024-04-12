@@ -21,6 +21,8 @@
 #define ROOK_1_WHITE_DEFAULT_Y (SQUARE_Y_1)
 #define ROOK_2_WHITE_DEFAULT_X (SQUARE_X_H)
 #define ROOK_2_WHITE_DEFAULT_Y (SQUARE_Y_1)
+#define ROOK_KING_CASTLE_X     (SQUARE_X_F)
+#define ROOK_QUEEN_CASTLE_X    (SQUARE_X_D)
 
 class Rook : public Piece
 {
@@ -95,7 +97,7 @@ public:
      * @brief Get the value of the rook
      * @return The value of the rook
      */
-    virtual SquareValue getValue(void) const;
+    virtual SquarePieceValue getValue(void) const;
 
     /**
      * @brief Print rook

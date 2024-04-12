@@ -66,11 +66,11 @@ Rook::isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U]) const
     }
 
     /* The rook can castle if it hasn't move */
-    if (MOVE_FLAG_KING_CASTLE == (flags & MOVE_FLAG_KING_CASTLE))
+    if ((MOVE_FLAG_KING_CASTLE == (flags & MOVE_FLAG_KING_CASTLE)) && (_y == y) && (_x == ROOK_KING_CASTLE_X))
     {
         xReturn = (!hasMoved && isKingSide);
     }
-    else if (MOVE_FLAG_QUEEN_CASTLE == (flags & MOVE_FLAG_QUEEN_CASTLE))
+    else if ((MOVE_FLAG_QUEEN_CASTLE == (flags & MOVE_FLAG_QUEEN_CASTLE)) && (_y == y) && (_x == ROOK_QUEEN_CASTLE_X))
     {
         xReturn = (!hasMoved && !isKingSide);
     }
@@ -109,7 +109,7 @@ Rook::move(int _x, int _y, int flags)
     return false;
 }
 
-SquareValue
+SquarePieceValue
 Rook::getValue(void) const
 {
     return RookValue;

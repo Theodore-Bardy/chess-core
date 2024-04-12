@@ -76,7 +76,11 @@ King::isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U]) const
     }
 
     /* The king can castle if it hasn't move and isn't in check state */
-    if (((MOVE_FLAG_KING_CASTLE == (flags & MOVE_FLAG_KING_CASTLE)) || (MOVE_FLAG_QUEEN_CASTLE == (flags & MOVE_FLAG_QUEEN_CASTLE))) && (_y == y))
+    if ((MOVE_FLAG_KING_CASTLE == (flags & MOVE_FLAG_KING_CASTLE)) && (_y == y) && (_x == KING_KING_CASTLE_X))
+    {
+        xReturn = (!hasMoved && !isCheck);
+    }
+    else if ((MOVE_FLAG_QUEEN_CASTLE == (flags & MOVE_FLAG_QUEEN_CASTLE)) && (_y == y) && (_x == KING_QUEEN_CASTLE_X))
     {
         xReturn = (!hasMoved && !isCheck);
     }
@@ -115,7 +119,7 @@ King::move(int _x, int _y, int flags)
     return false;
 }
 
-SquareValue
+SquarePieceValue
 King::getValue(void) const
 {
     return KingValue;

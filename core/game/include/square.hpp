@@ -45,7 +45,7 @@ enum SquarePieceColor
 /**
  * @brief Square values list
  */
-enum SquareValue
+enum SquarePieceValue
 {
     Empty,
     KingValue,
@@ -60,7 +60,7 @@ class Square
 {
 private:
     SquarePieceColor color; /**< Color of the piece in the square (0 = no piece, 1 = white, 2 = black) */
-    SquareValue      value; /**< Value of the piece in the square (cf. SquareValue) */
+    SquarePieceValue value; /**< Value of the piece in the square (cf. SquarePieceValue) */
     int              x;     /**< X position */
     int              y;     /**< Y position */
 
@@ -79,7 +79,7 @@ public:
 
     /**
      * @brief Get the Value object
-     * @return Value of the square (cf. SquareValue)
+     * @return Value of the square (cf. SquarePieceValue)
      */
     SquarePieceColor getColor(void) const
     {
@@ -97,9 +97,9 @@ public:
 
     /**
      * @brief Get the value of the square
-     * @return Value of the square (cf. SquareValue)
+     * @return Value of the square (cf. SquarePieceValue)
      */
-    SquareValue getValue(void) const
+    SquarePieceValue getValue(void) const
     {
         return value;
     }
@@ -108,7 +108,7 @@ public:
      * @brief Set the value of the square
      * @param[in] _value Value of the square
      */
-    void setValue(SquareValue _value)
+    void setValue(SquarePieceValue _value)
     {
         value = _value;
     }
@@ -129,6 +129,15 @@ public:
     int getY(void) const
     {
         return y;
+    }
+
+    /**
+     * @brief Reset square as default (no piece)
+     */
+    void resetSquare(void)
+    {
+        color = SquarePieceColor::NoPiece;
+        value = SquarePieceValue::Empty;
     }
 
     /**

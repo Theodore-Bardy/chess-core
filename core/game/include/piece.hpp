@@ -125,7 +125,7 @@ public:
      * @brief Get the value of the piece
      * @return The value of the piece
      */
-    virtual SquareValue getValue(void) const = 0;
+    virtual SquarePieceValue getValue(void) const = 0;
 
     /**
      * @brief Print the piece

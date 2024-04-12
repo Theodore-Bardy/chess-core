@@ -79,7 +79,7 @@ Queen::move(int _x, int _y, int flags)
     return false;
 }
 
-SquareValue
+SquarePieceValue
 Queen::getValue(void) const
 {
     return QueenValue;

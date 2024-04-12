@@ -54,7 +54,7 @@ public:
      * @param[in] extraFlag Extra flag for ambigous moves
      * @return true if the move is possible, false otherwise
      */
-    bool checkMove(SquareValue pieceType, SquarePieceColor pieceColor, int xEnd, int yEnd, int flags = 0, char extraFlag = ' ');
+    bool checkMove(SquarePieceValue pieceType, SquarePieceColor pieceColor, int xEnd, int yEnd, int flags = 0, char extraFlag = ' ');
 
     /**
      * @brief Returns the move index

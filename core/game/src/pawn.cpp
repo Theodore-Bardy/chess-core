@@ -122,7 +122,7 @@ Pawn::move(int _x, int _y, int flags)
     return false;
 }
 
-SquareValue
+SquarePieceValue
 Pawn::getValue(void) const
 {
     return PawnValue;

@@ -60,7 +60,7 @@ Knight::move(int _x, int _y, int flags)
     return false;
 }
 
-SquareValue
+SquarePieceValue
 Knight::getValue(void) const
 {
     return KnightValue;

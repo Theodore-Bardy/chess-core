@@ -7,7 +7,7 @@
 
 Square::Square(int _x, int _y)
     : color(SquarePieceColor::NoPiece)
-    , value(SquareValue::Empty)
+    , value(SquarePieceValue::Empty)
     , x(_x)
     , y(_y)
 {
@@ -18,11 +18,11 @@ Square::print(std::ostream& os) const
 {
     switch (value)
     {
-        case SquareValue::Empty:
+        case SquarePieceValue::Empty:
             os << " . ";
             break;
 
-        case SquareValue::KingValue:
+        case SquarePieceValue::KingValue:
             if (color == SquarePieceColor::White)
             {
                 os << " ♔ ";
@@ -33,7 +33,7 @@ Square::print(std::ostream& os) const
             }
             break;
 
-        case SquareValue::QueenValue:
+        case SquarePieceValue::QueenValue:
             if (color == SquarePieceColor::White)
             {
                 os << " ♕ ";
@@ -44,7 +44,7 @@ Square::print(std::ostream& os) const
             }
             break;
 
-        case SquareValue::BishopValue:
+        case SquarePieceValue::BishopValue:
             if (color == SquarePieceColor::White)
             {
                 os << " ♗ ";
@@ -55,7 +55,7 @@ Square::print(std::ostream& os) const
             }
             break;
 
-        case SquareValue::KnightValue:
+        case SquarePieceValue::KnightValue:
             if (color == SquarePieceColor::White)
             {
                 os << " ♘ ";
@@ -66,7 +66,7 @@ Square::print(std::ostream& os) const
             }
             break;
 
-        case SquareValue::RookValue:
+        case SquarePieceValue::RookValue:
             if (color == SquarePieceColor::White)
             {
                 os << " ♖ ";
@@ -77,7 +77,7 @@ Square::print(std::ostream& os) const
             }
             break;
 
-        case SquareValue::PawnValue:
+        case SquarePieceValue::PawnValue:
             if (color == SquarePieceColor::White)
             {
                 os << " ♙ ";

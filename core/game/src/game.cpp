@@ -48,7 +48,7 @@ Game::addMove(int xStart, int yStart, int xEnd, int yEnd, int flags, char extraF
 }
 
 bool
-Game::checkMove(SquareValue pieceType, SquarePieceColor pieceColor, int xEnd, int yEnd, int flags, char extraFlag)
+Game::checkMove(SquarePieceValue pieceType, SquarePieceColor pieceColor, int xEnd, int yEnd, int flags, char extraFlag)
 {
     Piece* p = nullptr;
 

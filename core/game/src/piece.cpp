@@ -39,7 +39,7 @@ Piece::checkWayOnMove(int _x, int _y, Square* board[8U][8U]) const
     /* Check the way between current and desired position excluded is empty */
     while ((xCheck != _x) && (yCheck != _y))
     {
-        if (board[xCheck][yCheck]->getValue() != SquareValue::Empty)
+        if (board[xCheck][yCheck]->getValue() != SquarePieceValue::Empty)
         {
             return false;
         }

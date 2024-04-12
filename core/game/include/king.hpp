@@ -17,6 +17,8 @@
 #define KING_BLACK_DEFAULT_Y (SQUARE_Y_8)
 #define KING_WHITE_DEFAULT_X (SQUARE_X_E)
 #define KING_WHITE_DEFAULT_Y (SQUARE_Y_1)
+#define KING_KING_CASTLE_X   (SQUARE_X_G)
+#define KING_QUEEN_CASTLE_X  (SQUARE_X_C)
 
 class King : public Piece
 {
@@ -82,7 +84,7 @@ public:
      * @brief Get the value of the king
      * @return The value of the king
      */
-    virtual SquareValue getValue(void) const;
+    virtual SquarePieceValue getValue(void) const;
 
     /**
      * @brief Print king

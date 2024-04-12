@@ -22,76 +22,87 @@ Move::Move(Piece* _piece, int _xStart, int _yStart, int _xEnd, int _yEnd, int _f
 void
 Move::print(std::ostream& os) const
 {
-    os << *piece;
-
-    /* Take flag */
-    if (MOVE_FLAG_TAKE == (flags & MOVE_FLAG_TAKE))
+    if (MOVE_FLAG_KING_CASTLE == (flags & MOVE_FLAG_KING_CASTLE))
     {
-        os << "x";
+        os << "O-O";
     }
-
-    /* Colomn */
-    switch (xEnd)
+    else if (MOVE_FLAG_KING_CASTLE == (flags & MOVE_FLAG_KING_CASTLE))
     {
-        case SQUARE_X_A:
-            os << "a";
-            break;
-        case SQUARE_X_B:
-            os << "b";
-            break;
-        case SQUARE_X_C:
-            os << "c";
-            break;
-        case SQUARE_X_D:
-            os << "d";
-            break;
-        case SQUARE_X_E:
-            os << "e";
-            break;
-        case SQUARE_X_F:
-            os << "f";
-            break;
-        case SQUARE_X_G:
-            os << "g";
-            break;
-        case SQUARE_X_H:
-            os << "h";
-            break;
-        default:
-            /* Should not be here */
-            break;
+        os << "O-O-O";
     }
-
-    /* Row */
-    switch (yEnd)
+    else
     {
-        case SQUARE_Y_1:
-            os << "1";
-            break;
-        case SQUARE_Y_2:
-            os << "2";
-            break;
-        case SQUARE_Y_3:
-            os << "3";
-            break;
-        case SQUARE_Y_4:
-            os << "4";
-            break;
-        case SQUARE_Y_5:
-            os << "5";
-            break;
-        case SQUARE_Y_6:
-            os << "6";
-            break;
-        case SQUARE_Y_7:
-            os << "7";
-            break;
-        case SQUARE_Y_8:
-            os << "8";
-            break;
-        default:
-            /* Should not be here */
-            break;
+        os << *piece;
+
+        /* Take flag */
+        if (MOVE_FLAG_TAKE == (flags & MOVE_FLAG_TAKE))
+        {
+            os << "x";
+        }
+
+        /* Colomn */
+        switch (xEnd)
+        {
+            case SQUARE_X_A:
+                os << "a";
+                break;
+            case SQUARE_X_B:
+                os << "b";
+                break;
+            case SQUARE_X_C:
+                os << "c";
+                break;
+            case SQUARE_X_D:
+                os << "d";
+                break;
+            case SQUARE_X_E:
+                os << "e";
+                break;
+            case SQUARE_X_F:
+                os << "f";
+                break;
+            case SQUARE_X_G:
+                os << "g";
+                break;
+            case SQUARE_X_H:
+                os << "h";
+                break;
+            default:
+                /* Should not be here */
+                break;
+        }
+
+        /* Row */
+        switch (yEnd)
+        {
+            case SQUARE_Y_1:
+                os << "1";
+                break;
+            case SQUARE_Y_2:
+                os << "2";
+                break;
+            case SQUARE_Y_3:
+                os << "3";
+                break;
+            case SQUARE_Y_4:
+                os << "4";
+                break;
+            case SQUARE_Y_5:
+                os << "5";
+                break;
+            case SQUARE_Y_6:
+                os << "6";
+                break;
+            case SQUARE_Y_7:
+                os << "7";
+                break;
+            case SQUARE_Y_8:
+                os << "8";
+                break;
+            default:
+                /* Should not be here */
+                break;
+        }
     }
 }
 

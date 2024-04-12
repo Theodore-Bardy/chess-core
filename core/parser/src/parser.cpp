@@ -22,13 +22,14 @@ static optional<string> getMoveStringIntoLine(string const& line, int moveNumber
 /**
  * @brief Parse move informations from the move string
  * @param[in] move Move string
+ * @param[in] color Look for this color (true: white, false: black)
  * @param[out] pieceType Piece type
  * @param[out] xEnd X position
  * @param[out] yEnd Y position
  * @param[out] flags Move flags
  * @return true if the move string have been parsed, false otherwise
  */
-static bool getMoveDescriptionFromString(string const& move, SquareValue& pieceType, int& xEnd, int& yEnd, int& flags);
+static bool getMoveDescriptionFromString(string const& move, bool color, SquarePieceValue& pieceType, int& xEnd, int& yEnd, int& flags);
 
 /**
  * @brief Returns the X position depending on the given char
@@ -87,7 +88,7 @@ Parser::loadGame(Game& game, string filePath, string fileName)
     {
         optional<string> tempStr;
         bool             whiteFound;
-        SquareValue      pieceType;
+        SquarePieceValue pieceType;
         int              xEnd;
         int              yEnd;
         int              flags;
@@ -98,19 +99,19 @@ Parser::loadGame(Game& game, string filePath, string fileName)
 
             /* Get white move */
             tempStr = getMoveStringIntoLine(gameAsStr, move, true);
-            if (tempStr.has_value() && getMoveDescriptionFromString(tempStr.value(), pieceType, xEnd, yEnd, flags))
+            if (tempStr.has_value() && getMoveDescriptionFromString(tempStr.value(), true, pieceType, xEnd, yEnd, flags))
             {
                 whiteFound = true;
-                game.addMoveFromPieceDesc(pieceType, White, xEnd, yEnd, flags);
+                game.checkMove(pieceType, White, xEnd, yEnd, flags);
             }
 
             /* Get black move if white move have been found */
             if (whiteFound)
             {
                 tempStr = getMoveStringIntoLine(gameAsStr, move++, false);
-                if (tempStr.has_value() && getMoveDescriptionFromString(tempStr.value(), pieceType, xEnd, yEnd, flags))
+                if (tempStr.has_value() && getMoveDescriptionFromString(tempStr.value(), false, pieceType, xEnd, yEnd, flags))
                 {
-                    game.addMoveFromPieceDesc(pieceType, Black, xEnd, yEnd, flags);
+                    game.checkMove(pieceType, Black, xEnd, yEnd, flags);
                 }
             }
         } while (tempStr.has_value());
@@ -161,31 +162,64 @@ getMoveStringIntoLine(string const& line, int moveNumber, bool color)
 }
 
 static bool
-getMoveDescriptionFromString(string const& move, SquareValue& pieceType, int& xEnd, int& yEnd, int& flags)
+getMoveDescriptionFromString(string const& move, bool color, SquarePieceValue& pieceType, int& xEnd, int& yEnd, int& flags)
 {
     /* Reset flags */
     flags = 0;
 
-    /* Special moves */
-    // TODO - castle - promotion …
+    int nextCharPosition = 0;
 
-    /* Pawn moves */
-    if (islower(move.at(0)))
-    {
-        pieceType = PawnValue;
-
-        /* Check if the pawn is eating */
+    /* Lambda declaration - take flags */
+    auto computeTakeFlag = [&xEnd, &yEnd, &flags](string const& move, bool isPawn) {
+        /* Is a take move */
         if (move.at(1) == 'x')
         {
-            flags |= MOVE_FLAG_EAT;
+            flags |= MOVE_FLAG_TAKE;
             xEnd = getXfromChar(move.at(2));
             yEnd = getYfromChar(move.at(3));
+            return 4;
         }
-        else
+        /* Is a pawn move, just describes the final position */
+        else if (isPawn)
         {
             xEnd = getXfromChar(move.at(0));
             yEnd = getYfromChar(move.at(1));
+            return 2;
         }
+        /* Is a piece move */
+        else
+        {
+            xEnd = getXfromChar(move.at(1));
+            yEnd = getYfromChar(move.at(2));
+            return 3;
+        }
+    };
+
+    /* Queen side castle */
+    if (move.compare("O-O-O") == 0U)
+    {
+        flags |= MOVE_FLAG_QUEEN_CASTLE;
+        xEnd      = KING_QUEEN_CASTLE_X;
+        yEnd      = (color) ? KING_WHITE_DEFAULT_Y : KING_BLACK_DEFAULT_Y;
+        pieceType = KingValue;
+    }
+
+    /* King side castle */
+    else if (move.compare("O-O") == 0U)
+    {
+        flags |= MOVE_FLAG_KING_CASTLE;
+        xEnd      = KING_KING_CASTLE_X;
+        yEnd      = (color) ? KING_WHITE_DEFAULT_Y : KING_BLACK_DEFAULT_Y;
+        pieceType = KingValue;
+    }
+
+    // TODO - promotion …
+    /* Pawn moves */
+    else if (islower(move.at(0)))
+    {
+        /* Check if the pawn is eating */
+        nextCharPosition = computeTakeFlag(move, true);
+        pieceType        = PawnValue;
     }
 
     /* Other piece moves */
@@ -195,82 +229,32 @@ getMoveDescriptionFromString(string const& move, SquareValue& pieceType, int& xE
         {
             /* King */
             case 'K':
-                if (move.at(1) == 'x')
-                {
-                    flags |= MOVE_FLAG_EAT;
-                    xEnd = getXfromChar(move.at(2));
-                    yEnd = getYfromChar(move.at(3));
-                }
-                else
-                {
-                    xEnd = getXfromChar(move.at(1));
-                    yEnd = getYfromChar(move.at(2));
-                }
-                pieceType = KingValue;
+                nextCharPosition = computeTakeFlag(move, false);
+                pieceType        = KingValue;
                 break;
 
             /* Queen */
             case 'Q':
-                if (move.at(1) == 'x')
-                {
-                    flags |= MOVE_FLAG_EAT;
-                    xEnd = getXfromChar(move.at(2));
-                    yEnd = getYfromChar(move.at(3));
-                }
-                else
-                {
-                    xEnd = getXfromChar(move.at(1));
-                    yEnd = getYfromChar(move.at(2));
-                }
-                pieceType = QueenValue;
+                nextCharPosition = computeTakeFlag(move, false);
+                pieceType        = QueenValue;
                 break;
 
             /* Bishop */
             case 'B':
-                if (move.at(1) == 'x')
-                {
-                    flags |= MOVE_FLAG_EAT;
-                    xEnd = getXfromChar(move.at(2));
-                    yEnd = getYfromChar(move.at(3));
-                }
-                else
-                {
-                    xEnd = getXfromChar(move.at(1));
-                    yEnd = getYfromChar(move.at(2));
-                }
-                pieceType = BishopValue;
+                nextCharPosition = computeTakeFlag(move, false);
+                pieceType        = BishopValue;
                 break;
 
             /* Knight */
             case 'N':
-                if (move.at(1) == 'x')
-                {
-                    flags |= MOVE_FLAG_EAT;
-                    xEnd = getXfromChar(move.at(2));
-                    yEnd = getYfromChar(move.at(3));
-                }
-                else
-                {
-                    xEnd = getXfromChar(move.at(1));
-                    yEnd = getYfromChar(move.at(2));
-                }
-                pieceType = KnightValue;
+                nextCharPosition = computeTakeFlag(move, false);
+                pieceType        = KnightValue;
                 break;
 
             /* Rook */
             case 'R':
-                if (move.at(1) == 'x')
-                {
-                    flags |= MOVE_FLAG_EAT;
-                    xEnd = getXfromChar(move.at(2));
-                    yEnd = getYfromChar(move.at(3));
-                }
-                else
-                {
-                    xEnd = getXfromChar(move.at(1));
-                    yEnd = getYfromChar(move.at(2));
-                }
-                pieceType = RookValue;
+                nextCharPosition = computeTakeFlag(move, false);
+                pieceType        = RookValue;
                 break;
 
             default:
@@ -279,6 +263,9 @@ getMoveDescriptionFromString(string const& move, SquareValue& pieceType, int& xE
                 break;
         }
     }
+
+    /* Check and mate flags */
+    // TODO
 
     return true;
 }

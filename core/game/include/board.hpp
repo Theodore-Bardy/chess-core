@@ -95,7 +95,7 @@ public:
      * @param[in] extraFlag Extra flag for ambigous moves
      * @return true if a piece is found, false otherwise
      */
-    bool checkMove(Piece** piece, SquareValue pieceType, SquarePieceColor pieceColor, int x, int y, int flags = 0, char extraFlag = ' ');
+    bool checkMove(Piece** piece, SquarePieceValue pieceType, SquarePieceColor pieceColor, int x, int y, int flags = 0, char extraFlag = ' ');
 
     /**
      * @brief Check if the square x, y is attacked a piece of the given color
@@ -104,7 +104,7 @@ public:
      * @param[in] y Y square position
      * @return true if the square is attacked, false otherwise
      */
-    bool isSquareAttacked(SquarePieceColor pieceColor, int x, int y);
+    bool isSquareAttacked(bool pieceColor, int x, int y);
 
     /**
      * @brief Print board

@@ -75,7 +75,7 @@ public:
      * @brief Get the value of the knight
      * @return The value of the knight
      */
-    virtual SquareValue getValue(void) const;
+    virtual SquarePieceValue getValue(void) const;
 
     /**
      * @brief Print knight

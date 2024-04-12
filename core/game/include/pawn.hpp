@@ -77,7 +77,7 @@ public:
      * @brief Get the value of the pawn
      * @return The value of the pawn
      */
-    virtual SquareValue getValue(void) const;
+    virtual SquarePieceValue getValue(void) const;
 
     /**
      * @brief Print pawn

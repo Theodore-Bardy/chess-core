@@ -86,98 +86,98 @@ Board::startUp()
 
         /* White pieces */
         King* white_king = new King(PIECE_WHITE);
-        board[KING_WHITE_DEFAULT_X][KING_WHITE_DEFAULT_Y]->setValue(SquareValue::KingValue);
+        board[KING_WHITE_DEFAULT_X][KING_WHITE_DEFAULT_Y]->setValue(SquarePieceValue::KingValue);
         board[KING_WHITE_DEFAULT_X][KING_WHITE_DEFAULT_Y]->setColor(SquarePieceColor::White);
         whitePieces.push_back(white_king);
         whiteKing = white_king;
 
         Queen* white_queen = new Queen(PIECE_WHITE);
-        board[QUEEN_WHITE_DEFAULT_X][QUEEN_WHITE_DEFAULT_Y]->setValue(SquareValue::QueenValue);
+        board[QUEEN_WHITE_DEFAULT_X][QUEEN_WHITE_DEFAULT_Y]->setValue(SquarePieceValue::QueenValue);
         board[QUEEN_WHITE_DEFAULT_X][QUEEN_WHITE_DEFAULT_Y]->setColor(SquarePieceColor::White);
         whitePieces.push_back(white_queen);
         whiteQueen = white_queen;
 
         Bishop* white_bishop = new Bishop(PIECE_WHITE, BISHOP_1_WHITE_DEFAULT_X, BISHOP_1_WHITE_DEFAULT_Y);
-        board[BISHOP_1_WHITE_DEFAULT_X][BISHOP_1_WHITE_DEFAULT_Y]->setValue(SquareValue::BishopValue);
+        board[BISHOP_1_WHITE_DEFAULT_X][BISHOP_1_WHITE_DEFAULT_Y]->setValue(SquarePieceValue::BishopValue);
         board[BISHOP_1_WHITE_DEFAULT_X][BISHOP_1_WHITE_DEFAULT_Y]->setColor(SquarePieceColor::White);
         whitePieces.push_back(white_bishop);
         whiteBishops[0] = white_bishop;
 
         white_bishop = new Bishop(PIECE_WHITE, BISHOP_2_WHITE_DEFAULT_X, BISHOP_2_WHITE_DEFAULT_Y);
-        board[BISHOP_2_WHITE_DEFAULT_X][BISHOP_2_WHITE_DEFAULT_Y]->setValue(SquareValue::BishopValue);
+        board[BISHOP_2_WHITE_DEFAULT_X][BISHOP_2_WHITE_DEFAULT_Y]->setValue(SquarePieceValue::BishopValue);
         board[BISHOP_2_WHITE_DEFAULT_X][BISHOP_2_WHITE_DEFAULT_Y]->setColor(SquarePieceColor::White);
         whitePieces.push_back(white_bishop);
         whiteBishops[1] = white_bishop;
 
         Knight* white_knight = new Knight(PIECE_WHITE, KNIGHT_1_WHITE_DEFAULT_X, KNIGHT_1_WHITE_DEFAULT_Y);
-        board[KNIGHT_1_WHITE_DEFAULT_X][KNIGHT_1_WHITE_DEFAULT_Y]->setValue(SquareValue::KnightValue);
+        board[KNIGHT_1_WHITE_DEFAULT_X][KNIGHT_1_WHITE_DEFAULT_Y]->setValue(SquarePieceValue::KnightValue);
         board[KNIGHT_1_WHITE_DEFAULT_X][KNIGHT_1_WHITE_DEFAULT_Y]->setColor(SquarePieceColor::White);
         whitePieces.push_back(white_knight);
         whiteKnights[0] = white_knight;
 
         white_knight = new Knight(PIECE_WHITE, KNIGHT_2_WHITE_DEFAULT_X, KNIGHT_2_WHITE_DEFAULT_Y);
-        board[KNIGHT_2_WHITE_DEFAULT_X][KNIGHT_2_WHITE_DEFAULT_Y]->setValue(SquareValue::KnightValue);
+        board[KNIGHT_2_WHITE_DEFAULT_X][KNIGHT_2_WHITE_DEFAULT_Y]->setValue(SquarePieceValue::KnightValue);
         board[KNIGHT_2_WHITE_DEFAULT_X][KNIGHT_2_WHITE_DEFAULT_Y]->setColor(SquarePieceColor::White);
         whitePieces.push_back(white_knight);
         whiteKnights[1] = white_knight;
 
         Rook* white_rook = new Rook(PIECE_WHITE, ROOK_1_WHITE_DEFAULT_X, ROOK_1_WHITE_DEFAULT_Y);
-        board[ROOK_1_WHITE_DEFAULT_X][ROOK_1_WHITE_DEFAULT_Y]->setValue(SquareValue::RookValue);
+        board[ROOK_1_WHITE_DEFAULT_X][ROOK_1_WHITE_DEFAULT_Y]->setValue(SquarePieceValue::RookValue);
         board[ROOK_1_WHITE_DEFAULT_X][ROOK_1_WHITE_DEFAULT_Y]->setColor(SquarePieceColor::White);
         whitePieces.push_back(white_rook);
         whiteRooks[0] = white_rook;
 
         white_rook = new Rook(PIECE_WHITE, ROOK_2_WHITE_DEFAULT_X, ROOK_2_WHITE_DEFAULT_Y);
-        board[ROOK_2_WHITE_DEFAULT_X][ROOK_2_WHITE_DEFAULT_Y]->setValue(SquareValue::RookValue);
+        board[ROOK_2_WHITE_DEFAULT_X][ROOK_2_WHITE_DEFAULT_Y]->setValue(SquarePieceValue::RookValue);
         board[ROOK_2_WHITE_DEFAULT_X][ROOK_2_WHITE_DEFAULT_Y]->setColor(SquarePieceColor::White);
         whitePieces.push_back(white_rook);
         whiteRooks[1] = white_rook;
 
         /* Black pieces */
         King* black_king = new King(PIECE_BLACK);
-        board[KING_BLACK_DEFAULT_X][KING_BLACK_DEFAULT_Y]->setValue(SquareValue::KingValue);
+        board[KING_BLACK_DEFAULT_X][KING_BLACK_DEFAULT_Y]->setValue(SquarePieceValue::KingValue);
         board[KING_BLACK_DEFAULT_X][KING_BLACK_DEFAULT_Y]->setColor(SquarePieceColor::Black);
         blackPieces.push_back(black_king);
         blackKing = black_king;
 
         Queen* black_queen = new Queen(PIECE_BLACK);
-        board[QUEEN_BLACK_DEFAULT_X][QUEEN_BLACK_DEFAULT_Y]->setValue(SquareValue::QueenValue);
+        board[QUEEN_BLACK_DEFAULT_X][QUEEN_BLACK_DEFAULT_Y]->setValue(SquarePieceValue::QueenValue);
         board[QUEEN_BLACK_DEFAULT_X][QUEEN_BLACK_DEFAULT_Y]->setColor(SquarePieceColor::Black);
         blackPieces.push_back(black_queen);
         blackQueen = black_queen;
 
         Bishop* black_bishop = new Bishop(PIECE_BLACK, BISHOP_1_BLACK_DEFAULT_X, BISHOP_1_BLACK_DEFAULT_Y);
-        board[BISHOP_1_BLACK_DEFAULT_X][BISHOP_1_BLACK_DEFAULT_Y]->setValue(SquareValue::BishopValue);
+        board[BISHOP_1_BLACK_DEFAULT_X][BISHOP_1_BLACK_DEFAULT_Y]->setValue(SquarePieceValue::BishopValue);
         board[BISHOP_1_BLACK_DEFAULT_X][BISHOP_1_BLACK_DEFAULT_Y]->setColor(SquarePieceColor::Black);
         blackPieces.push_back(black_bishop);
         blackBishops[0] = black_bishop;
 
         black_bishop = new Bishop(PIECE_BLACK, BISHOP_2_BLACK_DEFAULT_X, BISHOP_2_BLACK_DEFAULT_Y);
-        board[BISHOP_2_BLACK_DEFAULT_X][BISHOP_2_BLACK_DEFAULT_Y]->setValue(SquareValue::BishopValue);
+        board[BISHOP_2_BLACK_DEFAULT_X][BISHOP_2_BLACK_DEFAULT_Y]->setValue(SquarePieceValue::BishopValue);
         board[BISHOP_2_BLACK_DEFAULT_X][BISHOP_2_BLACK_DEFAULT_Y]->setColor(SquarePieceColor::Black);
         blackPieces.push_back(black_bishop);
         blackBishops[1] = black_bishop;
 
         Knight* black_knight = new Knight(PIECE_BLACK, KNIGHT_1_BLACK_DEFAULT_X, KNIGHT_1_BLACK_DEFAULT_Y);
-        board[KNIGHT_1_BLACK_DEFAULT_X][KNIGHT_1_BLACK_DEFAULT_Y]->setValue(SquareValue::KnightValue);
+        board[KNIGHT_1_BLACK_DEFAULT_X][KNIGHT_1_BLACK_DEFAULT_Y]->setValue(SquarePieceValue::KnightValue);
         board[KNIGHT_1_BLACK_DEFAULT_X][KNIGHT_1_BLACK_DEFAULT_Y]->setColor(SquarePieceColor::Black);
         blackPieces.push_back(black_knight);
         blackKnights[0] = black_knight;
 
         black_knight = new Knight(PIECE_BLACK, KNIGHT_2_BLACK_DEFAULT_X, KNIGHT_2_BLACK_DEFAULT_Y);
-        board[KNIGHT_2_BLACK_DEFAULT_X][KNIGHT_2_BLACK_DEFAULT_Y]->setValue(SquareValue::KnightValue);
+        board[KNIGHT_2_BLACK_DEFAULT_X][KNIGHT_2_BLACK_DEFAULT_Y]->setValue(SquarePieceValue::KnightValue);
         board[KNIGHT_2_BLACK_DEFAULT_X][KNIGHT_2_BLACK_DEFAULT_Y]->setColor(SquarePieceColor::Black);
         blackPieces.push_back(black_knight);
         blackKnights[1] = black_knight;
 
         Rook* black_rook = new Rook(PIECE_BLACK, ROOK_1_BLACK_DEFAULT_X, ROOK_1_BLACK_DEFAULT_Y);
-        board[ROOK_1_BLACK_DEFAULT_X][ROOK_1_BLACK_DEFAULT_Y]->setValue(SquareValue::RookValue);
+        board[ROOK_1_BLACK_DEFAULT_X][ROOK_1_BLACK_DEFAULT_Y]->setValue(SquarePieceValue::RookValue);
         board[ROOK_1_BLACK_DEFAULT_X][ROOK_1_BLACK_DEFAULT_Y]->setColor(SquarePieceColor::Black);
         blackPieces.push_back(black_rook);
         blackRooks[0] = black_rook;
 
         black_rook = new Rook(PIECE_BLACK, ROOK_2_BLACK_DEFAULT_X, ROOK_2_BLACK_DEFAULT_Y);
-        board[ROOK_2_BLACK_DEFAULT_X][ROOK_2_BLACK_DEFAULT_Y]->setValue(SquareValue::RookValue);
+        board[ROOK_2_BLACK_DEFAULT_X][ROOK_2_BLACK_DEFAULT_Y]->setValue(SquarePieceValue::RookValue);
         board[ROOK_2_BLACK_DEFAULT_X][ROOK_2_BLACK_DEFAULT_Y]->setColor(SquarePieceColor::Black);
         blackPieces.push_back(black_rook);
         blackRooks[1] = black_rook;
@@ -187,14 +187,14 @@ Board::startUp()
         {
             /* White pawns */
             Pawn* white_pawn = new Pawn(PIECE_WHITE, index);
-            board[index][PAWN_WHITE_DEFAULT_Y]->setValue(SquareValue::PawnValue);
+            board[index][PAWN_WHITE_DEFAULT_Y]->setValue(SquarePieceValue::PawnValue);
             board[index][PAWN_WHITE_DEFAULT_Y]->setColor(SquarePieceColor::White);
             whitePieces.push_back(white_pawn);
             whitePawns[index] = white_pawn;
 
             /* Black pawns */
             Pawn* black_pawn = new Pawn(PIECE_BLACK, index);
-            board[index][PAWN_BLACK_DEFAULT_Y]->setValue(SquareValue::PawnValue);
+            board[index][PAWN_BLACK_DEFAULT_Y]->setValue(SquarePieceValue::PawnValue);
             board[index][PAWN_BLACK_DEFAULT_Y]->setColor(SquarePieceColor::Black);
             blackPieces.push_back(black_pawn);
             blackPawns[index] = black_pawn;
@@ -205,8 +205,12 @@ Board::startUp()
 bool
 Board::movePiece(Piece* piece, int x, int y, int flags)
 {
-    int oldX = piece->getX();
-    int oldY = piece->getY();
+    /* Check parameter */
+    assert(nullptr != piece);
+
+    bool xReturn = false;
+    int  oldX    = piece->getX();
+    int  oldY    = piece->getY();
 
     /* Compute flags - take */
     if ((MOVE_FLAG_TAKE == (flags & MOVE_FLAG_TAKE)))
@@ -217,15 +221,100 @@ Board::movePiece(Piece* piece, int x, int y, int flags)
             piece->eat(*p); // TODO - eat is not to best method
 
             /* Reset square */
-            board[x][y]->setValue(SquareValue::Empty);
-            board[x][y]->setColor(SquarePieceColor::NoPiece);
+            board[x][y]->resetSquare();
         }
     }
 
-    if (piece->move(x, y, flags))
+    /* Special move - king castle */
+    if ((MOVE_FLAG_KING_CASTLE == (flags & MOVE_FLAG_KING_CASTLE)))
+    {
+        Rook* r = nullptr;
+        King* k = (piece->getColor()) ? whiteKing : blackKing;
+        assert(k == piece);
+
+        /* Find king side rook */
+        if (piece->getColor())
+        {
+            r = (whiteRooks[0]->isKingSideRook()) ? whiteRooks[0] : whiteRooks[1];
+        }
+        else
+        {
+            r = (blackRooks[0]->isKingSideRook()) ? blackRooks[0] : blackRooks[1];
+        }
+
+        /* Check king and rook can castle and square on the king way aren't attacked */
+        if (k->isAbleToMove(KING_KING_CASTLE_X, y, flags, board) && r->isAbleToMove(ROOK_KING_CASTLE_X, y, flags, board)
+            && !this->isSquareAttacked(!piece->getColor(), k->getX() + 1, y) && !this->isSquareAttacked(!piece->getColor(), k->getX() + 2, y))
+        {
+            /* Reset king and rook squares */
+            board[k->getX()][k->getY()]->resetSquare();
+            board[r->getX()][r->getY()]->resetSquare();
+
+            /* Move king and rook */
+            k->castling(true);
+            r->castling(true);
+            if (piece->getColor())
+            {
+                board[k->getX()][k->getY()]->setColor(SquarePieceColor::White);
+                board[r->getX()][r->getY()]->setColor(SquarePieceColor::White);
+            }
+            else
+            {
+                board[k->getX()][k->getY()]->setColor(SquarePieceColor::Black);
+                board[r->getX()][r->getY()]->setColor(SquarePieceColor::Black);
+            }
+            board[k->getX()][k->getY()]->setValue(SquarePieceValue::KingValue);
+            board[r->getX()][r->getY()]->setValue(SquarePieceValue::RookValue);
+        }
+    }
+
+    /* Special move - queen castle */
+    else if ((MOVE_FLAG_QUEEN_CASTLE == (flags & MOVE_FLAG_QUEEN_CASTLE)))
+    {
+        Rook* r = nullptr;
+        King* k = (piece->getColor()) ? whiteKing : blackKing;
+        assert(k == piece);
+
+        /* Find king side rook */
+        if (piece->getColor())
+        {
+            r = (!whiteRooks[0]->isKingSideRook()) ? whiteRooks[0] : whiteRooks[1];
+        }
+        else
+        {
+            r = (!blackRooks[0]->isKingSideRook()) ? blackRooks[0] : blackRooks[1];
+        }
+
+        /* Check king and rook can castle and square on the king way aren't attacked */
+        if (k->isAbleToMove(KING_QUEEN_CASTLE_X, y, flags, board) && r->isAbleToMove(ROOK_QUEEN_CASTLE_X, y, flags, board)
+            && !this->isSquareAttacked(!piece->getColor(), k->getX() - 1, y) && !this->isSquareAttacked(!piece->getColor(), k->getX() - 2, y))
+        {
+            /* Reset king and rook squares */
+            board[k->getX()][k->getY()]->resetSquare();
+            board[r->getX()][r->getY()]->resetSquare();
+
+            /* Move king and rook */
+            k->castling(false);
+            r->castling(false);
+            if (piece->getColor())
+            {
+                board[k->getX()][k->getY()]->setColor(SquarePieceColor::White);
+                board[r->getX()][r->getY()]->setColor(SquarePieceColor::White);
+            }
+            else
+            {
+                board[k->getX()][k->getY()]->setColor(SquarePieceColor::Black);
+                board[r->getX()][r->getY()]->setColor(SquarePieceColor::Black);
+            }
+            board[k->getX()][k->getY()]->setValue(SquarePieceValue::KingValue);
+            board[r->getX()][r->getY()]->setValue(SquarePieceValue::RookValue);
+        }
+    }
+
+    else if (piece->move(x, y, flags))
     {
         /* Reset old square */
-        board[oldX][oldY]->setValue(SquareValue::Empty);
+        board[oldX][oldY]->setValue(SquarePieceValue::Empty);
         board[oldX][oldY]->setColor(SquarePieceColor::NoPiece);
 
         /* Fill new square */
@@ -240,30 +329,30 @@ Board::movePiece(Piece* piece, int x, int y, int flags)
 
         board[x][y]->setValue(piece->getValue());
 
-        return true;
+        xReturn = true;
     }
 
-    return false;
+    return xReturn;
 }
 
 bool
 Board::selectPiece(Piece** piece, int x, int y)
 {
-    if ((board[x][y]->getColor() != SquarePieceColor::NoPiece) && (board[x][y]->getValue() != SquareValue::Empty))
+    if ((board[x][y]->getColor() != SquarePieceColor::NoPiece) && (board[x][y]->getValue() != SquarePieceValue::Empty))
     {
         if (board[x][y]->getColor() == SquarePieceColor::White)
         {
             switch (board[x][y]->getValue())
             {
-                case SquareValue::KingValue:
+                case SquarePieceValue::KingValue:
                     *piece = whiteKing;
                     break;
 
-                case SquareValue::QueenValue:
+                case SquarePieceValue::QueenValue:
                     *piece = whiteQueen;
                     break;
 
-                case SquareValue::BishopValue:
+                case SquarePieceValue::BishopValue:
                     if ((whiteBishops[0]->getX() == x) && (whiteBishops[0]->getY() == y))
                     {
                         *piece = whiteBishops[0];
@@ -274,7 +363,7 @@ Board::selectPiece(Piece** piece, int x, int y)
                     }
                     break;
 
-                case SquareValue::KnightValue:
+                case SquarePieceValue::KnightValue:
                     if ((whiteKnights[0]->getX() == x) && (whiteKnights[0]->getY() == y))
                     {
                         *piece = whiteKnights[0];
@@ -285,7 +374,7 @@ Board::selectPiece(Piece** piece, int x, int y)
                     }
                     break;
 
-                case SquareValue::RookValue:
+                case SquarePieceValue::RookValue:
                     if ((whiteRooks[0]->getX() == x) && (whiteRooks[0]->getY() == y))
                     {
                         *piece = whiteRooks[0];
@@ -296,7 +385,7 @@ Board::selectPiece(Piece** piece, int x, int y)
                     }
                     break;
 
-                case SquareValue::PawnValue:
+                case SquarePieceValue::PawnValue:
                     if ((whitePawns[0]->getX() == x) && (whitePawns[0]->getY() == y))
                     {
                         *piece = whitePawns[0];
@@ -339,15 +428,15 @@ Board::selectPiece(Piece** piece, int x, int y)
         {
             switch (board[x][y]->getValue())
             {
-                case SquareValue::KingValue:
+                case SquarePieceValue::KingValue:
                     *piece = blackKing;
                     break;
 
-                case SquareValue::QueenValue:
+                case SquarePieceValue::QueenValue:
                     *piece = blackQueen;
                     break;
 
-                case SquareValue::BishopValue:
+                case SquarePieceValue::BishopValue:
                     if ((blackBishops[0]->getX() == x) && (blackBishops[0]->getY() == y))
                     {
                         *piece = blackBishops[0];
@@ -358,7 +447,7 @@ Board::selectPiece(Piece** piece, int x, int y)
                     }
                     break;
 
-                case SquareValue::KnightValue:
+                case SquarePieceValue::KnightValue:
                     if ((blackKnights[0]->getX() == x) && (blackKnights[0]->getY() == y))
                     {
                         *piece = blackKnights[0];
@@ -369,7 +458,7 @@ Board::selectPiece(Piece** piece, int x, int y)
                     }
                     break;
 
-                case SquareValue::RookValue:
+                case SquarePieceValue::RookValue:
                     if ((blackRooks[0]->getX() == x) && (blackRooks[0]->getY() == y))
                     {
                         *piece = blackRooks[0];
@@ -380,7 +469,7 @@ Board::selectPiece(Piece** piece, int x, int y)
                     }
                     break;
 
-                case SquareValue::PawnValue:
+                case SquarePieceValue::PawnValue:
                     if ((blackPawns[0]->getX() == x) && (blackPawns[0]->getY() == y))
                     {
                         *piece = blackPawns[0];
@@ -426,7 +515,7 @@ Board::selectPiece(Piece** piece, int x, int y)
 }
 
 bool
-Board::checkMove(Piece** piece, SquareValue pieceType, SquarePieceColor pieceColor, int x, int y, int flags, char extraFlag)
+Board::checkMove(Piece** piece, SquarePieceValue pieceType, SquarePieceColor pieceColor, int x, int y, int flags, char extraFlag)
 {
     /* Check parameter */
     assert(nullptr == *piece);
@@ -509,7 +598,7 @@ Board::checkMove(Piece** piece, SquareValue pieceType, SquarePieceColor pieceCol
 }
 
 bool
-Board::isSquareAttacked(SquarePieceColor pieceColor, int x, int y)
+Board::isSquareAttacked(bool pieceColor, int x, int y)
 {
     auto isAttacked = [&x, &y](vector<Piece*> const& pieces, Square* board[BOARD_SIZE_MAX][BOARD_SIZE_MAX]) {
         for (auto p : pieces)
@@ -522,7 +611,7 @@ Board::isSquareAttacked(SquarePieceColor pieceColor, int x, int y)
         return false;
     };
 
-    return isAttacked(((pieceColor == White) ? whitePieces : blackPieces), board);
+    return isAttacked(((pieceColor) ? whitePieces : blackPieces), board);
 }
 
 void
