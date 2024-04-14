@@ -8,9 +8,9 @@ set -e
 # Create build directory
 mkdir -p build-ci
 
-echo "######################################"
-echo "--- Build Chess-Monitor repository ---"
-echo "######################################"
+echo "###################################"
+echo "--- Build Chess-core repository ---"
+echo "###################################"
 
 # Move to build directory
 cd build-ci
@@ -22,8 +22,8 @@ make -j"$(nproc)"
 
 # Copy firmware
 mkdir -p ../binaries
-if [ -f chess_monitor.elf ]; then
-    cp chess_monitor.elf ../binaries
+if [ -f chess_core.elf ]; then
+    cp chess_core.elf ../binaries
 fi
 
 # Go back to top directory

@@ -18,29 +18,36 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
 
 # Set project's name
-set(PROJECT_BASE_NAME chess_monitor)
+set(PROJECT_BASE_NAME chess_core)
 
-# Declare the executable first, so that we can add flags and sources later on
-set(APP_EXECUTABLE_NAME ${PROJECT_BASE_NAME}.elf)
-message("Executable name: ${APP_EXECUTABLE_NAME}")
-add_executable(${APP_EXECUTABLE_NAME})
+option(UNIT_TESTS "Build unit tests" OFF)
 
-# Specify GCC toolchain
-set(CMAKE_C_COMPILER /usr/bin/gcc)
-set(CMAKE_CXX_COMPILER /usr/bin/g++)
+if(UNIT_TESTS)
+    message("Build unit tests")
+    include(${CMAKE_CURRENT_LIST_DIR}/tests/CMakeLists.txt)
+else()
+    # Declare the executable first, so that we can add flags and sources later on
+    set(APP_EXECUTABLE_NAME ${PROJECT_BASE_NAME}.elf)
+    message("Executable name: ${APP_EXECUTABLE_NAME}")
+    add_executable(${APP_EXECUTABLE_NAME})
 
-# Define compile options
-target_compile_options(${APP_EXECUTABLE_NAME} PRIVATE -O1)
-if(CMAKE_BUILD_TYPE MATCHES "Debug")
-    target_compile_options(${APP_EXECUTABLE_NAME} PRIVATE -g)
-endif()
+    # Specify GCC toolchain
+    set(CMAKE_C_COMPILER /usr/bin/gcc)
+    set(CMAKE_CXX_COMPILER /usr/bin/g++)
 
-# Set project's version
-project(${PROJECT_BASE_NAME} LANGUAGES)
+    # Define compile options
+    target_compile_options(${APP_EXECUTABLE_NAME} PRIVATE -O1)
+    if(CMAKE_BUILD_TYPE MATCHES "Debug")
+        target_compile_options(${APP_EXECUTABLE_NAME} PRIVATE -g)
+    endif()
 
-# Include sub-directories
-include(${CMAKE_CURRENT_LIST_DIR}/app/CMakeLists.txt)
-include(${CMAKE_CURRENT_LIST_DIR}/core/CMakeLists.txt)
+    # Set project
+    project(${PROJECT_BASE_NAME} LANGUAGES)
 
-# Enable used languages. This must be done after the toolchain has been defined by the BSP.
-enable_language(C CXX ASM)
+    # Include sub-directories
+    include(${CMAKE_CURRENT_LIST_DIR}/app/CMakeLists.txt)
+    include(${CMAKE_CURRENT_LIST_DIR}/core/CMakeLists.txt)
+
+    # Enable used languages. This must be done after the toolchain has been defined by the BSP.
+    enable_language(C CXX ASM)
+endif(UNIT_TESTS)
