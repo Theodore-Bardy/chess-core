@@ -8,9 +8,8 @@
 
 Rook::Rook(bool _color, int _x, int _y)
     : Piece(_color, _x, _y)
+    , hasMoved(false)
 {
-    hasMoved = false;
-
     /* If rook is create in h1 or h8 it's a king side rook */
     if (((ROOK_2_WHITE_DEFAULT_X == _x) && (ROOK_2_WHITE_DEFAULT_Y)) || ((ROOK_2_BLACK_DEFAULT_X == _x) && (ROOK_2_BLACK_DEFAULT_Y)))
     {
@@ -36,17 +35,17 @@ Rook::~Rook()
 bool
 Rook::castling(bool side)
 {
-    if (!hasMoved)
+    /* King side castle */
+    if (!hasMoved && side && (x == ROOK_2_WHITE_DEFAULT_X))
     {
-        if (side)
-        {
-            x -= 2;
-        }
-        else
-        {
-            x += 3;
-        }
-
+        x        = ROOK_KING_CASTLE_X;
+        hasMoved = true;
+        return true;
+    }
+    /* Queen side castle */
+    else if (!hasMoved && !side && (x == ROOK_1_WHITE_DEFAULT_X))
+    {
+        x        = ROOK_QUEEN_CASTLE_X;
         hasMoved = true;
         return true;
     }
