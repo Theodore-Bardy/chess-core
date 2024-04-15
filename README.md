@@ -21,6 +21,7 @@ This project implement:
 ## TODO
 
 - [ ] Add doxygen documentation
+- [ ] Increase code coverage with unit tests
 - [ ] Finish PGN parser
 - [ ] Implement a TUI (Terminal User Interface)
     - [C++ FTXUI](https://github.com/ArthurSonzogni/FTXUI)
