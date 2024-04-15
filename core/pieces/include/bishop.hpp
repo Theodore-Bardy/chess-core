@@ -36,14 +36,14 @@ public:
     Bishop(bool _color, int _x, int _y);
 
     /**
-     * @brief Construct a custom bishop
+     * @brief Construct a custom bishop (use only for pawn promotion)
      */
     Bishop(bool _isAlive, bool _color, int _x, int _y);
 
     /**
      * @brief Destroy the bishop
      */
-    ~Bishop();
+    ~Bishop() = default;
 
     /**
      * @brief Clone a bishop
@@ -58,9 +58,10 @@ public:
      * @param[in] _x Desired X position
      * @param[in] _y Desired Y position
      * @param[in] flags Move flags
+     * @param[in] board Give more context to check the move (optional)
      * @return true if the piece is able to move, otherwise false
      */
-    virtual bool isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U] = nullptr) const;
+    virtual bool checkMove(int _x, int _y, int flags, Square* board[8U][8U] = nullptr) const;
 
     /**
      * @brief Move the bishop
@@ -75,7 +76,10 @@ public:
      * @brief Get the value of the bishop
      * @return The value of the bishop
      */
-    virtual SquarePieceValue getValue(void) const;
+    virtual SquarePieceValue getValue(void) const
+    {
+        return SquarePieceValue::BishopValue;
+    }
 
     /**
      * @brief Print bishop

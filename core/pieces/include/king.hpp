@@ -24,6 +24,8 @@ class King : public Piece
 {
 private:
     bool isCheck;  /**< King check status */
+    bool isMate;   /**< King check mate status */
+    bool isPat;    /**< King pat status */
     bool hasMoved; /**< Indicate if the king has moved */
 
 public:
@@ -38,14 +40,9 @@ public:
     King(bool _color);
 
     /**
-     * @brief Construct a custom king
-     */
-    King(bool _isCheck, bool _hasMoved, bool _isAlive, bool _color, int _x, int _y);
-
-    /**
      * @brief Destroy the king
      */
-    ~King();
+    ~King() = default;
 
     /**
      * @brief Clone a king
@@ -67,9 +64,10 @@ public:
      * @param[in] _x Desired X position
      * @param[in] _y Desired Y position
      * @param[in] flags Move flags
+     * @param[in] board Give more context to check the move (optional)
      * @return true if the piece is able to move, otherwise false
      */
-    virtual bool isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U] = nullptr) const;
+    virtual bool checkMove(int _x, int _y, int flags, Square* board[8U][8U] = nullptr) const;
 
     /**
      * @brief Move the king
@@ -84,7 +82,73 @@ public:
      * @brief Get the value of the king
      * @return The value of the king
      */
-    virtual SquarePieceValue getValue(void) const;
+    virtual SquarePieceValue getValue(void) const
+    {
+        return SquarePieceValue::KingValue;
+    }
+
+    /**
+     * @brief Get the king check status
+     * @return The king check status
+     */
+    bool getCheckStatus(void) const
+    {
+        return isCheck;
+    }
+
+    /**
+     * @brief Set the king check state
+     * @param[in] _isCheck New king check state
+     */
+    void setCheckStatus(bool _isCheck)
+    {
+        isCheck = _isCheck;
+    }
+
+    /**
+     * @brief Get the king check status
+     * @return The king check status
+     */
+    bool getMateStatus(void) const
+    {
+        return isMate;
+    }
+
+    /**
+     * @brief Set the king mate state
+     * @param[in] _isCheck New king mate state
+     */
+    void setMateStatus(bool _isMate)
+    {
+        isMate = _isMate;
+    }
+
+    /**
+     * @brief Get the king check status
+     * @return The king check status
+     */
+    bool getPatStatus(void) const
+    {
+        return isPat;
+    }
+
+    /**
+     * @brief Set the king pat state
+     * @param[in] _isCheck New king pat state
+     */
+    void setPatStatus(bool _isPat)
+    {
+        isPat = _isPat;
+    }
+
+    /**
+     * @brief Set the king check status
+     * @param[in] _isCheck New king check status
+     */
+    void setCheckStatus(bool _isCheck)
+    {
+        isCheck = _isCheck;
+    }
 
     /**
      * @brief Print king

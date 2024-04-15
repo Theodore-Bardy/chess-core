@@ -36,14 +36,14 @@ public:
     Knight(bool _color, int _x, int _y);
 
     /**
-     * @brief Construct a custom knight
+     * @brief Construct a custom knight (use only for pawn promotion)
      */
     Knight(bool _isAlive, bool _color, int _x, int _y);
 
     /**
      * @brief Destroy the knight
      */
-    ~Knight();
+    ~Knight() = default;
 
     /**
      * @brief Clone a knight
@@ -58,9 +58,10 @@ public:
      * @param[in] _x Desired X position
      * @param[in] _y Desired Y position
      * @param[in] flags Move flags
+     * @param[in] board Give more context to check the move (optional)
      * @return true if the piece is able to move, otherwise false
      */
-    virtual bool isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U] = nullptr) const;
+    virtual bool checkMove(int _x, int _y, int flags, Square* board[8U][8U] = nullptr) const;
 
     /**
      * @brief Move the knight
@@ -75,7 +76,10 @@ public:
      * @brief Get the value of the knight
      * @return The value of the knight
      */
-    virtual SquarePieceValue getValue(void) const;
+    virtual SquarePieceValue getValue(void) const
+    {
+        return SquarePieceValue::KnightValue;
+    }
 
     /**
      * @brief Print knight

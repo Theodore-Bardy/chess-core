@@ -15,12 +15,8 @@ Knight::Knight(bool _isAlive, bool _color, int _x, int _y)
 {
 }
 
-Knight::~Knight()
-{
-}
-
 bool
-Knight::isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U]) const
+Knight::checkMove(int _x, int _y, int flags, Square* board[8U][8U]) const
 {
     bool xReturn = false;
 
@@ -50,7 +46,7 @@ bool
 Knight::move(int _x, int _y, int flags)
 {
     /* Check the king is able to move to the desired position */
-    if (this->isAbleToMove(_x, _y, flags))
+    if (this->checkMove(_x, _y, flags))
     {
         x = _x;
         y = _y;
@@ -58,12 +54,6 @@ Knight::move(int _x, int _y, int flags)
     }
 
     return false;
-}
-
-SquarePieceValue
-Knight::getValue(void) const
-{
-    return KnightValue;
 }
 
 void

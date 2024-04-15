@@ -6,21 +6,21 @@
 #include <gtest/gtest.h>
 #include "bishop.hpp"
 
-TEST(BishopTest, IsAbleToMove)
+TEST(BishopTest, CheckMove)
 {
     Bishop b(true, 3U, 3U);
 
     /* Able to move to diagonals */
-    EXPECT_EQ(b.isAbleToMove(7U, 7U, 0U), true);
-    EXPECT_EQ(b.isAbleToMove(1U, 5U, 0U), true);
-    EXPECT_EQ(b.isAbleToMove(1U, 1U, 0U), true);
-    EXPECT_EQ(b.isAbleToMove(5U, 1U, 0U), true);
+    EXPECT_EQ(b.checkMove(7U, 7U, 0U), true);
+    EXPECT_EQ(b.checkMove(1U, 5U, 0U), true);
+    EXPECT_EQ(b.checkMove(1U, 1U, 0U), true);
+    EXPECT_EQ(b.checkMove(5U, 1U, 0U), true);
 
     /* Unable to move on raw and columns */
-    EXPECT_EQ(b.isAbleToMove(3U, 0U, 0U), false);
-    EXPECT_EQ(b.isAbleToMove(3U, 7U, 0U), false);
-    EXPECT_EQ(b.isAbleToMove(0U, 3U, 0U), false);
-    EXPECT_EQ(b.isAbleToMove(7U, 3U, 0U), false);
+    EXPECT_EQ(b.checkMove(3U, 0U, 0U), false);
+    EXPECT_EQ(b.checkMove(3U, 7U, 0U), false);
+    EXPECT_EQ(b.checkMove(0U, 3U, 0U), false);
+    EXPECT_EQ(b.checkMove(7U, 3U, 0U), false);
 }
 
 TEST(BishopTest, Move)

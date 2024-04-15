@@ -8,10 +8,11 @@
 
 King::King(bool _color)
     : Piece(_color, 0, 0)
+    , isCheck(false)
+    , isMate(false)
+    , isPat(false)
+    , hasMoved(false)
 {
-    isCheck  = false;
-    hasMoved = false;
-
     if (_color)
     {
         /* Default position for white king */
@@ -26,28 +27,11 @@ King::King(bool _color)
     }
 }
 
-King::King(bool _isCheck, bool _hasMoved, bool _isAlive, bool _color, int _x, int _y)
-    : isCheck(_isCheck)
-    , hasMoved(_hasMoved)
-    , Piece(_isAlive, _color, _x, _y)
-{
-    /* Ensure king have not moved */
-    if ((color && ((_x != KING_WHITE_DEFAULT_X) || (_y != KING_WHITE_DEFAULT_Y))) || (!color && ((_x != KING_BLACK_DEFAULT_X) || (_y != KING_BLACK_DEFAULT_Y))))
-    {
-        hasMoved = true;
-    }
-}
-
-King::~King()
-{
-}
-
 bool
 King::castling(bool side)
 {
     if (!hasMoved && !isCheck)
     {
-        // TODO check is the king is check on the way
         if (side)
         {
             x += 2;
@@ -65,7 +49,7 @@ King::castling(bool side)
 }
 
 bool
-King::isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U]) const
+King::checkMove(int _x, int _y, int flags, Square* board[8U][8U]) const
 {
     bool xReturn = false;
 
@@ -108,7 +92,7 @@ bool
 King::move(int _x, int _y, int flags)
 {
     /* Check the king is able to move to the desired position */
-    if (this->isAbleToMove(_x, _y, flags))
+    if (this->checkMove(_x, _y, flags))
     {
         x        = _x;
         y        = _y;
@@ -117,12 +101,6 @@ King::move(int _x, int _y, int flags)
     }
 
     return false;
-}
-
-SquarePieceValue
-King::getValue(void) const
-{
-    return KingValue;
 }
 
 void

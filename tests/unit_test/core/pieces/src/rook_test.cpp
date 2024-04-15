@@ -22,21 +22,21 @@ TEST(RookTest, Castling)
     EXPECT_EQ(r2.castling(true), false);
 }
 
-TEST(RookTest, IsAbleToMove)
+TEST(RookTest, CheckMove)
 {
     Rook r(true, 3U, 3U);
 
     /* Able to move on raw and columns */
-    EXPECT_EQ(r.isAbleToMove(3U, 0U, 0U), true);
-    EXPECT_EQ(r.isAbleToMove(3U, 7U, 0U), true);
-    EXPECT_EQ(r.isAbleToMove(0U, 3U, 0U), true);
-    EXPECT_EQ(r.isAbleToMove(7U, 3U, 0U), true);
+    EXPECT_EQ(r.checkMove(3U, 0U, 0U), true);
+    EXPECT_EQ(r.checkMove(3U, 7U, 0U), true);
+    EXPECT_EQ(r.checkMove(0U, 3U, 0U), true);
+    EXPECT_EQ(r.checkMove(7U, 3U, 0U), true);
 
     /* Unable to move to diagonals */
-    EXPECT_EQ(r.isAbleToMove(7U, 7U, 0U), false);
-    EXPECT_EQ(r.isAbleToMove(1U, 5U, 0U), false);
-    EXPECT_EQ(r.isAbleToMove(1U, 1U, 0U), false);
-    EXPECT_EQ(r.isAbleToMove(5U, 1U, 0U), false);
+    EXPECT_EQ(r.checkMove(7U, 7U, 0U), false);
+    EXPECT_EQ(r.checkMove(1U, 5U, 0U), false);
+    EXPECT_EQ(r.checkMove(1U, 1U, 0U), false);
+    EXPECT_EQ(r.checkMove(5U, 1U, 0U), false);
 }
 
 TEST(RookTest, Move)

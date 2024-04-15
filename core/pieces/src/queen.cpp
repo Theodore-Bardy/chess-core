@@ -9,8 +9,6 @@
 Queen::Queen(bool _color)
     : Piece(_color, 0, 0)
 {
-    alive = true;
-
     if (_color)
     {
         /* Default position for white queen */
@@ -30,12 +28,8 @@ Queen::Queen(bool _isAlive, bool _color, int _x, int _y)
 {
 }
 
-Queen::~Queen()
-{
-}
-
 bool
-Queen::isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U]) const
+Queen::checkMove(int _x, int _y, int flags, Square* board[8U][8U]) const
 {
     bool xReturn = false;
 
@@ -68,8 +62,8 @@ Queen::isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U]) const
 bool
 Queen::move(int _x, int _y, int flags)
 {
-    /* Check the king is able to move to the desired position */
-    if (this->isAbleToMove(_x, _y, flags))
+    /* Check the queen is able to move to the desired position */
+    if (this->checkMove(_x, _y, flags))
     {
         x = _x;
         y = _y;
@@ -77,12 +71,6 @@ Queen::move(int _x, int _y, int flags)
     }
 
     return false;
-}
-
-SquarePieceValue
-Queen::getValue(void) const
-{
-    return QueenValue;
 }
 
 void

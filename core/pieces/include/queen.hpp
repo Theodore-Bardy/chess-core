@@ -32,14 +32,14 @@ public:
     Queen(bool _color);
 
     /**
-     * @brief Construct a custom queen
+     * @brief Construct a custom queen (use only for pawn promotion)
      */
     Queen(bool _isAlive, bool _color, int _x, int _y);
 
     /**
      * @brief Destroy the queen
      */
-    ~Queen();
+    ~Queen() = default;
 
     /**
      * @brief Clone a queen
@@ -54,9 +54,10 @@ public:
      * @param[in] _x Desired X position
      * @param[in] _y Desired Y position
      * @param[in] flags Move flags
+     * @param[in] board Give more context to check the move (optional)
      * @return true if the piece is able to move, otherwise false
      */
-    virtual bool isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U] = nullptr) const;
+    virtual bool checkMove(int _x, int _y, int flags, Square* board[8U][8U] = nullptr) const;
 
     /**
      * @brief Move the queen
@@ -71,7 +72,10 @@ public:
      * @brief Get the value of the queen
      * @return The value of the queen
      */
-    virtual SquarePieceValue getValue(void) const;
+    virtual SquarePieceValue getValue(void) const
+    {
+        return SquarePieceValue::QueenValue;
+    }
 
     /**
      * @brief Print queen

@@ -110,7 +110,7 @@ public:
      * @param[in] board Give more context to check the move (optional)
      * @return true if the piece is able to move, otherwise false
      */
-    virtual bool isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U] = nullptr) const = 0;
+    virtual bool checkMove(int _x, int _y, int flags, Square* board[8U][8U] = nullptr) const = 0;
 
     /**
      * @brief Move a piece

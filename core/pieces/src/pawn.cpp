@@ -20,21 +20,6 @@ Pawn::Pawn(bool _color, int _x)
     }
 }
 
-Pawn::Pawn(bool _hasMoved, bool _isAlive, bool _color, int _x, int _y)
-    : hasMoved(_hasMoved)
-    , Piece(_isAlive, _color, _x, _y)
-{
-    /* Ensure the pawn have not moved */
-    if ((color && (_y != PAWN_WHITE_DEFAULT_Y)) || (!color && (_y != PAWN_BLACK_DEFAULT_Y)))
-    {
-        hasMoved = true;
-    }
-}
-
-Pawn::~Pawn()
-{
-}
-
 void
 Pawn::promotion()
 {
@@ -42,7 +27,7 @@ Pawn::promotion()
 }
 
 bool
-Pawn::isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U]) const
+Pawn::checkMove(int _x, int _y, int flags, Square* board[8U][8U]) const
 {
     bool xReturn = false;
 
@@ -112,7 +97,7 @@ bool
 Pawn::move(int _x, int _y, int flags)
 {
     /* Check the king is able to move to the desired position */
-    if (this->isAbleToMove(_x, _y, flags))
+    if (this->checkMove(_x, _y, flags))
     {
         x = _x;
         y = _y;
@@ -120,12 +105,6 @@ Pawn::move(int _x, int _y, int flags)
     }
 
     return false;
-}
-
-SquarePieceValue
-Pawn::getValue(void) const
-{
-    return PawnValue;
 }
 
 void

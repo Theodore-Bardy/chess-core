@@ -16,12 +16,8 @@ Bishop::Bishop(bool _isAlive, bool _color, int _x, int _y)
 {
 }
 
-Bishop::~Bishop()
-{
-}
-
 bool
-Bishop::isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U]) const
+Bishop::checkMove(int _x, int _y, int flags, Square* board[8U][8U]) const
 {
     bool xReturn = false;
 
@@ -54,7 +50,7 @@ bool
 Bishop::move(int _x, int _y, int flags)
 {
     /* Check the king is able to move to the desired position */
-    if (this->isAbleToMove(_x, _y, flags))
+    if (this->checkMove(_x, _y, flags))
     {
         x = _x;
         y = _y;
@@ -62,12 +58,6 @@ Bishop::move(int _x, int _y, int flags)
     }
 
     return false;
-}
-
-SquarePieceValue
-Bishop::getValue(void) const
-{
-    return BishopValue;
 }
 
 void

@@ -33,14 +33,9 @@ public:
     Pawn(bool _color, int _x);
 
     /**
-     * @brief Construct a custom pawn
-     */
-    Pawn(bool _hasMoved, bool _isAlive, bool _color, int _x, int _y);
-
-    /**
      * @brief Destroy the pawn
      */
-    ~Pawn();
+    ~Pawn() = default;
 
     /**
      * @brief Clone a pawn
@@ -60,9 +55,10 @@ public:
      * @param[in] _x Desired X position
      * @param[in] _y Desired Y position
      * @param[in] flags Move flags
+     * @param[in] board Give more context to check the move (optional)
      * @return true if the piece is able to move, otherwise false
      */
-    virtual bool isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U] = nullptr) const;
+    virtual bool checkMove(int _x, int _y, int flags, Square* board[8U][8U] = nullptr) const;
 
     /**
      * @brief Move the pawn
@@ -77,7 +73,10 @@ public:
      * @brief Get the value of the pawn
      * @return The value of the pawn
      */
-    virtual SquarePieceValue getValue(void) const;
+    virtual SquarePieceValue getValue(void) const
+    {
+        return SquarePieceValue::PawnValue;
+    }
 
     /**
      * @brief Print pawn

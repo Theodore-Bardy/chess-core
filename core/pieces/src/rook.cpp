@@ -28,10 +28,6 @@ Rook::Rook(bool _hasMoved, bool _isAlive, bool _color, int _x, int _y)
 {
 }
 
-Rook::~Rook()
-{
-}
-
 bool
 Rook::castling(bool side)
 {
@@ -54,7 +50,7 @@ Rook::castling(bool side)
 }
 
 bool
-Rook::isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U]) const
+Rook::checkMove(int _x, int _y, int flags, Square* board[8U][8U]) const
 {
     bool xReturn = false;
 
@@ -97,7 +93,7 @@ bool
 Rook::move(int _x, int _y, int flags)
 {
     /* Check the king is able to move to the desired position */
-    if (this->isAbleToMove(_x, _y, flags))
+    if (this->checkMove(_x, _y, flags))
     {
         x        = _x;
         y        = _y;
@@ -106,12 +102,6 @@ Rook::move(int _x, int _y, int flags)
     }
 
     return false;
-}
-
-SquarePieceValue
-Rook::getValue(void) const
-{
-    return RookValue;
 }
 
 void
