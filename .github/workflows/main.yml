@@ -26,3 +26,6 @@ jobs:
 
     - name: Build application
       run: ./.github/build.sh || exit 1
+
+    - name: Build unit tests
+      run: ./.github/test.sh || exit 1

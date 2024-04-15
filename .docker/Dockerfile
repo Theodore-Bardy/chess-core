@@ -14,5 +14,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     clang-format \
     cmake \
     git \
+    lcov \
     make \
     ssh
