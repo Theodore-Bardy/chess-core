@@ -14,18 +14,6 @@ Piece::Piece(bool _color, int _x, int _y)
 {
 }
 
-Piece::Piece(bool _alive, bool _color, int _x, int _y)
-    : alive(_alive)
-    , color(_color)
-    , y(_y)
-    , x(_x)
-{
-}
-
-Piece::~Piece()
-{
-}
-
 bool
 Piece::checkWayOnMove(int _x, int _y, Square* board[8U][8U]) const
 {
@@ -50,18 +38,30 @@ Piece::checkWayOnMove(int _x, int _y, Square* board[8U][8U]) const
     return true;
 }
 
-bool
+int
 Piece::checkFinalOnMove(int _x, int _y, Square* board[8U][8U]) const
 {
     assert(nullptr != board);
 
-    return (board[_x][_y]->getColor() != board[x][y]->getColor());
+    /* Piece with the same color*/
+    if (board[_x][_y]->getColor() == board[x][y]->getColor())
+    {
+        return -1;
+    }
+    /* No piece */
+    else if (board[_x][_y]->getColor() == SquarePieceColor::NoPiece)
+    {
+        return 0;
+    }
+
+    /* Piece with the opposite color */
+    return 1;
 }
 
 void
-Piece::eat(Piece& piece_to_eat)
+Piece::take(Piece& piece_to_take)
 {
-    piece_to_eat.alive = false;
+    piece_to_take.alive = false;
 }
 
 std::ostream&

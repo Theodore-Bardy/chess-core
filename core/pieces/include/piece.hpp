@@ -35,9 +35,10 @@ protected:
      * @param[in] _x Desired X position
      * @param[in] _y Desired Y position
      * @param[in] board Context board
-     * @return true if there is no piece with the same color at the desired position, otherwise false
+     * @return -1 if there is piece with the same color at the desired position, 0 if there is no piece, 1 if there is
+     *         piece of the opposite color
      */
-    bool checkFinalOnMove(int _x, int _y, Square* board[8U][8U]) const;
+    int checkFinalOnMove(int _x, int _y, Square* board[8U][8U]) const;
 
 public:
     /**
@@ -54,18 +55,9 @@ public:
     Piece(bool _color, int _x, int _y);
 
     /**
-     * @brief Construct a new piece
-     * @param[in] _alive Alive state
-     * @param[in] _color Color of the piece
-     * @param[in] _x Default X position
-     * @param[in] _y Default Y position
-     */
-    Piece(bool _alive, bool _color, int _x, int _y);
-
-    /**
      * @brief Destroy the piece
      */
-    ~Piece();
+    ~Piece() = default;
 
     /**
      * @brief Clone a piece
@@ -73,10 +65,10 @@ public:
     virtual Piece* clone(void) const = 0;
 
     /**
-     * @brief Eat a piece
-     * @param[in, out] piece_to_eat Piece to eat
+     * @brief Take a piece
+     * @param[in] piece_to_take Piece to take
      */
-    void eat(Piece& piece_to_eat);
+    void take(Piece& piece_to_take);
 
     /**
      * @brief Returns the color of the piece
@@ -110,7 +102,7 @@ public:
      * @param[in] board Give more context to check the move (optional)
      * @return true if the piece is able to move, otherwise false
      */
-    virtual bool checkMove(int _x, int _y, int flags, Square* board[8U][8U] = nullptr) const = 0;
+    virtual bool checkMove(int _x, int _y, int& flags, Square* board[8U][8U]) const = 0;
 
     /**
      * @brief Move a piece
@@ -119,7 +111,7 @@ public:
      * @param[in] flags Move flags
      * @return true if the piece has moved to the desired destination, false otherwise
      */
-    virtual bool move(int _x, int _y, int flags) = 0;
+    virtual bool move(int _x, int _y, int& flags, Square* board[8U][8U]) = 0;
 
     /**
      * @brief Get the value of the piece

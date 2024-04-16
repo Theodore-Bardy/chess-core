@@ -3,6 +3,7 @@
  * @brief Rook sources
  */
 
+#include <assert.h>
 #include "rook.hpp"
 #include "move.hpp"
 
@@ -21,25 +22,18 @@ Rook::Rook(bool _color, int _x, int _y)
     }
 }
 
-Rook::Rook(bool _hasMoved, bool _isAlive, bool _color, int _x, int _y)
-    : hasMoved(_hasMoved)
-    , isKingSide(false)
-    , Piece(_isAlive, _color, _x, _y)
-{
-}
-
 bool
-Rook::castling(bool side)
+Rook::castle(void)
 {
     /* King side castle */
-    if (!hasMoved && side && (x == ROOK_2_WHITE_DEFAULT_X))
+    if (!hasMoved && isKingSide && (x == ROOK_2_WHITE_DEFAULT_X))
     {
         x        = ROOK_KING_CASTLE_X;
         hasMoved = true;
         return true;
     }
     /* Queen side castle */
-    else if (!hasMoved && !side && (x == ROOK_1_WHITE_DEFAULT_X))
+    else if (!hasMoved && !isKingSide && (x == ROOK_1_WHITE_DEFAULT_X))
     {
         x        = ROOK_QUEEN_CASTLE_X;
         hasMoved = true;
@@ -50,24 +44,17 @@ Rook::castling(bool side)
 }
 
 bool
-Rook::checkMove(int _x, int _y, int flags, Square* board[8U][8U]) const
+Rook::checkMove(int _x, int _y, int& flags, Square* board[8U][8U]) const
 {
+    /* Check parameter */
+    assert(nullptr != board);
+
     bool xReturn = false;
 
     /* Check desired position exists and it is not the current position */
     if ((_x > 7) || (_x < 0) || (_y > 7) || (_y < 0) || ((_x == x) && (_y == y)))
     {
         return false;
-    }
-
-    /* The rook can castle if it hasn't move */
-    if ((MOVE_FLAG_KING_CASTLE == (flags & MOVE_FLAG_KING_CASTLE)) && (_y == y) && (_x == ROOK_KING_CASTLE_X))
-    {
-        xReturn = (!hasMoved && isKingSide);
-    }
-    else if ((MOVE_FLAG_QUEEN_CASTLE == (flags & MOVE_FLAG_QUEEN_CASTLE)) && (_y == y) && (_x == ROOK_QUEEN_CASTLE_X))
-    {
-        xReturn = (!hasMoved && !isKingSide);
     }
 
     /* The rook moves along a rank, check the desired postion is reachable */
@@ -77,12 +64,21 @@ Rook::checkMove(int _x, int _y, int flags, Square* board[8U][8U]) const
     }
 
     /* Check if there is piece between current and desired position */
-    if (xReturn && (board != nullptr))
+    if (xReturn)
     {
         xReturn = this->checkWayOnMove(_x, _y, board);
         if (xReturn)
         {
-            xReturn = this->checkFinalOnMove(_x, _y, board);
+            /* Check for piece of the same color */
+            if (this->checkFinalOnMove(_x, _y, board) == -1)
+            {
+                xReturn = false;
+            }
+            /* Check for piece of the opposite color */
+            else if (this->checkFinalOnMove(_x, _y, board) == 1)
+            {
+                flags |= MOVE_FLAG_TAKE;
+            }
         }
     }
 
@@ -90,10 +86,10 @@ Rook::checkMove(int _x, int _y, int flags, Square* board[8U][8U]) const
 }
 
 bool
-Rook::move(int _x, int _y, int flags)
+Rook::move(int _x, int _y, int& flags, Square* board[8U][8U])
 {
     /* Check the king is able to move to the desired position */
-    if (this->checkMove(_x, _y, flags))
+    if (this->checkMove(_x, _y, flags, board))
     {
         x        = _x;
         y        = _y;

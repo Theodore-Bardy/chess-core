@@ -3,13 +3,14 @@
  * @brief Pawn sources
  */
 
+#include <assert.h>
 #include "pawn.hpp"
 #include "move.hpp"
 
 Pawn::Pawn(bool _color, int _x)
     : Piece(_color, _x, 0)
+    , hasMoved(false)
 {
-    hasMoved = false;
     if (_color)
     {
         y = PAWN_WHITE_DEFAULT_Y;
@@ -27,8 +28,11 @@ Pawn::promotion()
 }
 
 bool
-Pawn::checkMove(int _x, int _y, int flags, Square* board[8U][8U]) const
+Pawn::checkMove(int _x, int _y, int& flags, Square* board[8U][8U]) const
 {
+    /* Check parameter */
+    assert(nullptr != board);
+
     bool xReturn = false;
 
     /* Check desired position exists and it is not the current position */
@@ -37,29 +41,18 @@ Pawn::checkMove(int _x, int _y, int flags, Square* board[8U][8U]) const
         return false;
     }
 
-    /* If the pawn is eating it must move 1 square right or left */
-    if ((MOVE_FLAG_TAKE == (flags & MOVE_FLAG_TAKE)) && ((_x == x + 1) || (_x == x - 1)))
+    /* The pawn can move right or left only when it takes */
+    if (((_x == x + 1) || (_x == x - 1)) && (this->checkFinalOnMove(_x, _y, board) == 1))
     {
-        /* Check the desired postion is reachable */
-        if (color)
+        /* White (black) pawn must increase (decrease) Y of 1 on take move */
+        if ((color && (_y == y + 1)) || (!color && (_y == y - 1)))
         {
-            /* White pawn must increase Y by one square */
-            if (_y == y + 1)
-            {
-                xReturn = true;
-            }
-        }
-        else
-        {
-            /* Black pawn must decrease Y by one square */
-            if (_y == y - 1)
-            {
-                xReturn = true;
-            }
+            flags |= MOVE_FLAG_TAKE;
+            xReturn = true;
         }
     }
-    /* If the pawn isn't eating it must stay on his column */
-    else if ((0 == (flags & MOVE_FLAG_TAKE)) && (_x == x))
+    /* Otherwise the pawn must stay on his column */
+    else if (_x == x)
     {
         /* Check the desired postion is reachable */
         if (color)
@@ -81,23 +74,33 @@ Pawn::checkMove(int _x, int _y, int flags, Square* board[8U][8U]) const
     }
 
     /* Check if there is piece between current and desired position */
-    if (xReturn && (board != nullptr))
+    if (xReturn)
     {
         xReturn = this->checkWayOnMove(_x, _y, board);
         if (xReturn)
         {
-            xReturn = this->checkFinalOnMove(_x, _y, board);
+            /* Check for piece of the same color */
+            if (this->checkFinalOnMove(_x, _y, board) == -1)
+            {
+                xReturn = false;
+            }
         }
+    }
+
+    /* Check if pawn reach the end of the board */
+    if (xReturn && ((color && (_y == SQUARE_Y_8)) || (!color && (_y == SQUARE_Y_1))))
+    {
+        flags |= MOVE_FLAG_PROMOTION;
     }
 
     return xReturn;
 }
 
 bool
-Pawn::move(int _x, int _y, int flags)
+Pawn::move(int _x, int _y, int& flags, Square* board[8U][8U])
 {
     /* Check the king is able to move to the desired position */
-    if (this->checkMove(_x, _y, flags))
+    if (this->checkMove(_x, _y, flags, board))
     {
         x = _x;
         y = _y;

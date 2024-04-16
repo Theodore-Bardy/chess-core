@@ -3,22 +3,22 @@
  * @brief Bishop sources
  */
 
-#include "math.h"
+#include <assert.h>
+#include <math.h>
 #include "bishop.hpp"
+#include "move.hpp"
 
 Bishop::Bishop(bool _color, int _x, int _y)
     : Piece(_color, _x, _y)
 {
 }
 
-Bishop::Bishop(bool _isAlive, bool _color, int _x, int _y)
-    : Piece(_isAlive, _color, _x, _y)
-{
-}
-
 bool
-Bishop::checkMove(int _x, int _y, int flags, Square* board[8U][8U]) const
+Bishop::checkMove(int _x, int _y, int& flags, Square* board[8U][8U]) const
 {
+    /* Check parameter */
+    assert(nullptr != board);
+
     bool xReturn = false;
 
     /* Check desired position exists and it is not the current position */
@@ -34,12 +34,21 @@ Bishop::checkMove(int _x, int _y, int flags, Square* board[8U][8U]) const
     }
 
     /* Check if there is piece between current and desired position */
-    if (xReturn && (board != nullptr))
+    if (xReturn)
     {
         xReturn = this->checkWayOnMove(_x, _y, board);
         if (xReturn)
         {
-            xReturn = this->checkFinalOnMove(_x, _y, board);
+            /* Check for piece of the same color */
+            if (this->checkFinalOnMove(_x, _y, board) == -1)
+            {
+                xReturn = false;
+            }
+            /* Check for piece of the opposite color */
+            else if (this->checkFinalOnMove(_x, _y, board) == 1)
+            {
+                flags |= MOVE_FLAG_TAKE;
+            }
         }
     }
 
@@ -47,10 +56,10 @@ Bishop::checkMove(int _x, int _y, int flags, Square* board[8U][8U]) const
 }
 
 bool
-Bishop::move(int _x, int _y, int flags)
+Bishop::move(int _x, int _y, int& flags, Square* board[8U][8U])
 {
     /* Check the king is able to move to the desired position */
-    if (this->checkMove(_x, _y, flags))
+    if (this->checkMove(_x, _y, flags, board))
     {
         x = _x;
         y = _y;

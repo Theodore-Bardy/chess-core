@@ -3,8 +3,10 @@
  * @brief Queen soucres
  */
 
+#include <assert.h>
+#include <math.h>
 #include "queen.hpp"
-#include "math.h"
+#include "move.hpp"
 
 Queen::Queen(bool _color)
     : Piece(_color, 0, 0)
@@ -23,14 +25,17 @@ Queen::Queen(bool _color)
     }
 }
 
-Queen::Queen(bool _isAlive, bool _color, int _x, int _y)
-    : Piece(_isAlive, _color, _x, _y)
+Queen::Queen(bool _color, int _x, int _y)
+    : Piece(_color, _x, _y)
 {
 }
 
 bool
-Queen::checkMove(int _x, int _y, int flags, Square* board[8U][8U]) const
+Queen::checkMove(int _x, int _y, int& flags, Square* board[8U][8U]) const
 {
+    /* Check parameter */
+    assert(nullptr != board);
+
     bool xReturn = false;
 
     /* Check desired position exists and it is not the current position */
@@ -47,12 +52,21 @@ Queen::checkMove(int _x, int _y, int flags, Square* board[8U][8U]) const
     }
 
     /* Check if there is piece between current and desired position */
-    if (xReturn && (board != nullptr))
+    if (xReturn)
     {
         xReturn = this->checkWayOnMove(_x, _y, board);
         if (xReturn)
         {
-            xReturn = this->checkFinalOnMove(_x, _y, board);
+            /* Check for piece of the same color */
+            if (this->checkFinalOnMove(_x, _y, board) == -1)
+            {
+                xReturn = false;
+            }
+            /* Check for piece of the opposite color */
+            else if (this->checkFinalOnMove(_x, _y, board) == 1)
+            {
+                flags |= MOVE_FLAG_TAKE;
+            }
         }
     }
 
@@ -60,10 +74,10 @@ Queen::checkMove(int _x, int _y, int flags, Square* board[8U][8U]) const
 }
 
 bool
-Queen::move(int _x, int _y, int flags)
+Queen::move(int _x, int _y, int& flags, Square* board[8U][8U])
 {
     /* Check the queen is able to move to the desired position */
-    if (this->checkMove(_x, _y, flags))
+    if (this->checkMove(_x, _y, flags, board))
     {
         x = _x;
         y = _y;

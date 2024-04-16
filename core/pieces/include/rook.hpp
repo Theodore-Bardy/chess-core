@@ -42,11 +42,6 @@ public:
     Rook(bool _color, int _x, int _y);
 
     /**
-     * @brief Construct a custom rook (use only for pawn promotion)
-     */
-    Rook(bool _hasMoved, bool _isAlive, bool _color, int _x, int _y);
-
-    /**
      * @brief Destroy the rook
      */
     ~Rook() = default;
@@ -61,10 +56,9 @@ public:
 
     /**
      * @brief Castle the rook
-     * @param[in] side true means little castle, flase great castle
      * @return true if the rook has castle, false otherwise
      */
-    bool castling(bool side);
+    bool castle(void);
 
     /**
      * @brief Check if the piece is able to move a the desired position
@@ -74,7 +68,7 @@ public:
      * @param[in] board Give more context to check the move (optional)
      * @return true if the piece is able to move, otherwise false
      */
-    virtual bool checkMove(int _x, int _y, int flags, Square* board[8U][8U] = nullptr) const;
+    virtual bool checkMove(int _x, int _y, int& flags, Square* board[8U][8U]) const;
 
     /**
      * @brief Move the rook
@@ -83,7 +77,7 @@ public:
      * @param[in] flags Move flags
      * @return true if the rook has moved to the desired destination, false otherwise
      */
-    virtual bool move(int _x, int _y, int flags);
+    virtual bool move(int _x, int _y, int& flags, Square* board[8U][8U]);
 
     /**
      * @brief Indicate if the rook is the king side one

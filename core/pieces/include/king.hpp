@@ -7,6 +7,7 @@
 #define _KING_HPP_
 
 #include "piece.hpp"
+#include "rook.hpp"
 #include "square.hpp"
 
 /**
@@ -54,10 +55,11 @@ public:
 
     /**
      * @brief Castle the king
-     * @param[in] side true means little castle, flase great castle
+     * @param[in] side true means king castle, false queen castle
+     * @param[in] rook Rook which castles with the king
      * @return true if the king has castle, false otherwise
      */
-    bool castling(bool side);
+    bool castle(bool side, Rook* rook);
 
     /**
      * @brief Check if the piece is able to move a the desired position
@@ -67,7 +69,7 @@ public:
      * @param[in] board Give more context to check the move (optional)
      * @return true if the piece is able to move, otherwise false
      */
-    virtual bool checkMove(int _x, int _y, int flags, Square* board[8U][8U] = nullptr) const;
+    virtual bool checkMove(int _x, int _y, int& flags, Square* board[8U][8U]) const;
 
     /**
      * @brief Move the king
@@ -76,7 +78,7 @@ public:
      * @param[in] flags Move flags
      * @return true if the king has moved to the desired destination, false otherwise
      */
-    virtual bool move(int _x, int _y, int flags);
+    virtual bool move(int _x, int _y, int& flags, Square* board[8U][8U]);
 
     /**
      * @brief Get the value of the king
@@ -139,15 +141,6 @@ public:
     void setPatStatus(bool _isPat)
     {
         isPat = _isPat;
-    }
-
-    /**
-     * @brief Set the king check status
-     * @param[in] _isCheck New king check status
-     */
-    void setCheckStatus(bool _isCheck)
-    {
-        isCheck = _isCheck;
     }
 
     /**

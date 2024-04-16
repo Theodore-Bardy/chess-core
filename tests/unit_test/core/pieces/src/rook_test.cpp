@@ -6,20 +6,20 @@
 #include <gtest/gtest.h>
 #include "rook.hpp"
 
-TEST(RookTest, Castling)
+TEST(RookTest, castle)
 {
     Rook r1(true, ROOK_1_WHITE_DEFAULT_X, ROOK_1_WHITE_DEFAULT_Y);
     Rook r2(true, ROOK_2_WHITE_DEFAULT_X, ROOK_2_WHITE_DEFAULT_Y);
 
     /* Able to castle since it hasn't move */
-    EXPECT_EQ(r1.castling(false), true);
+    EXPECT_EQ(r1.castle(false), true);
     EXPECT_EQ(r1.getX(), ROOK_QUEEN_CASTLE_X);
-    EXPECT_EQ(r2.castling(true), true);
+    EXPECT_EQ(r2.castle(true), true);
     EXPECT_EQ(r2.getX(), ROOK_KING_CASTLE_X);
 
     // /* Unable to castle since it has move */
-    EXPECT_EQ(r1.castling(false), false);
-    EXPECT_EQ(r2.castling(true), false);
+    EXPECT_EQ(r1.castle(false), false);
+    EXPECT_EQ(r2.castle(true), false);
 }
 
 TEST(RookTest, CheckMove)
