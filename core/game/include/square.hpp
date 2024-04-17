@@ -7,6 +7,7 @@
 #define _SQUARE_HPP_
 
 #include <iostream>
+#include <string>
 
 /**
  * @brief X coordinates
@@ -142,9 +143,9 @@ public:
 
     /**
      * @brief Print square
-     * @param[in, out] os Output stream
+     * @return Square as string
      */
-    void print(std::ostream& os) const;
+    std::string print(void) const;
 
     /**
      * @brief Overloading the `<<` operator for square class

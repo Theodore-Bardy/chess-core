@@ -121,9 +121,9 @@ public:
 
     /**
      * @brief Print the piece
-     * @param[in, out] os Output stream
+     * @return Piece as string
      */
-    virtual void print(std::ostream& os) const = 0;
+    virtual std::string print(void) const = 0;
 
     /**
      * @brief Overloading the `<<` operator for piece class

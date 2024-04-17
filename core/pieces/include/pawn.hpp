@@ -80,9 +80,9 @@ public:
 
     /**
      * @brief Print pawn
-     * @param[in, out] os Output stream
+     * @return Pawn as string
      */
-    virtual void print(std::ostream& os) const;
+    virtual std::string print(void) const;
 
     /**
      * @brief Overloading the `<<` operator for pawn class

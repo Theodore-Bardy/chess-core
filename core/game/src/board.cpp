@@ -13,6 +13,8 @@
 #include "pawn.hpp"
 #include "move.hpp"
 
+using namespace std;
+
 Board::Board()
     : isInitialize(false)
 {
@@ -742,46 +744,50 @@ Board::isKingPat(bool kingColor)
     return k->getPatStatus();
 }
 
-void
-Board::print(std::ostream& os) const
+string
+Board::print(void) const
 {
+    string toReturn = "";
+
     /* Print dead white pieces */
     for (auto p : whitePieces)
     {
         if (!p->isAlive())
         {
-            os << *p;
+            toReturn += p->print();
         }
     }
-    os << "\n";
+    toReturn += "\n";
 
     for (int Y = 1; Y <= BOARD_SIZE_MAX; Y++)
     {
-        os << (BOARD_SIZE_MAX - Y + 1) << "| ";
+        toReturn += (BOARD_SIZE_MAX - Y + 1) + "| ";
         for (int X = 0; X < BOARD_SIZE_MAX; X++)
         {
-            os << *board[X][BOARD_SIZE_MAX - Y];
+            toReturn += board[X][BOARD_SIZE_MAX - Y]->print();
         }
-        os << "\n";
+        toReturn += "\n";
     }
 
-    os << "___________________________\n";
-    os << "  | a  b  c  d  e  f  g  h \n";
+    toReturn += "___________________________\n";
+    toReturn += "  | a  b  c  d  e  f  g  h \n";
 
     /* Print dead black pieces */
     for (auto p : blackPieces)
     {
         if (!p->isAlive())
         {
-            os << *p;
+            toReturn += p->print();
         }
     }
-    os << "\n";
+    toReturn += "\n";
+
+    return toReturn;
 }
 
 std::ostream&
 operator<<(std::ostream& os, Board const& board)
 {
-    board.print(os);
+    os << board.print();
     return os;
 }

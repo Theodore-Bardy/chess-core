@@ -7,6 +7,8 @@
 #include "king.hpp"
 #include "move.hpp"
 
+using namespace std;
+
 King::King(bool _color)
     : Piece(_color, 0, 0)
     , isCheck(false)
@@ -106,15 +108,15 @@ King::move(int _x, int _y, int& flags, Square* board[8U][8U])
     return false;
 }
 
-void
-King::print(std::ostream& os) const
+string
+King::print(void) const
 {
-    os << (color ? " ♔ " : " ♚ ");
+    return (color ? " ♔ " : " ♚ ");
 }
 
 std::ostream&
 operator<<(std::ostream& os, King const& king)
 {
-    king.print(os);
+    os << king.print();
     return os;
 }

@@ -8,6 +8,8 @@
 #include "bishop.hpp"
 #include "move.hpp"
 
+using namespace std;
+
 Bishop::Bishop(bool _color, int _x, int _y)
     : Piece(_color, _x, _y)
 {
@@ -69,15 +71,15 @@ Bishop::move(int _x, int _y, int& flags, Square* board[8U][8U])
     return false;
 }
 
-void
-Bishop::print(std::ostream& os) const
+string
+Bishop::print(void) const
 {
-    os << (color ? " ♗ " : " ♝ ");
+    return (color ? " ♗ " : " ♝ ");
 }
 
 std::ostream&
 operator<<(std::ostream& os, Bishop const& bishop)
 {
-    bishop.print(os);
+    os << bishop.print();
     return os;
 }

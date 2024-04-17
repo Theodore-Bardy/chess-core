@@ -11,8 +11,6 @@
 
 #include "game.hpp"
 
-using namespace std;
-
 class Parser
 {
 private:
@@ -34,7 +32,7 @@ public:
      * @param[in] fileName Name of the file
      * @return true if file is found, false otherwise
      */
-    bool loadGame(Game& game, string filePath, string fileName);
+    bool loadGame(Game& game, std::string filePath, std::string fileName);
 
     /**
      * @brief Save a Chess game from to a PGN files format
@@ -42,7 +40,7 @@ public:
      * @param[in] fileName Name of the file
      * @return true if file is created, false otherwise
      */
-    bool saveGame(string filePath, string fileName);
+    bool saveGame(std::string filePath, std::string fileName);
 };
 
 #endif /* _PARSER_HPP_ */

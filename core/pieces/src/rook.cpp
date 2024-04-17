@@ -7,6 +7,8 @@
 #include "rook.hpp"
 #include "move.hpp"
 
+using namespace std;
+
 Rook::Rook(bool _color, int _x, int _y)
     : Piece(_color, _x, _y)
     , hasMoved(false)
@@ -100,15 +102,15 @@ Rook::move(int _x, int _y, int& flags, Square* board[8U][8U])
     return false;
 }
 
-void
-Rook::print(std::ostream& os) const
+string
+Rook::print(void) const
 {
-    os << (color ? " ♖ " : " ♜ ");
+    return (color ? " ♖ " : " ♜ ");
 }
 
 std::ostream&
 operator<<(std::ostream& os, Rook const& rook)
 {
-    rook.print(os);
+    os << rook.print();
     return os;
 }

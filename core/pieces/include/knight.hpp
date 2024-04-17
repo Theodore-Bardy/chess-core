@@ -78,9 +78,9 @@ public:
 
     /**
      * @brief Print knight
-     * @param[in, out] os Output stream
+     * @return Knight as string
      */
-    virtual void print(std::ostream& os) const;
+    virtual std::string print(void) const;
 
     /**
      * @brief Overloading the `<<` operator for knight class

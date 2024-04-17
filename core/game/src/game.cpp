@@ -62,33 +62,37 @@ Game::checkMove(SquarePieceValue pieceType, SquarePieceColor pieceColor, int xEn
     return false;
 }
 
-void
-Game::print(std::ostream& os) const
+string
+Game::print(void) const
 {
+    string toReturn = "";
+
     int whiteMove = 1;
     int blackMove = 1;
 
-    os << "[" << moveIndex << "]";
+    toReturn += "[" + to_string(moveIndex) + "]";
     for (auto m : moves)
     {
         if (whiteMove == blackMove)
         {
-            os << " " << whiteMove << ". " << *m;
+            toReturn += " " + to_string(whiteMove) + ". " + m->print();
             whiteMove++;
         }
         else
         {
-            os << " " << *m;
+            toReturn += " " + m->print();
             blackMove++;
         }
     }
 
-    os << "\n\n" << gameBoard;
+    toReturn += "\n\n" + gameBoard.print();
+
+    return toReturn;
 }
 
 std::ostream&
 operator<<(std::ostream& os, Game const& game)
 {
-    game.print(os);
+    os << game.print();
     return os;
 }

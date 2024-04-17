@@ -12,8 +12,6 @@
 #include "board.hpp"
 #include "move.hpp"
 
-using namespace std;
-
 class Game
 {
 private:
@@ -67,9 +65,9 @@ public:
 
     /**
      * @brief Print game
-     * @param[in, out] os Output stream
+     * @return Game as string
      */
-    virtual void print(std::ostream& os) const;
+    virtual std::string print(void) const;
 
     /**
      * @brief Overloading the `<<` operator for game class

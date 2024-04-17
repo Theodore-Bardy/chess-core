@@ -7,6 +7,8 @@
 #include "pawn.hpp"
 #include "move.hpp"
 
+using namespace std;
+
 Pawn::Pawn(bool _color, int _x)
     : Piece(_color, _x, 0)
     , hasMoved(false)
@@ -110,15 +112,15 @@ Pawn::move(int _x, int _y, int& flags, Square* board[8U][8U])
     return false;
 }
 
-void
-Pawn::print(std::ostream& os) const
+string
+Pawn::print(void) const
 {
-    os << (color ? " ♙ " : " ♟ ");
+    return (color ? " ♙ " : " ♟ ");
 }
 
 std::ostream&
 operator<<(std::ostream& os, Pawn const& pawn)
 {
-    pawn.print(os);
+    os << pawn.print();
     return os;
 }

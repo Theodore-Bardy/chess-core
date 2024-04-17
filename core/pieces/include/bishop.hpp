@@ -78,9 +78,9 @@ public:
 
     /**
      * @brief Print bishop
-     * @param[in, out] os Output stream
+     * @return Bishop as string
      */
-    virtual void print(std::ostream& os) const;
+    virtual std::string print(void) const;
 
     /**
      * @brief Overloading the `<<` operator for bishop class

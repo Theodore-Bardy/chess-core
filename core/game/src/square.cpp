@@ -5,6 +5,8 @@
 
 #include "square.hpp"
 
+using namespace std;
+
 Square::Square(int _x, int _y)
     : color(SquarePieceColor::NoPiece)
     , value(SquarePieceValue::Empty)
@@ -13,78 +15,80 @@ Square::Square(int _x, int _y)
 {
 }
 
-void
-Square::print(std::ostream& os) const
+string
+Square::print(void) const
 {
+    string toReturn = "";
+
     switch (value)
     {
         case SquarePieceValue::Empty:
-            os << " . ";
+            toReturn += " . ";
             break;
 
         case SquarePieceValue::KingValue:
             if (color == SquarePieceColor::White)
             {
-                os << " ♔ ";
+                toReturn += " ♔ ";
             }
             else
             {
-                os << " ♚ ";
+                toReturn += " ♚ ";
             }
             break;
 
         case SquarePieceValue::QueenValue:
             if (color == SquarePieceColor::White)
             {
-                os << " ♕ ";
+                toReturn += " ♕ ";
             }
             else
             {
-                os << " ♛ ";
+                toReturn += " ♛ ";
             }
             break;
 
         case SquarePieceValue::BishopValue:
             if (color == SquarePieceColor::White)
             {
-                os << " ♗ ";
+                toReturn += " ♗ ";
             }
             else
             {
-                os << " ♝ ";
+                toReturn += " ♝ ";
             }
             break;
 
         case SquarePieceValue::KnightValue:
             if (color == SquarePieceColor::White)
             {
-                os << " ♘ ";
+                toReturn += " ♘ ";
             }
             else
             {
-                os << " ♞ ";
+                toReturn += " ♞ ";
             }
             break;
 
         case SquarePieceValue::RookValue:
             if (color == SquarePieceColor::White)
             {
-                os << " ♖ ";
+                toReturn += " ♖ ";
             }
             else
             {
-                os << " ♜ ";
+                toReturn += " ♜ ";
             }
             break;
 
         case SquarePieceValue::PawnValue:
             if (color == SquarePieceColor::White)
             {
-                os << " ♙ ";
+                toReturn += " ♙ ";
             }
             else
             {
-                os << " ♟ ";
+                toReturn += " ♟ ";
             }
             break;
 
@@ -92,11 +96,13 @@ Square::print(std::ostream& os) const
             /* Should never be here */
             break;
     }
+
+    return toReturn;
 }
 
 std::ostream&
 operator<<(std::ostream& os, Square const& square)
 {
-    square.print(os);
+    os << square.print();
     return os;
 }

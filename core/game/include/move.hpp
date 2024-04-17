@@ -6,9 +6,8 @@
 #ifndef _MOVE_HPP_
 #define _MOVE_HPP_
 
+#include <string>
 #include "piece.hpp"
-
-using namespace std;
 
 /**
  * @brief Optional flash on a move
@@ -93,9 +92,9 @@ public:
 
     /**
      * @brief Print move
-     * @param[in, out] os Output stream
+     * @return Move as string
      */
-    virtual void print(std::ostream& os) const;
+    virtual std::string print(void) const;
 
     /**
      * @brief Overloading the `<<` operator for move class

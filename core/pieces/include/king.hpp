@@ -145,9 +145,9 @@ public:
 
     /**
      * @brief Print king
-     * @param[in, out] os Output stream
+     * @return King as string
      */
-    virtual void print(std::ostream& os) const;
+    virtual std::string print(void) const;
 
     /**
      * @brief Overloading the `<<` operator for king class

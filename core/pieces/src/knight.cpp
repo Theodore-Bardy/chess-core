@@ -7,6 +7,8 @@
 #include "knight.hpp"
 #include "move.hpp"
 
+using namespace std;
+
 Knight::Knight(bool _color, int _x, int _y)
     : Piece(_color, _x, _y)
 {
@@ -65,15 +67,15 @@ Knight::move(int _x, int _y, int& flags, Square* board[8U][8U])
     return false;
 }
 
-void
-Knight::print(std::ostream& os) const
+string
+Knight::print(void) const
 {
-    os << (color ? " ♘ " : " ♞ ");
+    return (color ? " ♘ " : " ♞ ");
 }
 
 std::ostream&
 operator<<(std::ostream& os, Knight const& knight)
 {
-    knight.print(os);
+    os << knight.print();
     return os;
 }

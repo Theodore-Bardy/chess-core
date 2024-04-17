@@ -7,6 +7,7 @@
 #define _BOARD_HPP_
 
 #include <iostream>
+#include <string>
 #include <vector>
 
 #include "piece.hpp"
@@ -129,9 +130,9 @@ public:
 
     /**
      * @brief Print board
-     * @param[in, out] os Output stream
+     * @return Board as string
      */
-    void print(std::ostream& os) const;
+    std::string print(void) const;
 
     /**
      * @brief Overloading the `<<` operator for board class

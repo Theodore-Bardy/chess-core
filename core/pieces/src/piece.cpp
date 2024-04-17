@@ -6,6 +6,8 @@
 #include <assert.h>
 #include "piece.hpp"
 
+using namespace std;
+
 Piece::Piece(bool _color, int _x, int _y)
     : alive(true)
     , color(_color)
@@ -67,6 +69,6 @@ Piece::take(Piece& piece_to_take)
 std::ostream&
 operator<<(std::ostream& os, Piece const& piece)
 {
-    piece.print(os);
+    os << piece.print();
     return os;
 }

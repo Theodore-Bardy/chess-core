@@ -99,9 +99,9 @@ public:
 
     /**
      * @brief Print rook
-     * @param[in, out] os Output stream
+     * @return Rook as string
      */
-    virtual void print(std::ostream& os) const;
+    virtual std::string print(void) const;
 
     /**
      * @brief Overloading the `<<` operator for rook class

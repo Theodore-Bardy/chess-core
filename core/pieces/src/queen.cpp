@@ -8,6 +8,8 @@
 #include "queen.hpp"
 #include "move.hpp"
 
+using namespace std;
+
 Queen::Queen(bool _color)
     : Piece(_color, 0, 0)
 {
@@ -87,15 +89,15 @@ Queen::move(int _x, int _y, int& flags, Square* board[8U][8U])
     return false;
 }
 
-void
-Queen::print(std::ostream& os) const
+string
+Queen::print(void) const
 {
-    os << (color ? " ♕ " : " ♛ ");
+    return (color ? " ♕ " : " ♛ ");
 }
 
 std::ostream&
 operator<<(std::ostream& os, Queen const& queen)
 {
-    queen.print(os);
+    os << queen.print();
     return os;
 }

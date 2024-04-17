@@ -19,53 +19,55 @@ Move::Move(Piece* _piece, int _xStart, int _yStart, int _xEnd, int _yEnd, int _f
 {
 }
 
-void
-Move::print(std::ostream& os) const
+string
+Move::print(void) const
 {
+    string toReturn = "";
+
     if (MOVE_FLAG_KING_CASTLE == (flags & MOVE_FLAG_KING_CASTLE))
     {
-        os << "O-O";
+        toReturn += "O-O";
     }
     else if (MOVE_FLAG_KING_CASTLE == (flags & MOVE_FLAG_KING_CASTLE))
     {
-        os << "O-O-O";
+        toReturn += "O-O-O";
     }
     else
     {
-        os << *piece;
+        toReturn += piece->print();
 
         /* Take flag */
         if (MOVE_FLAG_TAKE == (flags & MOVE_FLAG_TAKE))
         {
-            os << "x";
+            toReturn += "x";
         }
 
         /* Colomn */
         switch (xEnd)
         {
             case SQUARE_X_A:
-                os << "a";
+                toReturn += "a";
                 break;
             case SQUARE_X_B:
-                os << "b";
+                toReturn += "b";
                 break;
             case SQUARE_X_C:
-                os << "c";
+                toReturn += "c";
                 break;
             case SQUARE_X_D:
-                os << "d";
+                toReturn += "d";
                 break;
             case SQUARE_X_E:
-                os << "e";
+                toReturn += "e";
                 break;
             case SQUARE_X_F:
-                os << "f";
+                toReturn += "f";
                 break;
             case SQUARE_X_G:
-                os << "g";
+                toReturn += "g";
                 break;
             case SQUARE_X_H:
-                os << "h";
+                toReturn += "h";
                 break;
             default:
                 /* Should not be here */
@@ -76,39 +78,41 @@ Move::print(std::ostream& os) const
         switch (yEnd)
         {
             case SQUARE_Y_1:
-                os << "1";
+                toReturn += "1";
                 break;
             case SQUARE_Y_2:
-                os << "2";
+                toReturn += "2";
                 break;
             case SQUARE_Y_3:
-                os << "3";
+                toReturn += "3";
                 break;
             case SQUARE_Y_4:
-                os << "4";
+                toReturn += "4";
                 break;
             case SQUARE_Y_5:
-                os << "5";
+                toReturn += "5";
                 break;
             case SQUARE_Y_6:
-                os << "6";
+                toReturn += "6";
                 break;
             case SQUARE_Y_7:
-                os << "7";
+                toReturn += "7";
                 break;
             case SQUARE_Y_8:
-                os << "8";
+                toReturn += "8";
                 break;
             default:
                 /* Should not be here */
                 break;
         }
     }
+
+    return toReturn;
 }
 
 std::ostream&
 operator<<(std::ostream& os, Move const& move)
 {
-    move.print(os);
+    os << move.print();
     return os;
 }
