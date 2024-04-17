@@ -785,6 +785,60 @@ Board::print(void) const
     return toReturn;
 }
 
+string
+Board::printWhiteDeathPieces(void) const
+{
+    string toReturn = "";
+    /* Print dead white pieces */
+    for (auto p : whitePieces)
+    {
+        if (!p->isAlive())
+        {
+            toReturn += p->print();
+        }
+    }
+    return toReturn;
+}
+
+string
+Board::printBlackDeathPieces(void) const
+{
+    string toReturn = "";
+    /* Print dead white pieces */
+    for (auto p : blackPieces)
+    {
+        if (!p->isAlive())
+        {
+            toReturn += p->print();
+        }
+    }
+    return toReturn;
+}
+
+string
+Board::printBoardLine(int y) const
+{
+    string toReturn = "";
+    toReturn += to_string(y + 1) + "| ";
+    for (int X = 0; X < BOARD_SIZE_MAX; X++)
+    {
+        toReturn += board[X][y]->print();
+    }
+    return toReturn;
+}
+
+string
+Board::printDashLine(void) const
+{
+    return "___________________________";
+}
+
+string
+Board::printXLine(void) const
+{
+    return "  | a  b  c  d  e  f  g  h ";
+}
+
 std::ostream&
 operator<<(std::ostream& os, Board const& board)
 {

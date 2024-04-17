@@ -134,6 +134,12 @@ public:
      */
     std::string print(void) const;
 
+    std::string printWhiteDeathPieces(void) const;
+    std::string printBlackDeathPieces(void) const;
+    std::string printBoardLine(int y) const;
+    std::string printDashLine(void) const;
+    std::string printXLine(void) const;
+
     /**
      * @brief Overloading the `<<` operator for board class
      * @param[in, out] os Output stream
