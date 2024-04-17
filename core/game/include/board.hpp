@@ -70,10 +70,10 @@ public:
      * @param[in] piece Piece to move
      * @param[in] x X position to move
      * @param[in] y Y position to move
-     * @param[in] flags Flags of the movement
+     * @param[out] flags Flags of the movement
      * @return true if the piece has moved, false otherwise
      */
-    bool movePiece(Piece* piece, int x, int y, int flags);
+    bool movePiece(Piece* piece, int x, int y, int& flags);
 
     /**
      * @brief Select a piece on the board

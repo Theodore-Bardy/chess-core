@@ -53,7 +53,7 @@ Game::checkMove(SquarePieceValue pieceType, SquarePieceColor pieceColor, int xEn
     Piece* p = nullptr;
 
     /* Select piece */
-    if (gameBoard.checkMove(&p, pieceType, pieceColor, xEnd, yEnd, flags, extraFlag))
+    if (gameBoard.searchPiece(&p, pieceType, pieceColor, xEnd, yEnd, flags, extraFlag))
     {
         /* Add move into moves vector */
         return this->addMove(p->getX(), p->getY(), xEnd, yEnd, flags, extraFlag);

@@ -18,6 +18,7 @@ using namespace std;
 #define MOVE_FLAG_QUEEN_CASTLE (0x04) /**< (0b0000_0100) */
 #define MOVE_FLAG_CHECK        (0x08) /**< (0b0000_1000) */
 #define MOVE_FLAG_CHECK_MATE   (0x10) /**< (0b0001_0000) */
+#define MOVE_FLAG_PROMOTION    (0x20) /**< (0b0010_0000) */
 
 class Move
 {

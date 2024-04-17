@@ -203,7 +203,7 @@ Board::startUp()
 }
 
 bool
-Board::movePiece(Piece* piece, int x, int y, int flags)
+Board::movePiece(Piece* piece, int x, int y, int& flags)
 {
     /* Check parameter */
     assert(nullptr != piece);
@@ -212,21 +212,14 @@ Board::movePiece(Piece* piece, int x, int y, int flags)
     int  oldX    = piece->getX();
     int  oldY    = piece->getY();
 
-    /* Compute flags - take */
-    if ((MOVE_FLAG_TAKE == (flags & MOVE_FLAG_TAKE)))
-    {
-        Piece* p = nullptr;
-        if (this->selectPiece(&p, x, y))
-        {
-            piece->eat(*p); // TODO - eat is not to best method
+    /* Clear flag parameter */
+    flags = 0;
 
-            /* Reset square */
-            board[x][y]->resetSquare();
-        }
-    }
+    /* Check move and compute flags */
+    xReturn = piece->checkMove(x, y, flags, board);
 
-    /* Special move - king castle */
-    if ((MOVE_FLAG_KING_CASTLE == (flags & MOVE_FLAG_KING_CASTLE)))
+    /* Compute flags - king castle */
+    if (xReturn && (MOVE_FLAG_KING_CASTLE == (flags & MOVE_FLAG_KING_CASTLE)))
     {
         Rook* r = nullptr;
         King* k = (piece->getColor()) ? whiteKing : blackKing;
@@ -242,40 +235,42 @@ Board::movePiece(Piece* piece, int x, int y, int flags)
             r = (blackRooks[0]->isKingSideRook()) ? blackRooks[0] : blackRooks[1];
         }
 
-        /* Check king and rook can castle and square on the king way aren't attacked */
-        if (k->checkMove(KING_KING_CASTLE_X, y, flags, board) && r->checkMove(ROOK_KING_CASTLE_X, y, flags, board)
-            && !this->isSquareAttacked(!piece->getColor(), KING_KING_CASTLE_X, y) && !this->isSquareAttacked(!piece->getColor(), ROOK_KING_CASTLE_X, y))
+        /* Check square on the king way aren't attacked */
+        if (!this->isSquareAttacked(!piece->getColor(), KING_KING_CASTLE_X, y) && !this->isSquareAttacked(!piece->getColor(), ROOK_KING_CASTLE_X, y))
         {
-            /* Reset king and rook squares */
-            board[k->getX()][k->getY()]->resetSquare();
-            board[r->getX()][r->getY()]->resetSquare();
-
-            /* Move king and rook */
-            k->castling(true);
-            r->castling(true);
-            if (piece->getColor())
+            xReturn = k->castle(true, r);
+            if (xReturn)
             {
-                board[k->getX()][k->getY()]->setColor(SquarePieceColor::White);
-                board[r->getX()][r->getY()]->setColor(SquarePieceColor::White);
+                /* White */
+                if (piece->getColor())
+                {
+                    board[KING_WHITE_DEFAULT_X][KING_WHITE_DEFAULT_Y]->resetSquare();
+                    board[ROOK_2_WHITE_DEFAULT_X][ROOK_2_WHITE_DEFAULT_Y]->resetSquare();
+                    board[k->getX()][k->getY()]->setColor(SquarePieceColor::White);
+                    board[r->getX()][r->getY()]->setColor(SquarePieceColor::White);
+                }
+                /* Black */
+                else
+                {
+                    board[KING_BLACK_DEFAULT_X][KING_BLACK_DEFAULT_Y]->resetSquare();
+                    board[ROOK_2_BLACK_DEFAULT_X][ROOK_2_BLACK_DEFAULT_Y]->resetSquare();
+                    board[k->getX()][k->getY()]->setColor(SquarePieceColor::Black);
+                    board[r->getX()][r->getY()]->setColor(SquarePieceColor::Black);
+                }
+                board[k->getX()][k->getY()]->setValue(SquarePieceValue::KingValue);
+                board[r->getX()][r->getY()]->setValue(SquarePieceValue::RookValue);
             }
-            else
-            {
-                board[k->getX()][k->getY()]->setColor(SquarePieceColor::Black);
-                board[r->getX()][r->getY()]->setColor(SquarePieceColor::Black);
-            }
-            board[k->getX()][k->getY()]->setValue(SquarePieceValue::KingValue);
-            board[r->getX()][r->getY()]->setValue(SquarePieceValue::RookValue);
         }
     }
 
-    /* Special move - queen castle */
-    else if ((MOVE_FLAG_QUEEN_CASTLE == (flags & MOVE_FLAG_QUEEN_CASTLE)))
+    /* Compute flags - queen castle */
+    else if (xReturn && (MOVE_FLAG_QUEEN_CASTLE == (flags & MOVE_FLAG_QUEEN_CASTLE)))
     {
         Rook* r = nullptr;
         King* k = (piece->getColor()) ? whiteKing : blackKing;
         assert(k == piece);
 
-        /* Find king side rook */
+        /* Find queen side rook */
         if (piece->getColor())
         {
             r = (!whiteRooks[0]->isKingSideRook()) ? whiteRooks[0] : whiteRooks[1];
@@ -285,65 +280,129 @@ Board::movePiece(Piece* piece, int x, int y, int flags)
             r = (!blackRooks[0]->isKingSideRook()) ? blackRooks[0] : blackRooks[1];
         }
 
-        /* Check king and rook can castle and square on the king way aren't attacked */
-        if (k->checkMove(KING_QUEEN_CASTLE_X, y, flags, board) && r->checkMove(ROOK_QUEEN_CASTLE_X, y, flags, board)
-            && !this->isSquareAttacked(!piece->getColor(), KING_QUEEN_CASTLE_X, y) && !this->isSquareAttacked(!piece->getColor(), ROOK_QUEEN_CASTLE_X, y))
+        /* Check square on the king way aren't attacked */
+        if (!this->isSquareAttacked(!piece->getColor(), KING_KING_CASTLE_X, y) && !this->isSquareAttacked(!piece->getColor(), ROOK_KING_CASTLE_X, y))
         {
-            /* Reset king and rook squares */
-            board[k->getX()][k->getY()]->resetSquare();
-            board[r->getX()][r->getY()]->resetSquare();
-
-            /* Move king and rook */
-            k->castling(false);
-            r->castling(false);
-            if (piece->getColor())
+            xReturn = k->castle(false, r);
+            if (xReturn)
             {
-                board[k->getX()][k->getY()]->setColor(SquarePieceColor::White);
-                board[r->getX()][r->getY()]->setColor(SquarePieceColor::White);
+                /* White */
+                if (piece->getColor())
+                {
+                    board[KING_WHITE_DEFAULT_X][KING_WHITE_DEFAULT_Y]->resetSquare();
+                    board[ROOK_1_WHITE_DEFAULT_X][ROOK_1_WHITE_DEFAULT_Y]->resetSquare();
+                    board[k->getX()][k->getY()]->setColor(SquarePieceColor::White);
+                    board[r->getX()][r->getY()]->setColor(SquarePieceColor::White);
+                }
+                /* Black */
+                else
+                {
+                    board[KING_BLACK_DEFAULT_X][KING_BLACK_DEFAULT_Y]->resetSquare();
+                    board[ROOK_1_BLACK_DEFAULT_X][ROOK_1_BLACK_DEFAULT_Y]->resetSquare();
+                    board[k->getX()][k->getY()]->setColor(SquarePieceColor::Black);
+                    board[r->getX()][r->getY()]->setColor(SquarePieceColor::Black);
+                }
+                board[k->getX()][k->getY()]->setValue(SquarePieceValue::KingValue);
+                board[r->getX()][r->getY()]->setValue(SquarePieceValue::RookValue);
             }
-            else
-            {
-                board[k->getX()][k->getY()]->setColor(SquarePieceColor::Black);
-                board[r->getX()][r->getY()]->setColor(SquarePieceColor::Black);
-            }
-            board[k->getX()][k->getY()]->setValue(SquarePieceValue::KingValue);
-            board[r->getX()][r->getY()]->setValue(SquarePieceValue::RookValue);
         }
     }
 
     /* Normal move */
-    else if (piece->move(x, y, flags))
+    else if (xReturn)
     {
-        /* Reset old square */
-        board[oldX][oldY]->setValue(SquarePieceValue::Empty);
-        board[oldX][oldY]->setColor(SquarePieceColor::NoPiece);
-
-        /* Fill new square */
-        if (piece->getColor())
-        {
-            board[x][y]->setColor(SquarePieceColor::White);
-        }
-        else
-        {
-            board[x][y]->setColor(SquarePieceColor::Black);
-        }
-
+        /* Check move is legal - will not put the king in check state 
+         * 1. Save destination square configuration
+         * 2. Simulate the move on the board by modifying start and dest squares
+         * 3. Check if king is attacked
+         * 4. Restore board as before
+         */
+        SquarePieceColor saveColor = board[x][y]->getColor();
+        SquarePieceValue saveValue = board[x][y]->getValue();
+        King*            k         = (piece->getColor()) ? whiteKing : blackKing;
+        board[piece->getX()][piece->getY()]->resetSquare();
+        board[x][y]->setColor((piece->getColor()) ? SquarePieceColor::White : SquarePieceColor::Black);
         board[x][y]->setValue(piece->getValue());
+        if (isSquareAttacked(!piece->getColor(), k->getX(), k->getY()))
+        {
+            xReturn = false;
+        }
+        board[x][y]->setColor(saveColor);
+        board[x][y]->setValue(saveValue);
+        board[piece->getX()][piece->getY()]->setColor((piece->getColor()) ? SquarePieceColor::White : SquarePieceColor::Black);
+        board[piece->getX()][piece->getY()]->setValue(piece->getValue());
 
-        xReturn = true;
+        /* Compute flags - take */
+        if (xReturn && (MOVE_FLAG_TAKE == (flags & MOVE_FLAG_TAKE)))
+        {
+            Piece* p = nullptr;
+            if (this->selectPiece(&p, x, y))
+            {
+                piece->take(*p);
+                board[x][y]->resetSquare();
+            }
+        }
+
+        /* Move piece */
+        if (xReturn && piece->move(x, y, flags, board))
+        {
+            /* Reset old square */
+            board[oldX][oldY]->setValue(SquarePieceValue::Empty);
+            board[oldX][oldY]->setColor(SquarePieceColor::NoPiece);
+
+            /* Fill new square */
+            board[x][y]->setColor((piece->getColor()) ? SquarePieceColor::White : SquarePieceColor::Black);
+            board[x][y]->setValue(piece->getValue());
+        }
     }
 
-    /* Compute flags - check or check mate */
-    if ((MOVE_FLAG_CHECK == (flags & MOVE_FLAG_CHECK)) || (MOVE_FLAG_CHECK_MATE == (flags & MOVE_FLAG_CHECK_MATE)))
+    /* Compute flags - check: check if opposite color king is check */
+    King* k = (piece->getColor()) ? blackKing : whiteKing;
+    if (xReturn && this->isSquareAttacked(piece->getColor(), k->getX(), k->getY()))
     {
-        /* Check the king of the opposite color */
-        if (piece->getColor())
+        k->setCheckStatus(true);
+        flags |= MOVE_FLAG_CHECK;
+    }
+
+    /* Compute flags - check mate: check if opposite color king is check mate */
+    if (MOVE_FLAG_CHECK == (flags & MOVE_FLAG_CHECK))
+    {
+        /* To check if a king is mate:
+         * 1. Check if the king square is attacked
+         *  1. true means the king is at least in check state, see 2.
+         *  2. false means the king isn't mate (and check).
+         * 2. Check for all squares around the king are attacked:
+         *  1. true means the king can't move so check 3.
+         *  2. false means the king can try to move on a safe square, check if the king can legally move to a those squares.
+         *    1. true means the king isn't mate
+         *    2. false means the king can't move so check 3.
+         * 3. Check if any piece can meddle in the opponent.
+         */
+        bool isMate = true;
+        int  temp   = 0;
+
+        /* Check king moves */
+        for (int i = -1; isMate && (i <= 1); i++)
         {
-            blackKing->setCheckStatus(true);
+            for (int j = -1; isMate && (j <= 1); j++)
+            {
+                if (!this->isSquareAttacked(piece->getColor(), k->getX() + i, k->getY() + j) && k->checkMove(k->getX() + i, k->getY() + j, temp, board))
+                {
+                    isMate = false;
+                }
+            }
         }
-        else
+
+        /* Check others pieces moves */
+        if (isMate)
         {
-            whiteKing->setCheckStatus(true);
+            // TODO - Check if any piece can meddle in the opponent.
+        }
+
+        if (isMate)
+        {
+            k->setMateStatus(true);
+            flags |= MOVE_FLAG_CHECK_MATE;
         }
     }
 
@@ -595,30 +654,33 @@ Board::searchPiece(Piece** piece, SquarePieceValue pieceType, SquarePieceColor p
     }
 
     /* Lambda declaration - search a particular piece */
-    auto searchPiece = [&piece, &pieceType, &x, &y, &flags, &xExtraFlag, &yExtraFlag](vector<Piece*> const& pieces) {
-        for (auto p : pieces)
-        {
-            if ((p->getValue() == pieceType) && p->isAlive() && p->checkMove(x, y, flags) && ((xExtraFlag == -1) || (p->getX() == xExtraFlag))
-                && ((yExtraFlag == -1) || (p->getY() == yExtraFlag)))
-            {
-                /* Only one piece should fit to the description */
-                assert(nullptr == *piece);
-                *piece = p;
-            }
-        }
-        return (*piece != nullptr);
-    };
+    auto searchPiece
+        = [&piece, &pieceType, &x, &y, &flags, &xExtraFlag, &yExtraFlag](vector<Piece*> const& pieces, Square* board[BOARD_SIZE_MAX][BOARD_SIZE_MAX]) {
+              for (auto p : pieces)
+              {
+                  if ((p->getValue() == pieceType) && p->isAlive() && p->checkMove(x, y, flags, board) && ((xExtraFlag == -1) || (p->getX() == xExtraFlag))
+                      && ((yExtraFlag == -1) || (p->getY() == yExtraFlag)))
+                  {
+                      /* Only one piece should fit to the description */
+                      assert(nullptr == *piece);
+                      *piece = p;
+                  }
+              }
+              return (*piece != nullptr);
+          };
 
-    return searchPiece((pieceColor == White) ? whitePieces : blackPieces);
+    return searchPiece(((pieceColor == White) ? whitePieces : blackPieces), board);
 }
 
 bool
 Board::isSquareAttacked(bool pieceColor, int x, int y)
 {
-    auto isAttacked = [&x, &y](vector<Piece*> const& pieces, Square* board[BOARD_SIZE_MAX][BOARD_SIZE_MAX]) {
+    int flags = 0;
+
+    auto isAttacked = [&x, &y, &flags](vector<Piece*> const& pieces, Square* board[BOARD_SIZE_MAX][BOARD_SIZE_MAX]) {
         for (auto p : pieces)
         {
-            if (p->isAlive() && p->checkMove(x, y, 0, board))
+            if (p->isAlive() && p->checkMove(x, y, flags, board))
             {
                 return true;
             }
@@ -632,22 +694,52 @@ Board::isSquareAttacked(bool pieceColor, int x, int y)
 bool
 Board::isKingCheck(bool kingColor)
 {
-    // TODO
-    return true;
+    King* k = nullptr;
+
+    if (kingColor)
+    {
+        k = whiteKing;
+    }
+    else
+    {
+        k = blackKing;
+    }
+
+    return k->getCheckStatus();
 }
 
 bool
 Board::isKingMate(bool kingColor)
 {
-    // TODO
-    return true;
+    King* k = nullptr;
+
+    if (kingColor)
+    {
+        k = whiteKing;
+    }
+    else
+    {
+        k = blackKing;
+    }
+
+    return k->getMateStatus();
 }
 
 bool
 Board::isKingPat(bool kingColor)
 {
-    // TODO
-    return true;
+    King* k = nullptr;
+
+    if (kingColor)
+    {
+        k = whiteKing;
+    }
+    else
+    {
+        k = blackKing;
+    }
+
+    return k->getPatStatus();
 }
 
 void
