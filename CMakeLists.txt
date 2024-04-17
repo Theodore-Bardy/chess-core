@@ -47,6 +47,7 @@ else()
     # Include sub-directories
     include(${CMAKE_CURRENT_LIST_DIR}/app/CMakeLists.txt)
     include(${CMAKE_CURRENT_LIST_DIR}/core/CMakeLists.txt)
+    include(${CMAKE_CURRENT_LIST_DIR}/utils/CMakeLists.txt)
 
     # Enable used languages. This must be done after the toolchain has been defined by the BSP.
     enable_language(C CXX ASM)
