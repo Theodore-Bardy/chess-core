@@ -261,6 +261,10 @@ Board::movePiece(Piece* piece, int x, int y, int& flags)
                 board[r->getX()][r->getY()]->setValue(SquarePieceValue::RookValue);
             }
         }
+        else
+        {
+            xReturn = false;
+        }
     }
 
     /* Compute flags - queen castle */
@@ -281,7 +285,7 @@ Board::movePiece(Piece* piece, int x, int y, int& flags)
         }
 
         /* Check square on the king way aren't attacked */
-        if (!this->isSquareAttacked(!piece->getColor(), KING_KING_CASTLE_X, y) && !this->isSquareAttacked(!piece->getColor(), ROOK_KING_CASTLE_X, y))
+        if (!this->isSquareAttacked(!piece->getColor(), KING_QUEEN_CASTLE_X, y) && !this->isSquareAttacked(!piece->getColor(), ROOK_QUEEN_CASTLE_X, y))
         {
             xReturn = k->castle(false, r);
             if (xReturn)
@@ -305,6 +309,10 @@ Board::movePiece(Piece* piece, int x, int y, int& flags)
                 board[k->getX()][k->getY()]->setValue(SquarePieceValue::KingValue);
                 board[r->getX()][r->getY()]->setValue(SquarePieceValue::RookValue);
             }
+        }
+        else
+        {
+            xReturn = false;
         }
     }
 
@@ -338,8 +346,12 @@ Board::movePiece(Piece* piece, int x, int y, int& flags)
             Piece* p = nullptr;
             if (this->selectPiece(&p, x, y))
             {
+                /* Do not reset square otherwise the move() method fail */
                 piece->take(*p);
-                board[x][y]->resetSquare();
+            }
+            else
+            {
+                xReturn = false;
             }
         }
 
@@ -347,8 +359,7 @@ Board::movePiece(Piece* piece, int x, int y, int& flags)
         if (xReturn && piece->move(x, y, flags, board))
         {
             /* Reset old square */
-            board[oldX][oldY]->setValue(SquarePieceValue::Empty);
-            board[oldX][oldY]->setColor(SquarePieceColor::NoPiece);
+            board[oldX][oldY]->resetSquare();
 
             /* Fill new square */
             board[x][y]->setColor((piece->getColor()) ? SquarePieceColor::White : SquarePieceColor::Black);
@@ -362,47 +373,47 @@ Board::movePiece(Piece* piece, int x, int y, int& flags)
     {
         k->setCheckStatus(true);
         flags |= MOVE_FLAG_CHECK;
-    }
 
-    /* Compute flags - check mate: check if opposite color king is check mate */
-    if (MOVE_FLAG_CHECK == (flags & MOVE_FLAG_CHECK))
-    {
-        /* To check if a king is mate:
-         * 1. Check if the king square is attacked
-         *  1. true means the king is at least in check state, see 2.
-         *  2. false means the king isn't mate (and check).
-         * 2. Check for all squares around the king are attacked:
-         *  1. true means the king can't move so check 3.
-         *  2. false means the king can try to move on a safe square, check if the king can legally move to a those squares.
-         *    1. true means the king isn't mate
-         *    2. false means the king can't move so check 3.
-         * 3. Check if any piece can meddle in the opponent.
-         */
-        bool isMate = true;
-        int  temp   = 0;
-
-        /* Check king moves */
-        for (int i = -1; isMate && (i <= 1); i++)
+        /* Compute flags - check mate: check if opposite color king is check mate */
+        if (MOVE_FLAG_CHECK == (flags & MOVE_FLAG_CHECK))
         {
-            for (int j = -1; isMate && (j <= 1); j++)
+            /* To check if a king is mate:
+            * 1. Check if the king square is attacked
+            *  1. true means the king is at least in check state, see 2.
+            *  2. false means the king isn't mate (and check).
+            * 2. Check for all squares around the king are attacked:
+            *  1. true means the king can't move so check 3.
+            *  2. false means the king can try to move on a safe square, check if the king can legally move to a those squares.
+            *    1. true means the king isn't mate
+            *    2. false means the king can't move so check 3.
+            * 3. Check if any piece can meddle in the opponent.
+            */
+            bool isMate = true;
+            int  temp   = 0;
+
+            /* Check king moves */
+            for (int i = -1; isMate && (i <= 1); i++)
             {
-                if (!this->isSquareAttacked(piece->getColor(), k->getX() + i, k->getY() + j) && k->checkMove(k->getX() + i, k->getY() + j, temp, board))
+                for (int j = -1; isMate && (j <= 1); j++)
                 {
-                    isMate = false;
+                    if (!this->isSquareAttacked(piece->getColor(), k->getX() + i, k->getY() + j) && k->checkMove(k->getX() + i, k->getY() + j, temp, board))
+                    {
+                        isMate = false;
+                    }
                 }
             }
-        }
 
-        /* Check others pieces moves */
-        if (isMate)
-        {
-            // TODO - Check if any piece can meddle in the opponent.
-        }
+            /* Check others pieces moves */
+            if (isMate)
+            {
+                // TODO - Check if any piece can meddle in the opponent.
+            }
 
-        if (isMate)
-        {
-            k->setMateStatus(true);
-            flags |= MOVE_FLAG_CHECK_MATE;
+            if (isMate)
+            {
+                k->setMateStatus(true);
+                flags |= MOVE_FLAG_CHECK_MATE;
+            }
         }
     }
 

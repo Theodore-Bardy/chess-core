@@ -29,6 +29,7 @@ Game::addMove(int xStart, int yStart, int xEnd, int yEnd, int flags, char extraF
     Piece* p = nullptr;
 
     /* Select piece */
+    // TODO - need to check if the selected piece is the same color as the turn color
     if (!gameBoard.selectPiece(&p, xStart, yStart))
     {
         return false;

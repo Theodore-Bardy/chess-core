@@ -19,8 +19,8 @@ Piece::checkWayOnMove(int _x, int _y, Square* board[8U][8U]) const
 {
     assert(nullptr != board);
 
-    int xDir   = ((x - _x) == 0) ? 0 : ((x - _x) > 0) ? 1 : -1;
-    int yDir   = ((y - _y) == 0) ? 0 : ((y - _y) > 0) ? 1 : -1;
+    int xDir   = ((_x - x) == 0) ? 0 : ((_x - x) > 0) ? 1 : -1;
+    int yDir   = ((_y - y) == 0) ? 0 : ((_y - y) > 0) ? 1 : -1;
     int xCheck = x + xDir;
     int yCheck = y + yDir;
 
