@@ -5,13 +5,8 @@
 
 #include <assert.h>
 #include "board.hpp"
-#include "king.hpp"
-#include "queen.hpp"
-#include "bishop.hpp"
-#include "knight.hpp"
-#include "rook.hpp"
-#include "pawn.hpp"
 #include "move.hpp"
+#include "utils.hpp"
 
 Board::Board()
     : isInitialize(false)
@@ -23,33 +18,6 @@ Board::Board()
         {
             this->board[X][Y] = new Square(X, Y);
         }
-    }
-}
-
-Board::Board(Board const& boardToCopy)
-    : isInitialize(boardToCopy.isInitialize)
-{
-
-    /* Copy squares */
-    /* Initialize empty board */
-    for (int Y = 0; Y < BOARD_SIZE_MAX; Y++)
-    {
-        for (int X = 0; X < BOARD_SIZE_MAX; X++)
-        {
-            board[X][Y] = new Square(*boardToCopy.board[X][Y]);
-        }
-    }
-
-    /* White pieces */
-    for (auto const& it : boardToCopy.whitePieces)
-    {
-        whitePieces.push_back(it->clone());
-    }
-
-    /* Black pieces */
-    for (auto const& it : boardToCopy.blackPieces)
-    {
-        blackPieces.push_back(it->clone());
     }
 }
 
@@ -77,7 +45,7 @@ Board::~Board()
 }
 
 void
-Board::startUp()
+Board::startUp(void)
 {
     /* Check the startUp function is called once */
     if (!isInitialize)
@@ -425,6 +393,7 @@ Board::selectPiece(Piece** piece, int x, int y)
 {
     if ((board[x][y]->getColor() != SquarePieceColor::NoPiece) && (board[x][y]->getValue() != SquarePieceValue::Empty))
     {
+        /* Look for white piece */
         if (board[x][y]->getColor() == SquarePieceColor::White)
         {
             switch (board[x][y]->getValue())
@@ -471,44 +440,24 @@ Board::selectPiece(Piece** piece, int x, int y)
                     break;
 
                 case SquarePieceValue::PawnValue:
-                    if ((whitePawns[0]->getX() == x) && (whitePawns[0]->getY() == y))
+                    for (auto p : whitePawns)
                     {
-                        *piece = whitePawns[0];
-                    }
-                    else if ((whitePawns[1]->getX() == x) && (whitePawns[1]->getY() == y))
-                    {
-                        *piece = whitePawns[1];
-                    }
-                    else if ((whitePawns[2]->getX() == x) && (whitePawns[2]->getY() == y))
-                    {
-                        *piece = whitePawns[2];
-                    }
-                    else if ((whitePawns[3]->getX() == x) && (whitePawns[3]->getY() == y))
-                    {
-                        *piece = whitePawns[3];
-                    }
-                    else if ((whitePawns[4]->getX() == x) && (whitePawns[4]->getY() == y))
-                    {
-                        *piece = whitePawns[4];
-                    }
-                    else if ((whitePawns[5]->getX() == x) && (whitePawns[5]->getY() == y))
-                    {
-                        *piece = whitePawns[5];
-                    }
-                    else if ((whitePawns[6]->getX() == x) && (whitePawns[6]->getY() == y))
-                    {
-                        *piece = whitePawns[6];
-                    }
-                    else
-                    {
-                        *piece = whitePawns[7];
+                        if ((p->getX() == x) && (p->getY() == y))
+                        {
+                            *piece = p;
+                            break;
+                        }
                     }
                     break;
 
                 default:
+                    /* Should not be here */
+                    LOG_ERROR("Try to select a white piece with unknown value.");
+                    assert(false);
                     return false;
             }
         }
+        /* Look for black piece */
         else
         {
             switch (board[x][y]->getValue())
@@ -555,41 +504,20 @@ Board::selectPiece(Piece** piece, int x, int y)
                     break;
 
                 case SquarePieceValue::PawnValue:
-                    if ((blackPawns[0]->getX() == x) && (blackPawns[0]->getY() == y))
+                    for (auto p : blackPawns)
                     {
-                        *piece = blackPawns[0];
-                    }
-                    else if ((blackPawns[1]->getX() == x) && (blackPawns[1]->getY() == y))
-                    {
-                        *piece = blackPawns[1];
-                    }
-                    else if ((blackPawns[2]->getX() == x) && (blackPawns[2]->getY() == y))
-                    {
-                        *piece = blackPawns[2];
-                    }
-                    else if ((blackPawns[3]->getX() == x) && (blackPawns[3]->getY() == y))
-                    {
-                        *piece = blackPawns[3];
-                    }
-                    else if ((blackPawns[4]->getX() == x) && (blackPawns[4]->getY() == y))
-                    {
-                        *piece = blackPawns[4];
-                    }
-                    else if ((blackPawns[5]->getX() == x) && (blackPawns[5]->getY() == y))
-                    {
-                        *piece = blackPawns[5];
-                    }
-                    else if ((blackPawns[6]->getX() == x) && (blackPawns[6]->getY() == y))
-                    {
-                        *piece = blackPawns[6];
-                    }
-                    else
-                    {
-                        *piece = blackPawns[7];
+                        if ((p->getX() == x) && (p->getY() == y))
+                        {
+                            *piece = p;
+                            break;
+                        }
                     }
                     break;
 
                 default:
+                    /* Should not be here */
+                    LOG_ERROR("Try to select a black piece with unknown value.");
+                    assert(false);
                     return false;
             }
         }
@@ -705,52 +633,19 @@ Board::isSquareAttacked(bool pieceColor, int x, int y)
 bool
 Board::isKingCheck(bool kingColor)
 {
-    King* k = nullptr;
-
-    if (kingColor)
-    {
-        k = whiteKing;
-    }
-    else
-    {
-        k = blackKing;
-    }
-
-    return k->getCheckStatus();
+    return ((kingColor) ? whiteKing->getCheckStatus() : blackKing->getCheckStatus());
 }
 
 bool
 Board::isKingMate(bool kingColor)
 {
-    King* k = nullptr;
-
-    if (kingColor)
-    {
-        k = whiteKing;
-    }
-    else
-    {
-        k = blackKing;
-    }
-
-    return k->getMateStatus();
+    return ((kingColor) ? whiteKing->getMateStatus() : blackKing->getMateStatus());
 }
 
 bool
 Board::isKingPat(bool kingColor)
 {
-    King* k = nullptr;
-
-    if (kingColor)
-    {
-        k = whiteKing;
-    }
-    else
-    {
-        k = blackKing;
-    }
-
-    return k->getPatStatus();
+    return ((kingColor) ? whiteKing->getPatStatus() : blackKing->getPatStatus());
 }
 
 void

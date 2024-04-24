@@ -10,12 +10,12 @@
 #include <vector>
 
 #include "piece.hpp"
-#include "king.hpp"
-#include "queen.hpp"
 #include "bishop.hpp"
+#include "king.hpp"
 #include "knight.hpp"
-#include "rook.hpp"
 #include "pawn.hpp"
+#include "queen.hpp"
+#include "rook.hpp"
 #include "square.hpp"
 
 #define BOARD_SIZE_MAX (8)
@@ -51,11 +51,6 @@ public:
     Board();
 
     /**
-     * @brief Copy a new board
-     */
-    Board(Board const& boardToCopy);
-
-    /**
      * @brief Destroy the board
      */
     ~Board();
@@ -63,7 +58,7 @@ public:
     /**
      * @brief Set the board with the default configuration
      */
-    void startUp();
+    void startUp(void);
 
     /**
      * @brief Move a piece to the desired position
