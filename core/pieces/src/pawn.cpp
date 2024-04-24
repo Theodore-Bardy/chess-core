@@ -102,8 +102,9 @@ Pawn::move(int _x, int _y, int& flags, Square* board[8U][8U])
     /* Check the king is able to move to the desired position */
     if (this->checkMove(_x, _y, flags, board))
     {
-        x = _x;
-        y = _y;
+        x        = _x;
+        y        = _y;
+        hasMoved = true;
         return true;
     }
 

@@ -104,6 +104,17 @@ Move::print(std::ostream& os) const
                 break;
         }
     }
+
+    /* Check mate flag */
+    if (MOVE_FLAG_CHECK_MATE == (flags & MOVE_FLAG_CHECK_MATE))
+    {
+        os << "#";
+    }
+    /* Check flag */
+    else if (MOVE_FLAG_CHECK == (flags & MOVE_FLAG_CHECK))
+    {
+        os << "+";
+    }
 }
 
 std::ostream&

@@ -54,7 +54,7 @@ public:
      * @param[in] _x Desired X position
      * @param[in] _y Desired Y position
      * @param[in] flags Move flags
-     * @param[in] board Give more context to check the move (optional)
+     * @param[in] board The board context
      * @return true if the piece is able to move, otherwise false
      */
     virtual bool checkMove(int _x, int _y, int& flags, Square* board[8U][8U]) const;
@@ -64,6 +64,7 @@ public:
      * @param[in] x Desired X position
      * @param[in] y Desired Y position
      * @param[in] flags Move flags
+     * @param[in] board The board context
      * @return true if the queen has moved to the desired destination, false otherwise
      */
     virtual bool move(int _x, int _y, int& flags, Square* board[8U][8U]);

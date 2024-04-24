@@ -100,6 +100,7 @@ public:
      * @return true if the square is attacked, false otherwise
      */
     bool isSquareAttacked(bool pieceColor, int x, int y);
+    bool isSquareDefended(bool pieceColor, int x, int y);
 
     /**
      * @brief Check if king is check

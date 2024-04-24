@@ -7,6 +7,7 @@
 #define _PIECE_HPP_
 
 #include <iostream>
+#include <vector>
 
 #include "square.hpp"
 
@@ -71,6 +72,13 @@ public:
     void take(Piece& piece_to_take);
 
     /**
+     * @brief Returns all legal moves for a piece
+     * @param[in] board The board context
+     * @return Vector of moves
+     */
+    std::vector<std::pair<int, int>> getAllMoves(Square* board[8U][8U]) const;
+
+    /**
      * @brief Returns the color of the piece
      * @return Color of the piece
      */
@@ -99,7 +107,7 @@ public:
      * @param[in] _x Desired X position
      * @param[in] _y Desired Y position
      * @param[in] flags Move flags
-     * @param[in] board Give more context to check the move (optional)
+     * @param[in] board The board context
      * @return true if the piece is able to move, otherwise false
      */
     virtual bool checkMove(int _x, int _y, int& flags, Square* board[8U][8U]) const = 0;
@@ -109,6 +117,7 @@ public:
      * @param[in] x Desired X position
      * @param[in] y Desired Y position
      * @param[in] flags Move flags
+     * @param[in] board The board context
      * @return true if the piece has moved to the desired destination, false otherwise
      */
     virtual bool move(int _x, int _y, int& flags, Square* board[8U][8U]) = 0;
