@@ -26,3 +26,10 @@ This project implement:
 - [ ] Implement a TUI (Terminal User Interface)
     - [C++ FTXUI](https://github.com/ArthurSonzogni/FTXUI)
     - [Rust tui](https://docs.rs/tui/latest/tui/)
+- [ ] Add the notion of defended square for the king, for example the king must check mate and not just check:
+- [ ] In case the king is currently check, the move msut remove the flag. Otherwise it's an illegal move.
+- [ ] Rework the classes dependencies. Especially between board → square → piece.
+
+## Project description
+
+<div style="text-align:center"><img src="./chess-core_description.png" /></div>
