@@ -18,7 +18,7 @@ cmake .. -DCMAKE_BUILD_TYPE=Debug -DUNIT_TESTS=ON
 cmake --build .
 
 # Execute tests
-ctest --stop-on-failure --parallel "$(nproc)"
+ctest --stop-on-failure --output-on-failure --parallel "$(nproc)"
 
 # Generate gcov reports
 for gcda_file in `find . -name *.gcda`
