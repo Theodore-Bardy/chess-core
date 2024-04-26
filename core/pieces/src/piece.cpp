@@ -17,60 +17,27 @@ Piece::Piece(bool _color, int _x, int _y)
 }
 
 bool
-Piece::checkWayOnMove(int _x, int _y, Square* board[8U][8U]) const
+Piece::take(Piece& piece_to_take, int& flags)
 {
-    assert(nullptr != board);
-
-    int xDir   = ((_x - x) == 0) ? 0 : ((_x - x) > 0) ? 1 : -1;
-    int yDir   = ((_y - y) == 0) ? 0 : ((_y - y) > 0) ? 1 : -1;
-    int xCheck = x + xDir;
-    int yCheck = y + yDir;
-
-    /* Check the way between current and desired position excluded is empty */
-    while ((xCheck != _x) || (yCheck != _y))
+    /* Check piece_to_take status */
+    if (!piece_to_take.alive || piece_to_take.getColor() == color)
     {
-        if (board[xCheck][yCheck]->getValue() != SquarePieceValue::Empty)
-        {
-            return false;
-        }
-        xCheck += xDir;
-        yCheck += yDir;
+        return false;
     }
 
-    return true;
-}
-
-int
-Piece::checkFinalOnMove(int _x, int _y, Square* board[8U][8U]) const
-{
-    assert(nullptr != board);
-
-    /* Piece with the same color*/
-    if (board[_x][_y]->getColor() == board[x][y]->getColor())
+    /* Move piece to the piece_to_take position */
+    if (this->move(piece_to_take.getX(), piece_to_take.getY(), flags))
     {
-        return -1;
-    }
-    /* No piece */
-    else if (board[_x][_y]->getColor() == SquarePieceColor::NoPiece)
-    {
-        return 0;
+        piece_to_take.alive = false;
+        return true;
     }
 
-    /* Piece with the opposite color */
-    return 1;
-}
-
-void
-Piece::take(Piece& piece_to_take)
-{
-    piece_to_take.alive = false;
+    return false;
 }
 
 vector<pair<int, int>>
-Piece::getAllMoves(Square* board[8U][8U]) const
+Piece::getAllMoves(void) const
 {
-    assert(nullptr != board);
-
     vector<pair<int, int>> moves;
     int                    flags = 0;
 
@@ -79,8 +46,8 @@ Piece::getAllMoves(Square* board[8U][8U]) const
     {
         for (int _y = 0; _y < 8U; ++_y)
         {
-            /* If the piece can move add the position to the vector */
-            if (this->checkMove(_x, _y, flags, board))
+            /* If the piece is able to move add the position to the vector */
+            if (this->checkMove(_x, _y, flags))
             {
                 moves.push_back({ _x, _y });
             }

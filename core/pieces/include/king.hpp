@@ -8,18 +8,23 @@
 
 #include "piece.hpp"
 #include "rook.hpp"
-#include "square.hpp"
 
 /**
  * @brief King default value
  */
 #define KING_VALUE           (0)
-#define KING_BLACK_DEFAULT_X (SQUARE_X_E)
-#define KING_BLACK_DEFAULT_Y (SQUARE_Y_8)
-#define KING_WHITE_DEFAULT_X (SQUARE_X_E)
-#define KING_WHITE_DEFAULT_Y (SQUARE_Y_1)
-#define KING_KING_CASTLE_X   (SQUARE_X_G)
-#define KING_QUEEN_CASTLE_X  (SQUARE_X_C)
+#define KING_BLACK_DEFAULT_X (X_E)
+#define KING_BLACK_DEFAULT_Y (Y_8)
+#define KING_WHITE_DEFAULT_X (X_E)
+#define KING_WHITE_DEFAULT_Y (Y_1)
+#define KING_KING_CASTLE_X   (X_G)
+#define KING_QUEEN_CASTLE_X  (X_C)
+
+/**
+ * @brief Types of castles
+ */
+#define KING_CASTLE  (true)
+#define QUEEN_CASTLE (false)
 
 class King : public Piece
 {
@@ -46,48 +51,47 @@ public:
     ~King() = default;
 
     /**
-     * @brief Clone a king
-     */
-    King* clone(void) const
-    {
-        return new King(*this);
-    }
-
-    /**
      * @brief Castle the king
      * @param[in] side true means king castle, false queen castle
      * @param[in] rook Rook which castles with the king
      * @return true if the king has castle, false otherwise
      */
-    bool castle(bool side, Rook* rook);
+    bool castle(bool side, Rook& rook);
 
     /**
      * @brief Check if the piece is able to move a the desired position
      * @param[in] _x Desired X position
      * @param[in] _y Desired Y position
      * @param[in] flags Move flags
-     * @param[in] board The board context
      * @return true if the piece is able to move, otherwise false
      */
-    virtual bool checkMove(int _x, int _y, int& flags, Square* board[8U][8U]) const;
+    virtual bool checkMove(int _x, int _y, int& flags) const;
 
     /**
      * @brief Move the king
      * @param[in] x Desired X position
      * @param[in] y Desired Y position
      * @param[in] flags Move flags
-     * @param[in] board The board context
      * @return true if the king has moved to the desired destination, false otherwise
      */
-    virtual bool move(int _x, int _y, int& flags, Square* board[8U][8U]);
+    virtual bool move(int _x, int _y, int& flags);
 
     /**
-     * @brief Get the value of the king
-     * @return The value of the king
+     * @brief Get the piece type
+     * @return The piece type
      */
-    virtual SquarePieceValue getValue(void) const
+    virtual PieceType getType(void) const
     {
-        return SquarePieceValue::KingValue;
+        return PieceType::KingType;
+    }
+
+    /**
+     * @brief Get the piece value
+     * @return The piece value
+     */
+    virtual int getValue(void) const
+    {
+        return KING_VALUE;
     }
 
     /**

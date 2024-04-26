@@ -7,14 +7,13 @@
 #define _PAWN_HPP_
 
 #include "piece.hpp"
-#include "square.hpp"
 
 /**
  * @brief Pawn default value
  */
 #define PAWN_VALUE           (1)
-#define PAWN_BLACK_DEFAULT_Y (SQUARE_Y_7)
-#define PAWN_WHITE_DEFAULT_Y (SQUARE_Y_2)
+#define PAWN_BLACK_DEFAULT_Y (Y_7)
+#define PAWN_WHITE_DEFAULT_Y (Y_2)
 
 class Pawn : public Piece
 {
@@ -38,15 +37,8 @@ public:
     ~Pawn() = default;
 
     /**
-     * @brief Clone a pawn
-     */
-    Pawn* clone(void) const
-    {
-        return new Pawn(*this);
-    }
-
-    /**
      * @brief Promote the pawn
+     * // TODO
      */
     void promotion();
 
@@ -55,28 +47,35 @@ public:
      * @param[in] _x Desired X position
      * @param[in] _y Desired Y position
      * @param[in] flags Move flags
-     * @param[in] board The board context
      * @return true if the piece is able to move, otherwise false
      */
-    virtual bool checkMove(int _x, int _y, int& flags, Square* board[8U][8U]) const;
+    virtual bool checkMove(int _x, int _y, int& flags) const;
 
     /**
      * @brief Move the pawn
      * @param[in] x Desired X position
      * @param[in] y Desired Y position
      * @param[in] flags Move flags
-     * @param[in] board The board context
      * @return true if the pawn has moved to the desired destination, false otherwise
      */
-    virtual bool move(int _x, int _y, int& flags, Square* board[8U][8U]);
+    virtual bool move(int _x, int _y, int& flags);
 
     /**
-     * @brief Get the value of the pawn
-     * @return The value of the pawn
+     * @brief Get the piece type
+     * @return The piece type
      */
-    virtual SquarePieceValue getValue(void) const
+    virtual PieceType getType(void) const
     {
-        return SquarePieceValue::PawnValue;
+        return PieceType::PawnType;
+    }
+
+    /**
+     * @brief Get the piece value
+     * @return The piece value
+     */
+    virtual int getValue(void) const
+    {
+        return PAWN_VALUE;
     }
 
     /**

@@ -5,7 +5,6 @@
 
 #include <assert.h>
 #include "pawn.hpp"
-#include "move.hpp"
 
 Pawn::Pawn(bool _color, int _x)
     : Piece(_color, _x, 0)
@@ -28,11 +27,8 @@ Pawn::promotion()
 }
 
 bool
-Pawn::checkMove(int _x, int _y, int& flags, Square* board[8U][8U]) const
+Pawn::checkMove(int _x, int _y, int& flags) const
 {
-    /* Check parameter */
-    assert(nullptr != board);
-
     bool xReturn = false;
 
     /* Check desired position exists and it is not the current position */
@@ -42,7 +38,7 @@ Pawn::checkMove(int _x, int _y, int& flags, Square* board[8U][8U]) const
     }
 
     /* The pawn can move right or left only when it takes */
-    if (((_x == x + 1) || (_x == x - 1)) && (this->checkFinalOnMove(_x, _y, board) == 1))
+    if ((_x == x + 1) || (_x == x - 1))
     {
         /* White (black) pawn must increase (decrease) Y of 1 on take move */
         if ((color && (_y == y + 1)) || (!color && (_y == y - 1)))
@@ -73,22 +69,8 @@ Pawn::checkMove(int _x, int _y, int& flags, Square* board[8U][8U]) const
         }
     }
 
-    /* Check if there is piece between current and desired position */
-    if (xReturn)
-    {
-        xReturn = this->checkWayOnMove(_x, _y, board);
-        if (xReturn)
-        {
-            /* Check for piece of the same color */
-            if (this->checkFinalOnMove(_x, _y, board) == -1)
-            {
-                xReturn = false;
-            }
-        }
-    }
-
     /* Check if pawn reach the end of the board */
-    if (xReturn && ((color && (_y == SQUARE_Y_8)) || (!color && (_y == SQUARE_Y_1))))
+    if (xReturn && ((color && (_y == Y_8)) || (!color && (_y == Y_1))))
     {
         flags |= MOVE_FLAG_PROMOTION;
     }
@@ -97,10 +79,10 @@ Pawn::checkMove(int _x, int _y, int& flags, Square* board[8U][8U]) const
 }
 
 bool
-Pawn::move(int _x, int _y, int& flags, Square* board[8U][8U])
+Pawn::move(int _x, int _y, int& flags)
 {
     /* Check the king is able to move to the desired position */
-    if (this->checkMove(_x, _y, flags, board))
+    if (this->checkMove(_x, _y, flags))
     {
         x        = _x;
         y        = _y;

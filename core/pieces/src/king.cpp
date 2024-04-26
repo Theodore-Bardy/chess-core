@@ -5,7 +5,6 @@
 
 #include <assert.h>
 #include "king.hpp"
-#include "move.hpp"
 
 King::King(bool _color)
     : Piece(_color, 0, 0)
@@ -29,29 +28,24 @@ King::King(bool _color)
 }
 
 bool
-King::castle(bool side, Rook* rook)
+King::castle(bool side, Rook& rook)
 {
-    if (!hasMoved && !isCheck)
+    if (!hasMoved && !isCheck && !isMate && !isPat && (((KING_CASTLE == side) && rook.isKingSideRook()) || ((QUEEN_CASTLE == side) && !rook.isKingSideRook())))
     {
-        if (rook->castle())
+        if (rook.castle())
         {
-            x = (side) ? KING_KING_CASTLE_X : KING_QUEEN_CASTLE_X;
+            x        = (side) ? KING_KING_CASTLE_X : KING_QUEEN_CASTLE_X;
+            hasMoved = true;
+            return true;
         }
-        hasMoved = true;
-        return true;
     }
 
     return false;
 }
 
 bool
-King::checkMove(int _x, int _y, int& flags, Square* board[8U][8U]) const
+King::checkMove(int _x, int _y, int& flags) const
 {
-    /* Check parameter */
-    assert(nullptr != board);
-
-    bool xReturn = false;
-
     /* Check desired position exists and it is not the current position */
     if ((_x > 7) || (_x < 0) || (_y > 7) || (_y < 0) || ((_x == x) && (_y == y)))
     {
@@ -59,43 +53,34 @@ King::checkMove(int _x, int _y, int& flags, Square* board[8U][8U]) const
     }
 
     /* Check for king castle move */
-    if (!hasMoved && !isCheck && (_y == y) && (_x == KING_KING_CASTLE_X) && (this->checkFinalOnMove(_x, _y, board) == 0))
+    if (!hasMoved && !isCheck && !isMate && !isPat && (_y == y) && (_x == KING_KING_CASTLE_X))
     {
         flags |= MOVE_FLAG_KING_CASTLE;
-        xReturn = this->checkWayOnMove(_x, _y, board);
+        return true;
     }
     /* Check for queen castle move */
-    else if (!hasMoved && !isCheck && (_y == y) && (_x == KING_QUEEN_CASTLE_X) && (this->checkFinalOnMove(_x, _y, board) == 0))
+    else if (!hasMoved && !isCheck && !isMate && !isPat && (_y == y) && (_x == KING_QUEEN_CASTLE_X))
     {
         flags |= MOVE_FLAG_QUEEN_CASTLE;
-        xReturn = this->checkWayOnMove(_x, _y, board);
+        return true;
     }
     /* The king moves one square in any direction, check the desired postion is reachable */
     else if ((_x <= (x + 1)) && (_x >= (x - 1)) && (_y <= (y + 1)) && (_y >= (y - 1)))
     {
-        xReturn = true;
-
-        /* Check for piece of the opposite color */
-        if (this->checkFinalOnMove(_x, _y, board) == 1)
-        {
-            flags |= MOVE_FLAG_TAKE;
-        }
+        return true;
     }
 
-    /* Check for piece of the same color */
-    if (xReturn && this->checkFinalOnMove(_x, _y, board) == -1)
-    {
-        xReturn = false;
-    }
-
-    return xReturn;
+    return false;
 }
 
 bool
-King::move(int _x, int _y, int& flags, Square* board[8U][8U])
+King::move(int _x, int _y, int& flags)
 {
+    /* Make sure flags equal 0 */
+    flags = 0;
+
     /* Check the king is able to move to the desired position */
-    if (this->checkMove(_x, _y, flags, board))
+    if (this->checkMove(_x, _y, flags) && (flags == 0))
     {
         x        = _x;
         y        = _y;

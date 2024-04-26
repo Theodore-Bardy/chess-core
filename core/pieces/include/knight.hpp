@@ -7,20 +7,19 @@
 #define _KNIGHT_HPP_
 
 #include "piece.hpp"
-#include "square.hpp"
 
 /**
  * @brief Knight default value
  */
 #define KNIGHT_VALUE             (3)
-#define KNIGHT_1_BLACK_DEFAULT_X (SQUARE_X_B)
-#define KNIGHT_1_BLACK_DEFAULT_Y (SQUARE_Y_8)
-#define KNIGHT_2_BLACK_DEFAULT_X (SQUARE_X_G)
-#define KNIGHT_2_BLACK_DEFAULT_Y (SQUARE_Y_8)
-#define KNIGHT_1_WHITE_DEFAULT_X (SQUARE_X_B)
-#define KNIGHT_1_WHITE_DEFAULT_Y (SQUARE_Y_1)
-#define KNIGHT_2_WHITE_DEFAULT_X (SQUARE_X_G)
-#define KNIGHT_2_WHITE_DEFAULT_Y (SQUARE_Y_1)
+#define KNIGHT_1_BLACK_DEFAULT_X (X_B)
+#define KNIGHT_1_BLACK_DEFAULT_Y (Y_8)
+#define KNIGHT_2_BLACK_DEFAULT_X (X_G)
+#define KNIGHT_2_BLACK_DEFAULT_Y (Y_8)
+#define KNIGHT_1_WHITE_DEFAULT_X (X_B)
+#define KNIGHT_1_WHITE_DEFAULT_Y (Y_1)
+#define KNIGHT_2_WHITE_DEFAULT_X (X_G)
+#define KNIGHT_2_WHITE_DEFAULT_Y (Y_1)
 
 class Knight : public Piece
 {
@@ -41,40 +40,39 @@ public:
     ~Knight() = default;
 
     /**
-     * @brief Clone a knight
-     */
-    Knight* clone(void) const
-    {
-        return new Knight(*this);
-    }
-
-    /**
      * @brief Check if the piece is able to move a the desired position
      * @param[in] _x Desired X position
      * @param[in] _y Desired Y position
      * @param[in] flags Move flags
-     * @param[in] board The board context
      * @return true if the piece is able to move, otherwise false
      */
-    virtual bool checkMove(int _x, int _y, int& flags, Square* board[8U][8U]) const;
+    virtual bool checkMove(int _x, int _y, int& flags) const;
 
     /**
      * @brief Move the knight
      * @param[in] x Desired X position
      * @param[in] y Desired Y position
      * @param[in] flags Move flags
-     * @param[in] board The board context
      * @return true if the knight has moved to the desired destination, false otherwise
      */
-    virtual bool move(int _x, int _y, int& flags, Square* board[8U][8U]);
+    virtual bool move(int _x, int _y, int& flags);
 
     /**
-     * @brief Get the value of the knight
-     * @return The value of the knight
+     * @brief Get the piece type
+     * @return The piece type
      */
-    virtual SquarePieceValue getValue(void) const
+    virtual PieceType getType(void) const
     {
-        return SquarePieceValue::KnightValue;
+        return PieceType::KnightType;
+    }
+
+    /**
+     * @brief Get the piece value
+     * @return The piece value
+     */
+    virtual int getValue(void) const
+    {
+        return KNIGHT_VALUE;
     }
 
     /**

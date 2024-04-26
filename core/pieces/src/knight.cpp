@@ -5,7 +5,6 @@
 
 #include <assert.h>
 #include "knight.hpp"
-#include "move.hpp"
 
 Knight::Knight(bool _color, int _x, int _y)
     : Piece(_color, _x, _y)
@@ -13,12 +12,9 @@ Knight::Knight(bool _color, int _x, int _y)
 }
 
 bool
-Knight::checkMove(int _x, int _y, int& flags, Square* board[8U][8U]) const
+Knight::checkMove(int _x, int _y, int& flags) const
 {
-    /* Check parameter */
-    assert(nullptr != board);
-
-    bool xReturn = false;
+    (void)flags;
 
     /* Check desired position exists and it is not the current position */
     if ((_x > 7) || (_x < 0) || (_y > 7) || (_y < 0) || ((_x == x) && (_y == y)))
@@ -30,32 +26,17 @@ Knight::checkMove(int _x, int _y, int& flags, Square* board[8U][8U]) const
     if (((_x == x + 2) && (_y == y + 1)) || ((_x == x + 2) && (_y == y - 1)) || ((_x == x - 2) && (_y == y + 1)) || ((_x == x - 2) && (_y == y - 1))
         || ((_x == x + 1) && (_y == y + 2)) || ((_x == x + 1) && (_y == y - 2)) || ((_x == x - 1) && (_y == y + 2)) || ((_x == x - 1) && (_y == y - 2)))
     {
-        xReturn = true;
+        return true;
     }
 
-    /* Check desired position isn't a piece of the same color */
-    if (xReturn)
-    {
-        /* Check for piece of the same color */
-        if (this->checkFinalOnMove(_x, _y, board) == -1)
-        {
-            xReturn = false;
-        }
-        /* Check for piece of the opposite color */
-        else if (this->checkFinalOnMove(_x, _y, board) == 1)
-        {
-            flags |= MOVE_FLAG_TAKE;
-        }
-    }
-
-    return xReturn;
+    return false;
 }
 
 bool
-Knight::move(int _x, int _y, int& flags, Square* board[8U][8U])
+Knight::move(int _x, int _y, int& flags)
 {
     /* Check the king is able to move to the desired position */
-    if (this->checkMove(_x, _y, flags, board))
+    if (this->checkMove(_x, _y, flags))
     {
         x = _x;
         y = _y;

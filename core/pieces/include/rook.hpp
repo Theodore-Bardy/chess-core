@@ -7,22 +7,21 @@
 #define _ROOK_HPP_
 
 #include "piece.hpp"
-#include "square.hpp"
 
 /**
  * @brief Rook default value
  */
 #define ROOK_VALUE             (5)
-#define ROOK_1_BLACK_DEFAULT_X (SQUARE_X_A)
-#define ROOK_1_BLACK_DEFAULT_Y (SQUARE_Y_8)
-#define ROOK_2_BLACK_DEFAULT_X (SQUARE_X_H)
-#define ROOK_2_BLACK_DEFAULT_Y (SQUARE_Y_8)
-#define ROOK_1_WHITE_DEFAULT_X (SQUARE_X_A)
-#define ROOK_1_WHITE_DEFAULT_Y (SQUARE_Y_1)
-#define ROOK_2_WHITE_DEFAULT_X (SQUARE_X_H)
-#define ROOK_2_WHITE_DEFAULT_Y (SQUARE_Y_1)
-#define ROOK_KING_CASTLE_X     (SQUARE_X_F)
-#define ROOK_QUEEN_CASTLE_X    (SQUARE_X_D)
+#define ROOK_1_BLACK_DEFAULT_X (X_A)
+#define ROOK_1_BLACK_DEFAULT_Y (Y_8)
+#define ROOK_2_BLACK_DEFAULT_X (X_H)
+#define ROOK_2_BLACK_DEFAULT_Y (Y_8)
+#define ROOK_1_WHITE_DEFAULT_X (X_A)
+#define ROOK_1_WHITE_DEFAULT_Y (Y_1)
+#define ROOK_2_WHITE_DEFAULT_X (X_H)
+#define ROOK_2_WHITE_DEFAULT_Y (Y_1)
+#define ROOK_KING_CASTLE_X     (X_F)
+#define ROOK_QUEEN_CASTLE_X    (X_D)
 
 class Rook : public Piece
 {
@@ -47,14 +46,6 @@ public:
     ~Rook() = default;
 
     /**
-     * @brief Clone a rook
-     */
-    Rook* clone(void) const
-    {
-        return new Rook(*this);
-    }
-
-    /**
      * @brief Castle the rook
      * @return true if the rook has castle, false otherwise
      */
@@ -65,20 +56,18 @@ public:
      * @param[in] _x Desired X position
      * @param[in] _y Desired Y position
      * @param[in] flags Move flags
-     * @param[in] board The board context
      * @return true if the piece is able to move, otherwise false
      */
-    virtual bool checkMove(int _x, int _y, int& flags, Square* board[8U][8U]) const;
+    virtual bool checkMove(int _x, int _y, int& flags) const;
 
     /**
      * @brief Move the rook
      * @param[in] x Desired X position
      * @param[in] y Desired Y position
      * @param[in] flags Move flags
-     * @param[in] board The board context
      * @return true if the rook has moved to the desired destination, false otherwise
      */
-    virtual bool move(int _x, int _y, int& flags, Square* board[8U][8U]);
+    virtual bool move(int _x, int _y, int& flags);
 
     /**
      * @brief Indicate if the rook is the king side one
@@ -90,12 +79,21 @@ public:
     }
 
     /**
-     * @brief Get the value of the rook
-     * @return The value of the rook
+     * @brief Get the piece type
+     * @return The piece type
      */
-    virtual SquarePieceValue getValue(void) const
+    virtual PieceType getType(void) const
     {
-        return SquarePieceValue::RookValue;
+        return PieceType::RookType;
+    }
+
+    /**
+     * @brief Get the piece value
+     * @return The piece value
+     */
+    virtual int getValue(void) const
+    {
+        return ROOK_VALUE;
     }
 
     /**
