@@ -1,0 +1,89 @@
+@startuml overview
+
+title Chess Database & Analysis Tool — Component Overview
+
+skinparam componentStyle rectangle
+
+' ── UI Layer ────────────────────────────────────────────────
+package "UI Layer" {
+    [CLI\n(current)] <<existing>>
+    [TUI — FTXUI\n(Phase 6)] <<planned>>
+    [GUI — Qt 6\n(Phase 7)] <<planned>>
+}
+
+' ── Application ──────────────────────────────────────────────
+package "Application" {
+    [app/main.cpp] <<existing>>
+}
+
+' ── Core Engine ──────────────────────────────────────────────
+package "core/game" <<existing>> {
+    [Board]
+    [Game]
+    [Move]
+    [Square]
+    [GameTree] <<planned Phase 2>>
+}
+
+package "core/pieces" <<existing>> {
+    [Piece (abstract)]
+    [King / Queen / Rook\nBishop / Knight / Pawn]
+}
+
+package "core/parser" <<partial>> {
+    [Parser\n(PGN read/write)]
+    [GameMetadata] <<planned Phase 3>>
+}
+
+' ── Database ──────────────────────────────────────────────────
+package "core/database" <<planned Phase 4>> {
+    [Database\n(SQLiteCpp)]
+}
+
+' ── Analysis ──────────────────────────────────────────────────
+package "core/analysis" <<planned Phase 5>> {
+    [UCIEngine\n(Stockfish via UCI)]
+    [Statistics]
+}
+
+' ── External ──────────────────────────────────────────────────
+database "SQLite file\n(.db)" as SqliteFile
+[Stockfish\nbinary] <<external>>
+[PGN files] <<external>>
+
+' ── Relations ─────────────────────────────────────────────────
+[CLI\n(current)] --> [app/main.cpp]
+[TUI — FTXUI\n(Phase 6)] --> [app/main.cpp]
+[GUI — Qt 6\n(Phase 7)] --> [app/main.cpp]
+
+[app/main.cpp] --> [Game]
+[app/main.cpp] --> [Parser\n(PGN read/write)]
+[app/main.cpp] ..> [Database\n(SQLiteCpp)] : Phase 4
+
+[Game] --> [Board]
+[Game] --> [Move]
+[Board] --> [Square]
+[Board] --> [Piece (abstract)]
+[Piece (abstract)] <|.. [King / Queen / Rook\nBishop / Knight / Pawn]
+[GameTree] ..> [Move] : nodes reference
+
+[Parser\n(PGN read/write)] --> [Game]
+[Parser\n(PGN read/write)] ..> [GameTree] : Phase 3
+[Parser\n(PGN read/write)] --> [PGN files]
+
+[Database\n(SQLiteCpp)] --> [Parser\n(PGN read/write)] : import
+[Database\n(SQLiteCopy)] --> SqliteFile
+[Database\n(SQLiteCpp)] ..> [Statistics] : feeds
+
+[UCIEngine\n(Stockfish via UCI)] --> [Stockfish\nbinary] : subprocess\n(Boost.Process)
+[Statistics] --> [UCIEngine\n(Stockfish via UCI)]
+[Statistics] --> [Database\n(SQLiteCpp)]
+
+' ── Legend ────────────────────────────────────────────────────
+legend right
+  <<existing>>  = implemented
+  <<partial>>   = partially implemented
+  <<planned>>   = not yet implemented
+end legend
+
+@enduml

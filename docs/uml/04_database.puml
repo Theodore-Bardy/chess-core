@@ -1,0 +1,75 @@
+@startuml database
+
+title Database Layer — planned Phase 4
+
+note as Dep
+  Dependency: SQLiteCpp (MIT)
+  Added via CMake FetchContent
+end note
+
+class Database <<planned Phase 4>> {
+    - db : SQLite::Database
+    + Database(string path)
+    + importPGN(string filePath) : int
+    + searchGames(GameFilter const&) : vector<GameRecord>
+    + getGame(int id) : GameRecord
+    + getGamesByPosition(string fen) : vector<GameRecord>
+    + saveAnalysis(int gameId, int moveNum, float eval)
+    + getPlayerStats(string name) : PlayerStats
+}
+
+class GameFilter <<planned Phase 4>> {
+    + white : string
+    + black : string
+    + result : string
+    + dateFrom : string
+    + dateTo : string
+    + eco : string
+    + minElo : int
+    + maxElo : int
+}
+
+class GameRecord <<planned Phase 4>> {
+    + id : int
+    + pgnText : string
+    + result : string
+    + date : string
+    + white : string
+    + black : string
+    + whiteElo : int
+    + blackElo : int
+    + eco : string
+    + opening : string
+}
+
+class PlayerStats <<planned Phase 4>> {
+    + name : string
+    + gamesPlayed : int
+    + wins : int
+    + draws : int
+    + losses : int
+    + averageAccuracy : float
+}
+
+Database ..> GameFilter : query input
+Database ..> GameRecord : query output
+Database ..> PlayerStats : query output
+
+note right of Database
+  SQLite schema (3 tables):
+
+  games: id, pgn_text, result, date,
+    white_player, black_player,
+    white_elo, black_elo, eco, opening
+
+  positions: id, fen, game_id,
+    move_number, eval_score (nullable)
+
+  players: id, name, elo_history (JSON)
+
+  PGN files are the import/export format.
+  Import: PGN → Parser → Database
+  Export: Database → GameRecord → Parser.saveGame()
+end note
+
+@enduml

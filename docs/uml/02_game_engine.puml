@@ -1,0 +1,153 @@
+@startuml game_engine
+
+title Game Engine — Board, Move, Game, GameTree (Phase 2 complete)
+
+' ── Move flags ──────────────────────────────────────────────
+note as MoveFlags
+  Move flags (bitmask):
+  MOVE_FLAG_TAKE         = 0x01
+  MOVE_FLAG_KING_CASTLE  = 0x02
+  MOVE_FLAG_QUEEN_CASTLE = 0x04
+  MOVE_FLAG_CHECK        = 0x08
+  MOVE_FLAG_CHECK_MATE   = 0x10
+  MOVE_FLAG_EN_PASSANT   = 0x20
+  MOVE_FLAG_PROMOTION    = 0x40
+end note
+
+' ── GameResult enum ──────────────────────────────────────────
+enum GameResult {
+    InProgress
+    WhiteWins
+    BlackWins
+    DrawStalemate
+    DrawFiftyMove
+    DrawThreefold
+}
+
+' ── Move ────────────────────────────────────────────────────
+class Move {
+    - piece : Piece*
+    - xStart : int
+    - yStart : int
+    - xEnd : int
+    - yEnd : int
+    - flags : int
+    - extraFlag : char
+    - promotionPiece : SquarePieceValue
+    + Move(Piece*, int, int, int, int, int, char, SquarePieceValue)
+    + getPiece() : Piece*
+    + getXStart() : int
+    + getYStart() : int
+    + getXEnd() : int
+    + getYEnd() : int
+    + getFlags() : int
+    + getPromotionPiece() : SquarePieceValue
+    + print(ostream&)
+}
+
+' ── Board ───────────────────────────────────────────────────
+class Board {
+    # isInitialize : bool
+    # board : Square*[8][8]
+    # whitePieces : vector<Piece*>
+    # blackPieces : vector<Piece*>
+    # whiteKing : King*
+    # whiteQueen : Queen*
+    # whiteBishops : Bishop*[2]
+    # whiteKnights : Knight*[2]
+    # whiteRooks : Rook*[2]
+    # whitePawns : Pawn*[8]
+    # blackKing : King*
+    # blackQueen : Queen*
+    # blackBishops : Bishop*[2]
+    # blackKnights : Knight*[2]
+    # blackRooks : Rook*[2]
+    # blackPawns : Pawn*[8]
+    # enPassantX : int
+    # enPassantY : int
+    # halfMoveClock : int
+    # positionHistory : map<string, int>
+    - setupNamedPointers()
+    + Board()
+    + Board(Board const&)
+    + startUp()
+    + movePiece(Piece*, int, int, int, SquarePieceValue) : bool
+    + selectPiece(Piece**, int, int) : bool
+    + checkMove(Piece**, SquarePieceValue, SquarePieceColor, int, int, int, char) : bool
+    + isSquareAttacked(bool, int, int) : bool
+    + isInCheck(bool) : bool
+    + isMoveLegal(Piece*, int, int, int) : bool
+    + getLegalMoves(bool) : vector<Move>
+    + getGameResult(bool) : GameResult
+    + getFEN(bool, int) : string
+    + computeHash(bool) : string
+    + updateDrawTracking(bool, bool, bool)
+    + print(ostream&)
+}
+
+' ── GameNode ─────────────────────────────────────────────────
+struct GameNode {
+    + move : Move
+    + board : Board
+    + comment : string
+    + parent : GameNode*
+    + children : vector<GameNode*>
+}
+
+' ── GameTree ─────────────────────────────────────────────────
+class GameTree {
+    - root : GameNode*
+    - cursor : GameNode*
+    - variationStack : vector<GameNode*>
+    + GameTree(Board const&)
+    + addMove(Move const&, Board const&)
+    + addVariation(Move const&, Board const&)
+    + startVariation()
+    + endVariation()
+    + forward(int) : bool
+    + back() : bool
+    + getCursor() : GameNode const*
+    + getRoot() : GameNode const*
+    + canGoBack() : bool
+    + canGoForward(int) : bool
+    + getDepth() : int
+}
+
+' ── Game ────────────────────────────────────────────────────
+class Game {
+    - gameBoard : Board
+    - tree : GameTree
+    - colorToMove : bool
+    - fullMoveNumber : int
+    + Game()
+    + addMove(int, int, int, int, int, char, SquarePieceValue) : bool
+    + checkMove(SquarePieceValue, SquarePieceColor, int, int, int, char, SquarePieceValue) : bool
+    + forward(int) : bool
+    + back() : bool
+    + startVariation()
+    + endVariation()
+    + getMoveIndex() : int
+    + getTree() : GameTree const&
+    + getColorToMove() : bool
+    + getFEN() : string
+    + print(ostream&)
+}
+
+' ── Relations ────────────────────────────────────────────────
+Game *-- Board : gameBoard (working position)
+Game *-- GameTree : tree
+
+Board ..> Move : creates
+Board *-- Square : "board[8][8]"
+Board o-- Piece : whitePieces / blackPieces
+
+Move o-- Piece : references moving piece
+
+GameTree *-- GameNode : tree structure
+GameTree ..> GameResult : uses
+GameNode *-- Move : stores
+GameNode *-- Board : snapshot
+
+note right of GameNode : Board snapshot enables\nO(1) forward/back navigation\nwithout replaying moves
+
+@enduml

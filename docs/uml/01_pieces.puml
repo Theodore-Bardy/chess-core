@@ -1,0 +1,128 @@
+@startuml pieces
+
+title Piece Hierarchy
+
+enum SquarePieceValue {
+    Empty
+    KingValue
+    QueenValue
+    BishopValue
+    KnightValue
+    RookValue
+    PawnValue
+}
+
+enum SquarePieceColor {
+    NoPiece
+    White
+    Black
+}
+
+class Square {
+    - color : SquarePieceColor
+    - value : SquarePieceValue
+    - x : int
+    - y : int
+    + getColor() : SquarePieceColor
+    + setColor(SquarePieceColor)
+    + getValue() : SquarePieceValue
+    + setValue(SquarePieceValue)
+    + getX() : int
+    + getY() : int
+    + resetSquare()
+    + print(ostream&)
+}
+
+abstract class Piece {
+    # alive : bool
+    # color : bool
+    # x : int
+    # y : int
+    # checkWayOnMove(int, int, Square*[8][8]) : bool
+    # checkFinalOnMove(int, int, Square*[8][8]) : bool
+    + Piece(bool color, int x, int y)
+    + eat(Piece&)
+    + getColor() : bool
+    + isAlive() : bool
+    + getX() : int
+    + getY() : int
+    + {abstract} clone() : Piece*
+    + {abstract} isAbleToMove(int, int, int, Square*[8][8]) : bool
+    + {abstract} move(int, int, int) : bool
+    + {abstract} getValue() : SquarePieceValue
+    + {abstract} print(ostream&)
+}
+
+class King {
+    - isCheck : bool
+    - hasMoved : bool
+    + King(bool color)
+    + getHasMoved() : bool
+    + castling(bool side) : bool
+    + isAbleToMove(int, int, int, Square*[8][8]) : bool
+    + move(int, int, int) : bool
+    + getValue() : SquarePieceValue
+    + print(ostream&)
+}
+
+class Queen {
+    + Queen(bool color)
+    + isAbleToMove(int, int, int, Square*[8][8]) : bool
+    + move(int, int, int) : bool
+    + getValue() : SquarePieceValue
+    + print(ostream&)
+}
+
+class Rook {
+    - hasMoved : bool
+    - isKingSide : bool
+    + Rook(bool color, int x, int y)
+    + getHasMoved() : bool
+    + castling(bool side) : bool
+    + isKingSideRook() : bool
+    + isAbleToMove(int, int, int, Square*[8][8]) : bool
+    + move(int, int, int) : bool
+    + getValue() : SquarePieceValue
+    + print(ostream&)
+}
+
+class Bishop {
+    + Bishop(bool color, int x, int y)
+    + isAbleToMove(int, int, int, Square*[8][8]) : bool
+    + move(int, int, int) : bool
+    + getValue() : SquarePieceValue
+    + print(ostream&)
+}
+
+class Knight {
+    + Knight(bool color, int x, int y)
+    + isAbleToMove(int, int, int, Square*[8][8]) : bool
+    + move(int, int, int) : bool
+    + getValue() : SquarePieceValue
+    + print(ostream&)
+}
+
+class Pawn {
+    - hasMoved : bool
+    + Pawn(bool color, int x)
+    + promotion()
+    + isAbleToMove(int, int, int, Square*[8][8]) : bool
+    + move(int, int, int) : bool
+    + getValue() : SquarePieceValue
+    + print(ostream&)
+}
+
+Piece <|-- King
+Piece <|-- Queen
+Piece <|-- Rook
+Piece <|-- Bishop
+Piece <|-- Knight
+Piece <|-- Pawn
+
+Piece ..> Square : uses board context
+
+note bottom of King : hasMoved tracks castling rights
+note bottom of Rook : hasMoved + isKingSide for castling
+note bottom of Pawn : hasMoved enables double-push on first move\npromotion handled in Board::movePiece (Phase 1.4 complete)
+
+@enduml

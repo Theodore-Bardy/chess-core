@@ -1,0 +1,84 @@
+@startuml parser
+
+title PGN Parser (Phase 3 complete)
+
+class Parser {
+    + Parser()
+    + ~Parser()
+    + loadGame(Game&, filePath : string, meta : GameMetadata*) : bool
+    + saveGame(Game const&, filePath : string, meta : GameMetadata const*) : bool
+    -- private helpers --
+    - parseMoveToken(token : string, game : Game&, color : bool) : bool
+    - applyTokens(game : Game&, tokens, pos, isVariation : bool) : void
+    - moveToSAN(move : Move const&) : string
+    - writeNode(os, node : GameNode*, moveNum : int&, isWhite : bool&, firstInVariation : bool) : void
+}
+
+struct GameMetadata {
+    + event : string
+    + site : string
+    + date : string
+    + round : string
+    + white : string
+    + black : string
+    + result : string
+    + whiteElo : int
+    + blackElo : int
+    + eco : string
+    + opening : string
+    + GameMetadata()
+}
+
+enum TokenType {
+    TOK_MOVE_NUM
+    TOK_MOVE
+    TOK_LPAREN
+    TOK_RPAREN
+    TOK_COMMENT
+    TOK_RESULT
+    TOK_EOF
+}
+
+struct Token {
+    + type : TokenType
+    + value : string
+}
+
+class Game {
+}
+
+class GameTree {
+}
+
+class GameNode {
+}
+
+Parser ..> Game : loads into / saves from
+Parser ..> GameMetadata : fills on load / reads on save
+Parser ..> Token : produces (tokenizer)
+Parser ..> GameTree : walks via Game::getTree()
+Parser ..> GameNode : visits via writeNode()
+
+note right of Parser
+  loadGame() pipeline:
+  1. Parse [Header "value"] tags → GameMetadata
+  2. Tokenize move text → vector<Token>
+  3. applyTokens() recursive descent:
+     - TOK_LPAREN  → game.startVariation(), recurse
+     - TOK_RPAREN  → return (end variation)
+     - TOK_COMMENT → game.setComment()
+     - TOK_RESULT  → break
+     - TOK_MOVE    → parseMoveToken() → game.checkMove()
+  Handles: e8=Q promotion, +/# flags,
+  file/rank/square disambiguation
+
+  saveGame() pipeline:
+  1. Write [Header "value"] lines from GameMetadata
+  2. writeNode() walks GameTree from root:
+     - Emits move numbers (1. / 1...)
+     - Emits SAN via moveToSAN()
+     - Emits {comment} if present
+     - Recursively emits ( variation ) branches
+end note
+
+@enduml

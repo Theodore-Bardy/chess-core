@@ -1,0 +1,90 @@
+@startuml analysis
+
+title Analysis Layer — planned Phase 5
+
+note as Dep
+  Dependency: Boost.Process (BSL-1.0)
+  Cross-platform child process management.
+  Stockfish runs as an external subprocess
+  communicating via UCI over stdin/stdout.
+end note
+
+class UCIEngine <<planned Phase 5>> {
+    - process : boost::process::child
+    - stdin_pipe : boost::process::opstream
+    - stdout_pipe : boost::process::ipstream
+    + connect(string stockfishPath) : bool
+    + setPosition(string fen, vector<string> moves)
+    + analyze(int depth) : EngineResult
+    + shutdown()
+    - sendCommand(string cmd)
+    - readLine() : string
+    - parseInfoLine(string) : void
+}
+
+class EngineResult <<planned Phase 5>> {
+    + bestMove : string
+    + ponderMove : string
+    + score : float
+    + depth : int
+    + pvLine : vector<string>
+}
+
+class Statistics <<planned Phase 5>> {
+    - db : Database&
+    - engine : UCIEngine&
+    + analyzeGame(int gameId)
+    + detectBlunders(int gameId, float threshold) : vector<BlunderInfo>
+    + getOpeningStats(string eco) : OpeningStats
+    + getPositionFrequency(string fen) : int
+    + getPerformanceTrend(string player, string dateFrom, string dateTo) : vector<TrendPoint>
+}
+
+class BlunderInfo <<planned Phase 5>> {
+    + moveNumber : int
+    + move : string
+    + evalBefore : float
+    + evalAfter : float
+    + drop : float
+    + severity : string
+}
+
+class OpeningStats <<planned Phase 5>> {
+    + eco : string
+    + name : string
+    + gamesPlayed : int
+    + wins : int
+    + draws : int
+    + losses : int
+    + winRate : float
+}
+
+class TrendPoint <<planned Phase 5>> {
+    + date : string
+    + accuracy : float
+    + blunderRate : float
+}
+
+UCIEngine ..> EngineResult : produces
+Statistics ..> UCIEngine : calls for eval
+Statistics ..> BlunderInfo : produces
+Statistics ..> OpeningStats : produces
+Statistics ..> TrendPoint : produces
+
+note right of UCIEngine
+  UCI protocol flow:
+  1. spawn stockfish process
+  2. send "uci" → wait "uciok"
+  3. send "isready" → wait "readyok"
+  4. send "position fen <fen>"
+  5. send "go depth <N>"
+  6. parse "info depth ... score cp ..." lines
+  7. wait for "bestmove <move>"
+  8. send "quit" on shutdown
+
+  Blunder threshold:
+  > 0.5 pawns drop = mistake
+  > 2.0 pawns drop = blunder
+end note
+
+@enduml
