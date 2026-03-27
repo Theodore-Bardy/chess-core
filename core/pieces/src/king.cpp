@@ -45,9 +45,8 @@ King::~King()
 bool
 King::castling(bool side)
 {
-    if (!hasMoved && !isCheck)
+    if (!hasMoved)
     {
-        // TODO check is the king is check on the way
         if (side)
         {
             x += 2;
@@ -75,14 +74,14 @@ King::isAbleToMove(int _x, int _y, int flags, Square* board[8U][8U]) const
         return false;
     }
 
-    /* The king can castle if it hasn't move and isn't in check state */
+    /* The king can castle if it hasn't moved (check/intermediate-square validation is done in Board) */
     if ((MOVE_FLAG_KING_CASTLE == (flags & MOVE_FLAG_KING_CASTLE)) && (_y == y) && (_x == KING_KING_CASTLE_X))
     {
-        xReturn = (!hasMoved && !isCheck);
+        xReturn = !hasMoved;
     }
     else if ((MOVE_FLAG_QUEEN_CASTLE == (flags & MOVE_FLAG_QUEEN_CASTLE)) && (_y == y) && (_x == KING_QUEEN_CASTLE_X))
     {
-        xReturn = (!hasMoved && !isCheck);
+        xReturn = !hasMoved;
     }
 
     /* The king moves one square in any direction, check the desired postion is reachable */

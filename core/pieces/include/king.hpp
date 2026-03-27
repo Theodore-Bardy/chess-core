@@ -56,6 +56,11 @@ public:
     }
 
     /**
+     * @brief Returns whether the king has moved (used for castling validation in Board)
+     */
+    bool getHasMoved(void) const { return hasMoved; }
+
+    /**
      * @brief Castle the king
      * @param[in] side true means little castle, flase great castle
      * @return true if the king has castle, false otherwise

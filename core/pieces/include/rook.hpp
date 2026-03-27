@@ -85,6 +85,11 @@ public:
     virtual bool move(int _x, int _y, int flags);
 
     /**
+     * @brief Returns whether the rook has moved (used for castling validation in Board)
+     */
+    bool getHasMoved(void) const { return hasMoved; }
+
+    /**
      * @brief Indicate if the rook is the king side one
      * @return true if the rook is the king side one, false otherwise
      */
