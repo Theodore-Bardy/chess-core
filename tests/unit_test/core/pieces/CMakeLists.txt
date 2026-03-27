@@ -2,9 +2,9 @@
 # @brief CMakeLists file for the pieces tests
 
 include(AddGoogleTest)
-if (UNIX)
+if (UNIX AND CODE_COVERAGE)
     include(CodeCoverage)
-endif (UNIX)
+endif ()
 
 # Compile tests
 add_google_test(bishop_test
@@ -22,7 +22,7 @@ add_google_test(rook_test
 )
 
 # Add tests coverage
-if (UNIX)
+if (UNIX AND CODE_COVERAGE)
     add_test_unit_coverage(bishop_test_coverage ctest bishop_test)
     add_test_unit_coverage(rook_test_coverage ctest rook_test)
-endif (UNIX)
+endif ()

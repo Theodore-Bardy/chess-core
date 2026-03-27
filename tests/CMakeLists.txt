@@ -23,5 +23,8 @@ project(${PROJECT_BASE_NAME} LANGUAGES CXX)
 # Add CMake modules
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake-modules)
 
+# Code coverage is opt-in (requires lcov/gcov)
+option(CODE_COVERAGE "Enable code coverage reporting (requires lcov)" OFF)
+
 # Add all tests
 include(${CMAKE_CURRENT_LIST_DIR}/unit_test/CMakeLists.txt)
