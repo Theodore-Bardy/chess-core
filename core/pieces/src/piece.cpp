@@ -31,13 +31,14 @@ Piece::checkWayOnMove(int _x, int _y, Square* board[8U][8U]) const
 {
     assert(nullptr != board);
 
-    int xDir   = ((x - _x) == 0) ? 0 : ((x - _x) > 0) ? 1 : -1;
-    int yDir   = ((y - _y) == 0) ? 0 : ((y - _y) > 0) ? 1 : -1;
+    /* Direction: from current position toward destination */
+    int xDir   = (_x == x) ? 0 : (_x > x) ? 1 : -1;
+    int yDir   = (_y == y) ? 0 : (_y > y) ? 1 : -1;
     int xCheck = x + xDir;
     int yCheck = y + yDir;
 
-    /* Check the way between current and desired position excluded is empty */
-    while ((xCheck != _x) && (yCheck != _y))
+    /* Check every square between current and desired position (excluded) is empty */
+    while ((xCheck != _x) || (yCheck != _y))
     {
         if (board[xCheck][yCheck]->getValue() != SquarePieceValue::Empty)
         {

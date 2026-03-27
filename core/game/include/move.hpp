@@ -13,28 +13,31 @@ using namespace std;
 /**
  * @brief Optional flash on a move
  */
-#define MOVE_FLAG_TAKE         (0x01) /**< (0b0000_0001) */
-#define MOVE_FLAG_KING_CASTLE  (0x02) /**< (0b0000_0010) */
-#define MOVE_FLAG_QUEEN_CASTLE (0x04) /**< (0b0000_0100) */
-#define MOVE_FLAG_CHECK        (0x08) /**< (0b0000_1000) */
-#define MOVE_FLAG_CHECK_MATE   (0x10) /**< (0b0001_0000) */
+#define MOVE_FLAG_TAKE         (0x01) /**< (0b0000_0001) Capture move */
+#define MOVE_FLAG_KING_CASTLE  (0x02) /**< (0b0000_0010) Kingside castling */
+#define MOVE_FLAG_QUEEN_CASTLE (0x04) /**< (0b0000_0100) Queenside castling */
+#define MOVE_FLAG_CHECK        (0x08) /**< (0b0000_1000) Move gives check */
+#define MOVE_FLAG_CHECK_MATE   (0x10) /**< (0b0001_0000) Move gives checkmate */
+#define MOVE_FLAG_EN_PASSANT   (0x20) /**< (0b0010_0000) En passant pawn capture */
+#define MOVE_FLAG_PROMOTION    (0x40) /**< (0b0100_0000) Pawn promotion */
 
 class Move
 {
 private:
-    Piece* piece;     /**< The moving piece */
-    int    xStart;    /**< X position before move */
-    int    yStart;    /**< Y position before move */
-    int    xEnd;      /**< X position after move */
-    int    yEnd;      /**< Y position after move */
-    int    flags;     /**< Move flags */
-    char   extraFlag; /**< Extra flag used on pawn takes and ambigous moves */
+    Piece*           piece;          /**< The moving piece */
+    int              xStart;         /**< X position before move */
+    int              yStart;         /**< Y position before move */
+    int              xEnd;           /**< X position after move */
+    int              yEnd;           /**< Y position after move */
+    int              flags;          /**< Move flags */
+    char             extraFlag;      /**< Extra flag used on pawn takes and ambigous moves */
+    SquarePieceValue promotionPiece; /**< Piece type chosen on pawn promotion (Empty = no promotion) */
 
 public:
     /**
-     * @brief Construct a default rook
+     * @brief Construct a move
      */
-    Move(Piece* _piece, int _xStart, int _yStart, int _xEnd, int _yEnd, int _flags = 0, char _extraFlag = ' ');
+    Move(Piece* _piece, int _xStart, int _yStart, int _xEnd, int _yEnd, int _flags = 0, char _extraFlag = ' ', SquarePieceValue _promotionPiece = SquarePieceValue::Empty);
 
     /**
      * @brief Returns the moving piece
@@ -88,6 +91,24 @@ public:
     int getFlags(void) const
     {
         return flags;
+    }
+
+    /**
+     * @brief Returns the extra disambiguation flag
+     * @return File ('a'-'h') or rank ('1'-'8') used to disambiguate, ' ' if none
+     */
+    char getExtraFlag(void) const
+    {
+        return extraFlag;
+    }
+
+    /**
+     * @brief Returns the promotion piece type
+     * @return Promotion piece type (Empty if not a promotion)
+     */
+    SquarePieceValue getPromotionPiece(void) const
+    {
+        return promotionPiece;
     }
 
     /**

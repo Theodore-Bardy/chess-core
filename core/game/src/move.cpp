@@ -8,7 +8,7 @@
 
 using namespace std;
 
-Move::Move(Piece* _piece, int _xStart, int _yStart, int _xEnd, int _yEnd, int _flags, char _extraFlag)
+Move::Move(Piece* _piece, int _xStart, int _yStart, int _xEnd, int _yEnd, int _flags, char _extraFlag, SquarePieceValue _promotionPiece)
     : piece(_piece)
     , xStart(_xStart)
     , yStart(_yStart)
@@ -16,6 +16,7 @@ Move::Move(Piece* _piece, int _xStart, int _yStart, int _xEnd, int _yEnd, int _f
     , yEnd(_yEnd)
     , flags(_flags)
     , extraFlag(_extraFlag)
+    , promotionPiece(_promotionPiece)
 {
 }
 
@@ -26,7 +27,7 @@ Move::print(std::ostream& os) const
     {
         os << "O-O";
     }
-    else if (MOVE_FLAG_KING_CASTLE == (flags & MOVE_FLAG_KING_CASTLE))
+    else if (MOVE_FLAG_QUEEN_CASTLE == (flags & MOVE_FLAG_QUEEN_CASTLE))
     {
         os << "O-O-O";
     }

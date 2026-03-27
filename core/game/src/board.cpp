@@ -4,6 +4,8 @@
  */
 
 #include <assert.h>
+#include <cstdlib>
+#include <string>
 #include "board.hpp"
 #include "king.hpp"
 #include "queen.hpp"
@@ -15,6 +17,9 @@
 
 Board::Board()
     : isInitialize(false)
+    , enPassantX(-1)
+    , enPassantY(-1)
+    , halfMoveClock(0)
 {
     /* Initialize empty board */
     for (int Y = 0; Y < BOARD_SIZE_MAX; Y++)
@@ -28,10 +33,12 @@ Board::Board()
 
 Board::Board(Board const& boardToCopy)
     : isInitialize(boardToCopy.isInitialize)
+    , enPassantX(boardToCopy.enPassantX)
+    , enPassantY(boardToCopy.enPassantY)
+    , halfMoveClock(boardToCopy.halfMoveClock)
+    , positionHistory(boardToCopy.positionHistory)
 {
-
     /* Copy squares */
-    /* Initialize empty board */
     for (int Y = 0; Y < BOARD_SIZE_MAX; Y++)
     {
         for (int X = 0; X < BOARD_SIZE_MAX; X++)
@@ -50,6 +57,44 @@ Board::Board(Board const& boardToCopy)
     for (auto const& it : boardToCopy.blackPieces)
     {
         blackPieces.push_back(it->clone());
+    }
+
+    /* Repair named pointers that now point into the copied vectors */
+    setupNamedPointers();
+}
+
+void
+Board::setupNamedPointers()
+{
+    int wBishop = 0, wKnight = 0, wRook = 0, wPawn = 0;
+    int bBishop = 0, bKnight = 0, bRook = 0, bPawn = 0;
+
+    for (Piece* p : whitePieces)
+    {
+        switch (p->getValue())
+        {
+            case SquarePieceValue::KingValue:   whiteKing           = static_cast<King*>(p);           break;
+            case SquarePieceValue::QueenValue:  whiteQueen          = static_cast<Queen*>(p);          break;
+            case SquarePieceValue::BishopValue: whiteBishops[wBishop++] = static_cast<Bishop*>(p);    break;
+            case SquarePieceValue::KnightValue: whiteKnights[wKnight++] = static_cast<Knight*>(p);    break;
+            case SquarePieceValue::RookValue:   whiteRooks[wRook++]     = static_cast<Rook*>(p);      break;
+            case SquarePieceValue::PawnValue:   whitePawns[wPawn++]     = static_cast<Pawn*>(p);      break;
+            default: break;
+        }
+    }
+
+    for (Piece* p : blackPieces)
+    {
+        switch (p->getValue())
+        {
+            case SquarePieceValue::KingValue:   blackKing           = static_cast<King*>(p);           break;
+            case SquarePieceValue::QueenValue:  blackQueen          = static_cast<Queen*>(p);          break;
+            case SquarePieceValue::BishopValue: blackBishops[bBishop++] = static_cast<Bishop*>(p);    break;
+            case SquarePieceValue::KnightValue: blackKnights[bKnight++] = static_cast<Knight*>(p);    break;
+            case SquarePieceValue::RookValue:   blackRooks[bRook++]     = static_cast<Rook*>(p);      break;
+            case SquarePieceValue::PawnValue:   blackPawns[bPawn++]     = static_cast<Pawn*>(p);      break;
+            default: break;
+        }
     }
 }
 
@@ -203,7 +248,7 @@ Board::startUp()
 }
 
 bool
-Board::movePiece(Piece* piece, int x, int y, int flags)
+Board::movePiece(Piece* piece, int x, int y, int flags, SquarePieceValue promotionPiece)
 {
     /* Check parameter */
     assert(nullptr != piece);
@@ -212,13 +257,25 @@ Board::movePiece(Piece* piece, int x, int y, int flags)
     int  oldX    = piece->getX();
     int  oldY    = piece->getY();
 
-    /* Compute flags - take */
-    if ((MOVE_FLAG_TAKE == (flags & MOVE_FLAG_TAKE)))
+    /* En passant capture: the captured pawn is beside the moving pawn, not at the destination */
+    if ((flags & MOVE_FLAG_EN_PASSANT) && (flags & MOVE_FLAG_TAKE))
+    {
+        int capturedY = oldY; /* Captured pawn sits on the same rank as the moving pawn */
+        Piece* captured = nullptr;
+        if (this->selectPiece(&captured, x, capturedY))
+        {
+            piece->eat(*captured);
+            board[x][capturedY]->resetSquare();
+        }
+        /* Destination is empty — the normal move branch will place the pawn there */
+    }
+    /* Regular capture */
+    else if ((MOVE_FLAG_TAKE == (flags & MOVE_FLAG_TAKE)))
     {
         Piece* p = nullptr;
         if (this->selectPiece(&p, x, y))
         {
-            piece->eat(*p); // TODO - eat is not to best method
+            piece->eat(*p);
 
             /* Reset square */
             board[x][y]->resetSquare();
@@ -242,8 +299,9 @@ Board::movePiece(Piece* piece, int x, int y, int flags)
             r = (blackRooks[0]->isKingSideRook()) ? blackRooks[0] : blackRooks[1];
         }
 
-        /* Check king and rook can castle and square on the king way aren't attacked */
-        if (k->isAbleToMove(KING_KING_CASTLE_X, y, flags, board) && r->isAbleToMove(ROOK_KING_CASTLE_X, y, flags, board)
+        /* Check king and rook can castle, king is not in check, and king does not pass through or land on attacked square */
+        if (!r->getHasMoved() && k->isAbleToMove(KING_KING_CASTLE_X, y, flags, board) && r->isAbleToMove(ROOK_KING_CASTLE_X, y, flags, board)
+            && !this->isInCheck(piece->getColor())
             && !this->isSquareAttacked(!piece->getColor(), k->getX() + 1, y) && !this->isSquareAttacked(!piece->getColor(), k->getX() + 2, y))
         {
             /* Reset king and rook squares */
@@ -265,6 +323,12 @@ Board::movePiece(Piece* piece, int x, int y, int flags)
             }
             board[k->getX()][k->getY()]->setValue(SquarePieceValue::KingValue);
             board[r->getX()][r->getY()]->setValue(SquarePieceValue::RookValue);
+
+            /* Castling succeeds: update draw tracking and return success */
+            enPassantX = -1;
+            enPassantY = -1;
+            updateDrawTracking(piece->getColor(), false, false);
+            xReturn = true;
         }
     }
 
@@ -285,8 +349,9 @@ Board::movePiece(Piece* piece, int x, int y, int flags)
             r = (!blackRooks[0]->isKingSideRook()) ? blackRooks[0] : blackRooks[1];
         }
 
-        /* Check king and rook can castle and square on the king way aren't attacked */
-        if (k->isAbleToMove(KING_QUEEN_CASTLE_X, y, flags, board) && r->isAbleToMove(ROOK_QUEEN_CASTLE_X, y, flags, board)
+        /* Check king and rook can castle, king is not in check, and king does not pass through or land on attacked square */
+        if (!r->getHasMoved() && k->isAbleToMove(KING_QUEEN_CASTLE_X, y, flags, board) && r->isAbleToMove(ROOK_QUEEN_CASTLE_X, y, flags, board)
+            && !this->isInCheck(piece->getColor())
             && !this->isSquareAttacked(!piece->getColor(), k->getX() - 1, y) && !this->isSquareAttacked(!piece->getColor(), k->getX() - 2, y))
         {
             /* Reset king and rook squares */
@@ -308,10 +373,16 @@ Board::movePiece(Piece* piece, int x, int y, int flags)
             }
             board[k->getX()][k->getY()]->setValue(SquarePieceValue::KingValue);
             board[r->getX()][r->getY()]->setValue(SquarePieceValue::RookValue);
+
+            /* Castling succeeds: update draw tracking and return success */
+            enPassantX = -1;
+            enPassantY = -1;
+            updateDrawTracking(piece->getColor(), false, false);
+            xReturn = true;
         }
     }
 
-    else if (piece->move(x, y, flags))
+    else if (piece->isAbleToMove(x, y, flags, board) && piece->move(x, y, flags))
     {
         /* Reset old square */
         board[oldX][oldY]->setValue(SquarePieceValue::Empty);
@@ -329,7 +400,70 @@ Board::movePiece(Piece* piece, int x, int y, int flags)
 
         board[x][y]->setValue(piece->getValue());
 
+        /* Pawn promotion: replace the pawn with the chosen piece */
+        if ((flags & MOVE_FLAG_PROMOTION) && piece->getValue() == SquarePieceValue::PawnValue)
+        {
+            piece->eat(*piece); /* Mark the pawn as dead */
+
+            Piece* promoted = nullptr;
+            bool pawnColor  = piece->getColor();
+            switch (promotionPiece)
+            {
+                case SquarePieceValue::QueenValue:
+                    promoted = new Queen(true, pawnColor, x, y);
+                    break;
+                case SquarePieceValue::RookValue:
+                    promoted = new Rook(false, true, pawnColor, x, y);
+                    break;
+                case SquarePieceValue::BishopValue:
+                    promoted = new Bishop(true, pawnColor, x, y);
+                    break;
+                case SquarePieceValue::KnightValue:
+                    promoted = new Knight(true, pawnColor, x, y);
+                    break;
+                default:
+                    /* Default to queen */
+                    promoted = new Queen(true, pawnColor, x, y);
+                    break;
+            }
+
+            if (pawnColor)
+            {
+                whitePieces.push_back(promoted);
+            }
+            else
+            {
+                blackPieces.push_back(promoted);
+            }
+
+            board[x][y]->setValue(promoted->getValue());
+        }
+
+        /* Set or clear the en passant target after a pawn double-push */
+        if (piece->getValue() == SquarePieceValue::PawnValue && abs(y - oldY) == 2)
+        {
+            /* The en passant target square is the square the pawn skipped */
+            enPassantX = x;
+            enPassantY = (oldY + y) / 2;
+        }
+        else
+        {
+            enPassantX = -1;
+            enPassantY = -1;
+        }
+
+        /* Update draw tracking (fifty-move clock + position history) */
+        bool isCapture  = (flags & MOVE_FLAG_TAKE) != 0;
+        bool isPawnMove = (piece->getValue() == SquarePieceValue::PawnValue);
+        updateDrawTracking(piece->getColor(), isCapture, isPawnMove);
+
         xReturn = true;
+    }
+    else
+    {
+        /* Castling and failed moves clear the en passant target */
+        enPassantX = -1;
+        enPassantY = -1;
     }
 
     return xReturn;
@@ -579,12 +713,12 @@ Board::checkMove(Piece** piece, SquarePieceValue pieceType, SquarePieceColor pie
             break;
     }
 
-    /* Lambda declaration - search a particular piece */
-    auto searchPiece = [&piece, &pieceType, &x, &y, &flags, &xExtraFlag, &yExtraFlag](vector<Piece*> const& pieces) {
+    /* Lambda declaration - search a particular piece that can legally make the move */
+    auto searchPiece = [&piece, &pieceType, &x, &y, &flags, &xExtraFlag, &yExtraFlag, this](vector<Piece*> const& pieces) {
         for (auto p : pieces)
         {
             if ((p->getValue() == pieceType) && p->isAlive() && p->isAbleToMove(x, y, flags) && ((xExtraFlag == -1) || (p->getX() == xExtraFlag))
-                && ((yExtraFlag == -1) || (p->getY() == yExtraFlag)))
+                && ((yExtraFlag == -1) || (p->getY() == yExtraFlag)) && this->isMoveLegal(p, x, y, flags))
             {
                 /* Only one piece should fit to the description */
                 assert(nullptr == *piece);
@@ -600,10 +734,11 @@ Board::checkMove(Piece** piece, SquarePieceValue pieceType, SquarePieceColor pie
 bool
 Board::isSquareAttacked(bool pieceColor, int x, int y)
 {
+    /* MOVE_FLAG_TAKE is required so pawns check diagonal attack squares, not forward movement */
     auto isAttacked = [&x, &y](vector<Piece*> const& pieces, Square* board[BOARD_SIZE_MAX][BOARD_SIZE_MAX]) {
         for (auto p : pieces)
         {
-            if (p->isAlive() && p->isAbleToMove(x, y, 0, board))
+            if (p->isAlive() && p->isAbleToMove(x, y, MOVE_FLAG_TAKE, board))
             {
                 return true;
             }
@@ -612,6 +747,318 @@ Board::isSquareAttacked(bool pieceColor, int x, int y)
     };
 
     return isAttacked(((pieceColor) ? whitePieces : blackPieces), board);
+}
+
+bool
+Board::isInCheck(bool color)
+{
+    /* Find the king of the given color by scanning the piece vector */
+    vector<Piece*>& myPieces = color ? whitePieces : blackPieces;
+    for (Piece* p : myPieces)
+    {
+        if (p->isAlive() && p->getValue() == SquarePieceValue::KingValue)
+        {
+            /* Check if any opponent piece attacks the king's square */
+            return isSquareAttacked(!color, p->getX(), p->getY());
+        }
+    }
+    return false;
+}
+
+bool
+Board::isMoveLegal(Piece* piece, int xEnd, int yEnd, int flags)
+{
+    /* Apply the move on a temporary copy and check that the own king is not in check */
+    Board tempBoard(*this);
+
+    Piece* tempPiece = nullptr;
+    tempBoard.selectPiece(&tempPiece, piece->getX(), piece->getY());
+    if (!tempPiece)
+    {
+        return false;
+    }
+
+    /* For castling, movePiece validates all conditions inline (check, intermediate squares) */
+    bool moveApplied = tempBoard.movePiece(tempPiece, xEnd, yEnd, flags);
+    if (!moveApplied)
+    {
+        return false;
+    }
+
+    return !tempBoard.isInCheck(piece->getColor());
+}
+
+std::vector<Move>
+Board::getLegalMoves(bool color)
+{
+    std::vector<Move> legalMoves;
+
+    SquarePieceColor ownColor = color ? SquarePieceColor::White : SquarePieceColor::Black;
+    std::vector<Piece*>& myPieces = color ? whitePieces : blackPieces;
+
+    for (Piece* p : myPieces)
+    {
+        if (!p->isAlive())
+        {
+            continue;
+        }
+
+        for (int destX = 0; destX < BOARD_SIZE_MAX; destX++)
+        {
+            for (int destY = 0; destY < BOARD_SIZE_MAX; destY++)
+            {
+                /* Skip destination occupied by own piece */
+                if (board[destX][destY]->getColor() == ownColor)
+                {
+                    continue;
+                }
+
+                /* Determine capture flag */
+                int flags = (board[destX][destY]->getValue() != SquarePieceValue::Empty) ? MOVE_FLAG_TAKE : 0;
+
+                /* Check piece movement rules with full board context */
+                if (!p->isAbleToMove(destX, destY, flags, board))
+                {
+                    continue;
+                }
+
+                /* Check that the move does not leave own king in check */
+                if (!isMoveLegal(p, destX, destY, flags))
+                {
+                    continue;
+                }
+
+                /* Pawn promotion: reaching the back rank generates 4 moves (one per piece type) */
+                bool isPromotion = (p->getValue() == SquarePieceValue::PawnValue)
+                                   && ((color && destY == SQUARE_Y_8) || (!color && destY == SQUARE_Y_1));
+
+                if (isPromotion)
+                {
+                    int promoFlags = flags | MOVE_FLAG_PROMOTION;
+                    legalMoves.push_back(Move(p, p->getX(), p->getY(), destX, destY, promoFlags, ' ', SquarePieceValue::QueenValue));
+                    legalMoves.push_back(Move(p, p->getX(), p->getY(), destX, destY, promoFlags, ' ', SquarePieceValue::RookValue));
+                    legalMoves.push_back(Move(p, p->getX(), p->getY(), destX, destY, promoFlags, ' ', SquarePieceValue::BishopValue));
+                    legalMoves.push_back(Move(p, p->getX(), p->getY(), destX, destY, promoFlags, ' ', SquarePieceValue::KnightValue));
+                }
+                else
+                {
+                    legalMoves.push_back(Move(p, p->getX(), p->getY(), destX, destY, flags));
+                }
+            }
+        }
+
+        /* En passant: check if this pawn can capture en passant */
+        if (p->getValue() == SquarePieceValue::PawnValue && enPassantX != -1)
+        {
+            int epFlags = MOVE_FLAG_EN_PASSANT | MOVE_FLAG_TAKE;
+            if (p->isAbleToMove(enPassantX, enPassantY, epFlags, board) && isMoveLegal(p, enPassantX, enPassantY, epFlags))
+            {
+                legalMoves.push_back(Move(p, p->getX(), p->getY(), enPassantX, enPassantY, epFlags));
+            }
+        }
+
+        /* Castling: try both sides for the king */
+        if (p->getValue() == SquarePieceValue::KingValue)
+        {
+            King* k = static_cast<King*>(p);
+            if (!k->getHasMoved())
+            {
+                int castleY = p->getY();
+                if (isMoveLegal(p, KING_KING_CASTLE_X, castleY, MOVE_FLAG_KING_CASTLE))
+                {
+                    legalMoves.push_back(Move(p, p->getX(), castleY, KING_KING_CASTLE_X, castleY, MOVE_FLAG_KING_CASTLE));
+                }
+                if (isMoveLegal(p, KING_QUEEN_CASTLE_X, castleY, MOVE_FLAG_QUEEN_CASTLE))
+                {
+                    legalMoves.push_back(Move(p, p->getX(), castleY, KING_QUEEN_CASTLE_X, castleY, MOVE_FLAG_QUEEN_CASTLE));
+                }
+            }
+        }
+    }
+
+    return legalMoves;
+}
+
+std::string
+Board::getFEN(bool colorToMove, int fullMoveNumber) const
+{
+    std::string fen;
+
+    /* 1. Piece placement: rank 8 (Y=7) down to rank 1 (Y=0) */
+    for (int y = BOARD_SIZE_MAX - 1; y >= 0; y--)
+    {
+        int empty = 0;
+        for (int x = 0; x < BOARD_SIZE_MAX; x++)
+        {
+            SquarePieceValue val = board[x][y]->getValue();
+            if (val == SquarePieceValue::Empty)
+            {
+                empty++;
+            }
+            else
+            {
+                if (empty > 0)
+                {
+                    fen += (char)('0' + empty);
+                    empty = 0;
+                }
+                bool isWhite = (board[x][y]->getColor() == SquarePieceColor::White);
+                switch (val)
+                {
+                    case SquarePieceValue::KingValue:   fen += isWhite ? 'K' : 'k'; break;
+                    case SquarePieceValue::QueenValue:  fen += isWhite ? 'Q' : 'q'; break;
+                    case SquarePieceValue::RookValue:   fen += isWhite ? 'R' : 'r'; break;
+                    case SquarePieceValue::BishopValue: fen += isWhite ? 'B' : 'b'; break;
+                    case SquarePieceValue::KnightValue: fen += isWhite ? 'N' : 'n'; break;
+                    case SquarePieceValue::PawnValue:   fen += isWhite ? 'P' : 'p'; break;
+                    default: break;
+                }
+            }
+        }
+        if (empty > 0)
+        {
+            fen += (char)('0' + empty);
+        }
+        if (y > 0)
+        {
+            fen += '/';
+        }
+    }
+
+    /* 2. Active color */
+    fen += colorToMove ? " w " : " b ";
+
+    /* 3. Castling rights */
+    Rook* wKsRook = (whiteRooks[0]->isKingSideRook()) ? whiteRooks[0] : whiteRooks[1];
+    Rook* wQsRook = (!whiteRooks[0]->isKingSideRook()) ? whiteRooks[0] : whiteRooks[1];
+    Rook* bKsRook = (blackRooks[0]->isKingSideRook()) ? blackRooks[0] : blackRooks[1];
+    Rook* bQsRook = (!blackRooks[0]->isKingSideRook()) ? blackRooks[0] : blackRooks[1];
+
+    std::string castling;
+    if (whiteKing->isAlive() && !whiteKing->getHasMoved())
+    {
+        if (wKsRook->isAlive() && !wKsRook->getHasMoved()) castling += 'K';
+        if (wQsRook->isAlive() && !wQsRook->getHasMoved()) castling += 'Q';
+    }
+    if (blackKing->isAlive() && !blackKing->getHasMoved())
+    {
+        if (bKsRook->isAlive() && !bKsRook->getHasMoved()) castling += 'k';
+        if (bQsRook->isAlive() && !bQsRook->getHasMoved()) castling += 'q';
+    }
+    fen += (castling.empty() ? "-" : castling) + " ";
+
+    /* 4. En passant target square */
+    if (enPassantX == -1)
+    {
+        fen += "- ";
+    }
+    else
+    {
+        fen += (char)('a' + enPassantX);
+        fen += (char)('1' + enPassantY);
+        fen += ' ';
+    }
+
+    /* 5. Halfmove clock */
+    fen += std::to_string(halfMoveClock) + " ";
+
+    /* 6. Fullmove number */
+    fen += std::to_string(fullMoveNumber);
+
+    return fen;
+}
+
+std::string
+Board::computeHash(bool colorToMove) const
+{
+    std::string hash;
+    hash.reserve(128);
+
+    /* Encode each square: color character + value digit */
+    for (int Y = 0; Y < BOARD_SIZE_MAX; Y++)
+    {
+        for (int X = 0; X < BOARD_SIZE_MAX; X++)
+        {
+            char c = '.';
+            if (board[X][Y]->getValue() != SquarePieceValue::Empty)
+            {
+                bool isWhite = (board[X][Y]->getColor() == SquarePieceColor::White);
+                switch (board[X][Y]->getValue())
+                {
+                    case SquarePieceValue::KingValue:   c = isWhite ? 'K' : 'k'; break;
+                    case SquarePieceValue::QueenValue:  c = isWhite ? 'Q' : 'q'; break;
+                    case SquarePieceValue::RookValue:   c = isWhite ? 'R' : 'r'; break;
+                    case SquarePieceValue::BishopValue: c = isWhite ? 'B' : 'b'; break;
+                    case SquarePieceValue::KnightValue: c = isWhite ? 'N' : 'n'; break;
+                    case SquarePieceValue::PawnValue:   c = isWhite ? 'P' : 'p'; break;
+                    default: break;
+                }
+            }
+            hash += c;
+        }
+    }
+
+    /* Encode side to move */
+    hash += colorToMove ? 'w' : 'b';
+
+    /* Encode en passant file (-1 = none, 0-7 = a-h) */
+    hash += (char)('0' + (enPassantX + 1)); /* +1 so -1 becomes '0', 0 becomes '1', etc. */
+
+    /* Castling rights: check hasMoved flags via the named pointers */
+    /* These fields are protected; we access them through the known initial positions */
+    /* For a proper hash, castling rights would be encoded here — simplified for Phase 1 */
+
+    return hash;
+}
+
+void
+Board::updateDrawTracking(bool colorToMove, bool isCapture, bool isPawnMove)
+{
+    /* Fifty-move clock: reset on capture or pawn move, otherwise increment */
+    if (isCapture || isPawnMove)
+    {
+        halfMoveClock = 0;
+    }
+    else
+    {
+        halfMoveClock++;
+    }
+
+    /* Threefold repetition: record the current position */
+    std::string hash = computeHash(!colorToMove); /* After the move, the opponent is to move */
+    positionHistory[hash]++;
+}
+
+GameResult
+Board::getGameResult(bool colorToMove)
+{
+    /* Fifty-move rule: 100 half-moves (50 full moves) without capture or pawn move */
+    if (halfMoveClock >= 100)
+    {
+        return GameResult::DrawFiftyMove;
+    }
+
+    /* Threefold repetition: same position occurred 3 times */
+    std::string currentHash = computeHash(colorToMove);
+    if (positionHistory.count(currentHash) && positionHistory.at(currentHash) >= 3)
+    {
+        return GameResult::DrawThreefold;
+    }
+
+    std::vector<Move> legalMoves = getLegalMoves(colorToMove);
+
+    if (!legalMoves.empty())
+    {
+        return GameResult::InProgress;
+    }
+
+    /* No legal moves: checkmate or stalemate */
+    if (isInCheck(colorToMove))
+    {
+        return colorToMove ? GameResult::BlackWins : GameResult::WhiteWins;
+    }
+
+    return GameResult::DrawStalemate;
 }
 
 void
