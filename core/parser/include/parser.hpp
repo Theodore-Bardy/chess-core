@@ -6,16 +6,34 @@
 #ifndef _PARSER_HPP_
 #define _PARSER_HPP_
 
-#include <optional>
 #include <string>
 
 #include "game.hpp"
 
 using namespace std;
 
+/**
+ * @brief PGN game metadata (header tags)
+ */
+struct GameMetadata
+{
+    std::string event;    /**< [Event "..."] */
+    std::string site;     /**< [Site "..."] */
+    std::string date;     /**< [Date "..."] */
+    std::string round;    /**< [Round "..."] */
+    std::string white;    /**< [White "..."] */
+    std::string black;    /**< [Black "..."] */
+    std::string result;   /**< [Result "..."] */
+    int         whiteElo; /**< [WhiteElo "..."] */
+    int         blackElo; /**< [BlackElo "..."] */
+    std::string eco;      /**< [ECO "..."] */
+    std::string opening;  /**< [Opening "..."] */
+
+    GameMetadata() : whiteElo(0), blackElo(0) {}
+};
+
 class Parser
 {
-private:
 public:
     /**
      * @brief Default constructor
@@ -28,21 +46,22 @@ public:
     ~Parser() = default;
 
     /**
-     * @brief Read a Chess game from a PGN files format
-     * @param[in] game Game object where the PGN file will be loaded
-     * @param[in] filePath Path to the file
-     * @param[in] fileName Name of the file
-     * @return true if file is found, false otherwise
+     * @brief Read a chess game from a PGN file
+     * @param[in,out] game     Game object to populate
+     * @param[in]     filePath Path to the PGN file
+     * @param[out]    meta     Optional pointer to receive parsed header metadata
+     * @return true if the file was read successfully, false otherwise
      */
-    bool loadGame(Game& game, string filePath, string fileName);
+    bool loadGame(Game& game, std::string const& filePath, GameMetadata* meta = nullptr);
 
     /**
-     * @brief Save a Chess game from to a PGN files format
-     * @param[in] filePath Path to the file
-     * @param[in] fileName Name of the file
-     * @return true if file is created, false otherwise
+     * @brief Write a chess game to a PGN file
+     * @param[in] game     Game to serialize (traverses the full game tree)
+     * @param[in] filePath Path to the output PGN file
+     * @param[in] meta     Optional metadata to write as PGN headers
+     * @return true if the file was written successfully, false otherwise
      */
-    bool saveGame(string filePath, string fileName);
+    bool saveGame(Game const& game, std::string const& filePath, GameMetadata const* meta = nullptr);
 };
 
 #endif /* _PARSER_HPP_ */
