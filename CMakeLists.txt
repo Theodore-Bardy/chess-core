@@ -3,6 +3,18 @@
 
 cmake_minimum_required(VERSION 3.19)
 
+include(FetchContent)
+
+# SQLiteCpp — MIT license, cross-platform SQLite C++ wrapper
+FetchContent_Declare(
+    SQLiteCpp
+    GIT_REPOSITORY https://github.com/SRombauts/SQLiteCpp.git
+    GIT_TAG        3.3.1
+)
+set(SQLITECPP_RUN_CPPLINT  OFF CACHE BOOL "" FORCE)
+set(SQLITECPP_RUN_CPPCHECK OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(SQLiteCpp)
+
 # C/C++ standards
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -42,4 +54,7 @@ else()
     # Include sub-directories
     include(${CMAKE_CURRENT_LIST_DIR}/app/CMakeLists.txt)
     include(${CMAKE_CURRENT_LIST_DIR}/core/CMakeLists.txt)
+
+    # Link SQLiteCpp
+    target_link_libraries(${APP_EXECUTABLE_NAME} PRIVATE SQLiteCpp)
 endif()

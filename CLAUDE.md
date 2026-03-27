@@ -138,10 +138,18 @@ MOVE_FLAG_PROMOTION    0x40  — pawn promotion
 - `saveGame()`: `moveToSAN()` produces standard algebraic notation (O-O/O-O-O, `exd5`, `e8=Q`, `Nxf3`, `Raf1`); `writeNode()` walks `GameTree` recursively, emitting variations in `( )`, move numbers, and `{comments}`.
 - Verified: `gameExample.pgn` → 67 moves played, correct final FEN `2R5/p7/1p3k2/8/5n2/8/PP2BK2/6R1 b - - 0 34`, round-trip PGN output preserves all headers, comments, and SAN notation.
 
-### Phase 4 — SQLite Database Layer
-- Add **SQLiteCpp** (MIT) via CMake FetchContent.
-- Create `core/database/` with `Database` class (import PGN, search games, get games by position, store eval results).
-- Schema: `games`, `positions`, `players` tables.
+### Phase 4 — SQLite Database Layer ✅
+
+- Added **SQLiteCpp 3.3.1** (MIT) via CMake FetchContent (root `CMakeLists.txt`).
+- Created `core/database/` module: `database.hpp` / `database.cpp` + `CMakeLists.txt`.
+- `Database` class:
+  - `importPGN(path)` — parses PGN via `Parser::loadGame()`, inserts into `games` + `positions` tables, walks main-line game tree for FEN snapshots.
+  - `searchGames(GameFilter)` — filter by white/black/result/dateFrom/dateTo/eco/minElo/maxElo, substring match on player names.
+  - `getGame(id)` — retrieves full `pgn_text` + metadata.
+  - `getGamesByPosition(fen)` — indexed lookup on `positions.fen`.
+  - `saveAnalysis(gameId, moveNum, eval)` — stores engine eval (used by Phase 5).
+  - `getPlayerStats(name)` — aggregates win/draw/loss counts.
+- Schema: `players`, `games`, `positions` tables with FKs, WAL mode, `PRAGMA foreign_keys = ON`.
 
 ### Phase 5 — Stockfish Analysis Integration
 - Add **Boost.Process** (BSL-1.0) via CMake FetchContent for cross-platform subprocess.

@@ -1,24 +1,28 @@
 @startuml database
 
-title Database Layer — planned Phase 4
+title Database Layer (Phase 4 complete)
 
 note as Dep
-  Dependency: SQLiteCpp (MIT)
+  Dependency: SQLiteCpp 3.3.1 (MIT)
   Added via CMake FetchContent
 end note
 
-class Database <<planned Phase 4>> {
+class Database {
     - db : SQLite::Database
-    + Database(string path)
-    + importPGN(string filePath) : int
+    + Database(path : string)
+    + importPGN(filePath : string) : int
     + searchGames(GameFilter const&) : vector<GameRecord>
-    + getGame(int id) : GameRecord
-    + getGamesByPosition(string fen) : vector<GameRecord>
-    + saveAnalysis(int gameId, int moveNum, float eval)
-    + getPlayerStats(string name) : PlayerStats
+    + getGame(id : int) : GameRecord
+    + getGamesByPosition(fen : string) : vector<GameRecord>
+    + saveAnalysis(gameId : int, moveNum : int, evalScore : float) : void
+    + getPlayerStats(name : string) : PlayerStats
+    -- private --
+    - initSchema() : void
+    - upsertPlayer(name : string) : int
+    - recordToMeta(GameRecord const&) : GameMetadata
 }
 
-class GameFilter <<planned Phase 4>> {
+struct GameFilter {
     + white : string
     + black : string
     + result : string
@@ -27,9 +31,10 @@ class GameFilter <<planned Phase 4>> {
     + eco : string
     + minElo : int
     + maxElo : int
+    + GameFilter()
 }
 
-class GameRecord <<planned Phase 4>> {
+struct GameRecord {
     + id : int
     + pgnText : string
     + result : string
@@ -40,36 +45,71 @@ class GameRecord <<planned Phase 4>> {
     + blackElo : int
     + eco : string
     + opening : string
+    + event : string
+    + site : string
+    + round : string
+    + GameRecord()
 }
 
-class PlayerStats <<planned Phase 4>> {
+struct PlayerStats {
     + name : string
     + gamesPlayed : int
     + wins : int
     + draws : int
     + losses : int
-    + averageAccuracy : float
+    + PlayerStats()
 }
 
-Database ..> GameFilter : query input
-Database ..> GameRecord : query output
-Database ..> PlayerStats : query output
+class Parser {
+}
+
+class Game {
+}
+
+class GameMetadata {
+}
+
+Database ..> GameFilter   : query input
+Database ..> GameRecord   : query output
+Database ..> PlayerStats  : query output
+Database ..> Parser       : uses for importPGN / exportPGN
+Database ..> Game         : loads game tree via Parser
+Database ..> GameMetadata : converts to/from GameRecord
 
 note right of Database
   SQLite schema (3 tables):
 
-  games: id, pgn_text, result, date,
-    white_player, black_player,
-    white_elo, black_elo, eco, opening
+  players:
+    id INTEGER PK AUTOINCREMENT
+    name TEXT UNIQUE
 
-  positions: id, fen, game_id,
-    move_number, eval_score (nullable)
+  games:
+    id INTEGER PK AUTOINCREMENT
+    pgn_text TEXT
+    result TEXT
+    date TEXT
+    white_player_id → players(id)
+    black_player_id → players(id)
+    white_elo INTEGER
+    black_elo INTEGER
+    eco TEXT, opening TEXT
+    event TEXT, site TEXT, round TEXT
 
-  players: id, name, elo_history (JSON)
+  positions:
+    id INTEGER PK AUTOINCREMENT
+    fen TEXT (indexed)
+    game_id → games(id) ON DELETE CASCADE
+    move_num INTEGER
+    eval_score REAL (nullable, filled by Phase 5)
 
-  PGN files are the import/export format.
-  Import: PGN → Parser → Database
-  Export: Database → GameRecord → Parser.saveGame()
+  Import flow:
+    PGN file → Parser.loadGame() → Game tree
+    → walk main line for FEN snapshots
+    → INSERT into games + positions
+
+  Export flow:
+    getGame(id) → GameRecord → GameMetadata
+    → new Game → Parser.saveGame()
 end note
 
 @enduml

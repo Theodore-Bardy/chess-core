@@ -5,3 +5,4 @@
 include(${CMAKE_CURRENT_LIST_DIR}/game/CMakeLists.txt)
 include(${CMAKE_CURRENT_LIST_DIR}/parser/CMakeLists.txt)
 include(${CMAKE_CURRENT_LIST_DIR}/pieces/CMakeLists.txt)
+include(${CMAKE_CURRENT_LIST_DIR}/database/CMakeLists.txt)
