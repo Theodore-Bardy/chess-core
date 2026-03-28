@@ -102,6 +102,11 @@ public:
     GameTree const& getTree() const { return tree; }
 
     /**
+     * @brief Returns the current board (mutable) — used by the TUI for legal move generation
+     */
+    Board& getBoard() { return gameBoard; }
+
+    /**
      * @brief Returns true if it is white's turn to move
      */
     bool getColorToMove() const { return colorToMove; }

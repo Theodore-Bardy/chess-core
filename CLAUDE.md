@@ -164,10 +164,17 @@ MOVE_FLAG_PROMOTION    0x40  — pawn promotion
   - `getPerformanceTrend(player, dateFrom, dateTo)` — buckets games by YYYY.MM, computes win rate per month.
 - Added `Database::getEvals(gameId)` to support blunder detection (returns eval_score rows ordered by move_num).
 
-### Phase 6 — TUI (FTXUI)
-- Add **FTXUI** (MIT) via CMake FetchContent.
-- Create `ui/tui/` with screens: Board, Game tree, Database browser, Analysis panel.
-- Replace the raw `cin`/`cout` loop in `app/src/main.cpp`.
+### Phase 6 — TUI (FTXUI) ✅
+
+- Added **FTXUI v5.0.0** (MIT) via CMake FetchContent; linked `ftxui::screen`, `ftxui::dom`, `ftxui::component`.
+- Created `ui/tui/` module: `tui_app.hpp` / `tui_app.cpp`.
+- `TuiApp::run()` launches a full-screen terminal UI with three screens (`1`/`2`/`3` to switch):
+  - **Board screen**: 8×8 board rendered via `ftxui::Canvas` with wood-coloured squares; cursor (yellow), selected piece (green); arrow keys move cursor, Enter select/move piece, Escape deselect, `<`/`>` navigate move tree, `L` load PGN dialog, `S` save PGN dialog.
+  - **Database screen**: press `I` to import a PGN file into the SQLite database.
+  - **Analysis screen**: code usage instructions for `UCIEngine` + `Statistics`.
+- Move list panel (right side) shows move pairs, current position highlighted in yellow.
+- Status bar shows current FEN, side to move, and status messages.
+- Replaced `app/src/main.cpp` raw cin/cout loop with a single `TuiApp app; app.run();` call.
 
 ### Phase 7 — Qt 6 GUI
 - Qt 6 (LGPL), system install or vcpkg.
