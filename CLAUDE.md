@@ -151,10 +151,18 @@ MOVE_FLAG_PROMOTION    0x40  — pawn promotion
   - `getPlayerStats(name)` — aggregates win/draw/loss counts.
 - Schema: `players`, `games`, `positions` tables with FKs, WAL mode, `PRAGMA foreign_keys = ON`.
 
-### Phase 5 — Stockfish Analysis Integration
-- Add **Boost.Process** (BSL-1.0) via CMake FetchContent for cross-platform subprocess.
-- Create `core/analysis/include/uci_engine.hpp` + `.cpp`: spawn Stockfish, UCI handshake, `analyze(depth)` → `EngineResult`.
-- Create `core/analysis/include/statistics.hpp` + `.cpp`: blunder detection (eval drop > 0.5 = mistake, > 2.0 = blunder), opening repertoire stats, position frequency, time-based trends.
+### Phase 5 — Stockfish Analysis Integration ✅
+
+- No external subprocess dependency: implemented a thin `Process` class with `#ifdef _WIN32` / POSIX guards (fork/exec/pipe/select on Linux; CreateProcess/CreatePipe/PeekNamedPipe on Windows).
+- Created `core/analysis/` module: `process.hpp/cpp`, `uci_engine.hpp/cpp`, `statistics.hpp/cpp`.
+- `UCIEngine`: `connect()` spawns engine and completes UCI handshake (`uci`/`uciok`, `isready`/`readyok`); `setPosition(fen)` sends `position fen`; `analyze(depth)` sends `go depth N`, parses `info` lines for score/depth/PV, waits for `bestmove`; `shutdown()` sends `quit`.
+- `Statistics`:
+  - `analyzeGame(gameId, depth)` — re-parses stored PGN, evaluates every main-line position via Stockfish, stores result via `Database::saveAnalysis()`.
+  - `detectBlunders(gameId)` — reads stored evals via `Database::getEvals()`, computes eval drop per move from side-to-move perspective; flags > 0.5 pawns as mistake, > 2.0 as blunder.
+  - `getOpeningStats(eco)` — aggregates win/draw/loss for an ECO prefix.
+  - `getPositionFrequency(fen)` — counts games reaching a given FEN.
+  - `getPerformanceTrend(player, dateFrom, dateTo)` — buckets games by YYYY.MM, computes win rate per month.
+- Added `Database::getEvals(gameId)` to support blunder detection (returns eval_score rows ordered by move_num).
 
 ### Phase 6 — TUI (FTXUI)
 - Add **FTXUI** (MIT) via CMake FetchContent.

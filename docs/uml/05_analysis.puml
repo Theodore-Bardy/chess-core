@@ -1,55 +1,79 @@
 @startuml analysis
 
-title Analysis Layer — planned Phase 5
+title Analysis Layer (Phase 5 complete)
 
 note as Dep
-  Dependency: Boost.Process (BSL-1.0)
-  Cross-platform child process management.
-  Stockfish runs as an external subprocess
-  communicating via UCI over stdin/stdout.
+  No external dependency for subprocess.
+  Platform abstraction: Process class
+  - POSIX: fork/exec + pipe + select
+  - Windows: CreateProcess + CreatePipe + PeekNamedPipe
+  Stockfish communicates via UCI over stdin/stdout.
 end note
 
-class UCIEngine <<planned Phase 5>> {
-    - process : boost::process::child
-    - stdin_pipe : boost::process::opstream
-    - stdout_pipe : boost::process::ipstream
-    + connect(string stockfishPath) : bool
-    + setPosition(string fen, vector<string> moves)
-    + analyze(int depth) : EngineResult
-    + shutdown()
-    - sendCommand(string cmd)
-    - readLine() : string
-    - parseInfoLine(string) : void
+class Process {
+    -- POSIX fields --
+    - pid : pid_t
+    - stdinWrite : int
+    - stdoutRead : int
+    -- Windows fields --
+    - hProcess : HANDLE
+    - hStdinWrite : HANDLE
+    - hStdoutRead : HANDLE
+    -- shared --
+    - readBuf : string
+    + Process()
+    + ~Process()
+    + start(executable : string) : bool
+    + writeLine(line : string) : bool
+    + readLine(out : string&, timeoutMs : int) : bool
+    + terminate() : void
+    + isRunning() : bool
 }
 
-class EngineResult <<planned Phase 5>> {
+class UCIEngine {
+    - process : Process
+    - connected : bool
+    - sendCommand(cmd : string) : bool
+    - waitFor(prefix : string, lineOut : string*, timeoutMs : int) : bool
+    + UCIEngine()
+    + ~UCIEngine()
+    + connect(enginePath : string) : bool
+    + setPosition(fen : string) : void
+    + analyze(depth : int) : EngineResult
+    + shutdown() : void
+    + isConnected() : bool
+}
+
+struct EngineResult {
     + bestMove : string
     + ponderMove : string
     + score : float
     + depth : int
     + pvLine : vector<string>
+    + EngineResult()
 }
 
-class Statistics <<planned Phase 5>> {
+class Statistics {
     - db : Database&
     - engine : UCIEngine&
-    + analyzeGame(int gameId)
-    + detectBlunders(int gameId, float threshold) : vector<BlunderInfo>
-    + getOpeningStats(string eco) : OpeningStats
-    + getPositionFrequency(string fen) : int
-    + getPerformanceTrend(string player, string dateFrom, string dateTo) : vector<TrendPoint>
+    + Statistics(db : Database&, engine : UCIEngine&)
+    + analyzeGame(gameId : int, depth : int) : int
+    + detectBlunders(gameId : int, mistakeThreshold : float, blunderThreshold : float) : vector<BlunderInfo>
+    + getOpeningStats(eco : string) : OpeningStats
+    + getPositionFrequency(fen : string) : int
+    + getPerformanceTrend(player : string, dateFrom : string, dateTo : string) : vector<TrendPoint>
 }
 
-class BlunderInfo <<planned Phase 5>> {
-    + moveNumber : int
-    + move : string
+struct BlunderInfo {
+    + moveNum : int
+    + san : string
     + evalBefore : float
     + evalAfter : float
     + drop : float
     + severity : string
 }
 
-class OpeningStats <<planned Phase 5>> {
+struct OpeningStats {
     + eco : string
     + name : string
     + gamesPlayed : int
@@ -57,34 +81,57 @@ class OpeningStats <<planned Phase 5>> {
     + draws : int
     + losses : int
     + winRate : float
+    + OpeningStats()
 }
 
-class TrendPoint <<planned Phase 5>> {
+struct TrendPoint {
     + date : string
-    + accuracy : float
+    + gamesPlayed : int
+    + winRate : float
     + blunderRate : float
+    + TrendPoint()
 }
 
-UCIEngine ..> EngineResult : produces
-Statistics ..> UCIEngine : calls for eval
-Statistics ..> BlunderInfo : produces
+class Database {
+}
+
+UCIEngine o-- Process       : owns
+UCIEngine ..> EngineResult  : produces
+Statistics o-- Database     : ref
+Statistics o-- UCIEngine    : ref
+Statistics ..> BlunderInfo  : produces
 Statistics ..> OpeningStats : produces
-Statistics ..> TrendPoint : produces
+Statistics ..> TrendPoint   : produces
 
 note right of UCIEngine
   UCI protocol flow:
-  1. spawn stockfish process
-  2. send "uci" → wait "uciok"
-  3. send "isready" → wait "readyok"
+  1. process.start(stockfishPath)
+  2. send "uci"    → waitFor("uciok")
+  3. send "isready" → waitFor("readyok")
   4. send "position fen <fen>"
   5. send "go depth <N>"
-  6. parse "info depth ... score cp ..." lines
-  7. wait for "bestmove <move>"
+  6. parse "info depth N score cp N pv ..." lines
+  7. wait for "bestmove <move> [ponder <move>]"
   8. send "quit" on shutdown
 
-  Blunder threshold:
+  Score parsing:
+  - "score cp N" → N/100 pawns
+  - "score mate N" → ±999 sentinel
+end note
+
+note right of Statistics
+  analyzeGame(): replays main line from DB
+  via temp PGN file, evaluates each position,
+  stores result via Database::saveAnalysis()
+
+  detectBlunders(): reads stored evals via
+  Database::getEvals(), computes per-move drop
+  from side-to-move perspective.
   > 0.5 pawns drop = mistake
   > 2.0 pawns drop = blunder
+
+  getPerformanceTrend(): buckets games by
+  YYYY.MM, computes win rate per month
 end note
 
 @enduml

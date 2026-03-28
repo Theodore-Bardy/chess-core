@@ -138,6 +138,14 @@ public:
     void saveAnalysis(int gameId, int moveNum, float evalScore);
 
     /**
+     * @brief Retrieve stored engine evaluations for a game (for blunder detection)
+     * @param[in] gameId Database game id
+     * @return Vector of (moveNum, evalScore) pairs ordered by moveNum; only rows
+     *         where eval_score IS NOT NULL are returned
+     */
+    std::vector<std::pair<int, float>> getEvals(int gameId) const;
+
+    /**
      * @brief Aggregate win/draw/loss statistics for a player
      * @param[in] name Player name (exact match)
      * @return PlayerStats struct

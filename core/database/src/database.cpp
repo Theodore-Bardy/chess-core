@@ -388,6 +388,24 @@ void Database::saveAnalysis(int gameId, int moveNum, float evalScore)
     q.exec();
 }
 
+std::vector<std::pair<int, float>> Database::getEvals(int gameId) const
+{
+    SQLite::Statement q(db,
+        "SELECT move_num, eval_score FROM positions "
+        "WHERE game_id = ? AND eval_score IS NOT NULL "
+        "ORDER BY move_num ASC");
+    q.bind(1, gameId);
+
+    std::vector<std::pair<int, float>> result;
+    while (q.executeStep())
+    {
+        int   mn   = q.getColumn(0).getInt();
+        float eval = static_cast<float>(q.getColumn(1).getDouble());
+        result.emplace_back(mn, eval);
+    }
+    return result;
+}
+
 PlayerStats Database::getPlayerStats(std::string const& name) const
 {
     PlayerStats stats;
